@@ -14,7 +14,7 @@ jobs:
       - name: Install dependencies
         run: |
           apt-get update
-          apt-get install -y git curl ca-certificates
+          apt-get install -y git curl ca-certificates unzip
           curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
           apt-get install -y nodejs
 

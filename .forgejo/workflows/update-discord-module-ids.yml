@@ -1,0 +1,47 @@
+name: Update Discord Module IDs
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: docker
+    container:
+      image: ubuntu:22.04
+    steps:
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y git curl ca-certificates
+          curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+          apt-get install -y nodejs
+
+      - name: Checkout repository
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git clone "https://x-access-token:${{ secrets.PAT }}@${GITHUB_SERVER_URL#https://}/${{ github.repository }}.git" .
+          git fetch --depth 1 origin "${{ github.sha }}"
+          git checkout "${{ github.sha }}"
+
+      - name: Setup Bun
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          echo "$HOME/.bun/bin" >> $GITHUB_PATH
+
+      - name: Update module IDs from decord
+        run: bun scripts/update-discord-module-ids.mjs
+
+      - name: Commit changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            BUILD=$(bun -e "import('./plugins/shared/discord-modules.ts').then(m => console.log(m.discordBuild))")
+            git config user.name 'forgejo-actions[bot]'
+            git config user.email 'noreply@git.gay'
+            git add .
+            git commit -m "chore(kmmiio-lib): update Discord module IDs (build ${BUILD})"
+            git push "https://x-access-token:${{ secrets.PAT }}@${GITHUB_SERVER_URL#https://}/${{ github.repository }}.git" HEAD:main
+          else
+            echo 'No module ID changes'
+          fi

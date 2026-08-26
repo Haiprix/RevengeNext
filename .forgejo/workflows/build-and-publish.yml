@@ -1,0 +1,130 @@
+name: Build & Publish Plugins
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-publish:
+    runs-on: docker
+    container:
+      image: ubuntu:22.04
+    timeout-minutes: 60
+    steps:
+      - name: Install dependencies
+        run: |
+          apt-get update && apt-get install -y --no-install-recommends git curl ca-certificates gnupg wget unzip
+          curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+          apt-get install -y --no-install-recommends nodejs
+
+      - name: Checkout repository
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git clone "https://x-access-token:${{ github.token }}@${GITHUB_SERVER_URL#https://}/${{ github.repository }}.git" .
+          git fetch --depth 1 origin "${{ github.sha }}"
+          git checkout "${{ github.sha }}"
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: bun-${{ runner.os }}-${{ hashFiles('package.json', 'bun.lockb') }}
+          restore-keys: |
+            bun-${{ runner.os }}-
+
+      - name: Cache Android SDK
+        id: cache-android
+        uses: actions/cache@v4
+        with:
+          path: /opt/android-sdk
+          key: android-sdk-${{ runner.os }}-37-37.0.0
+          restore-keys: |
+            android-sdk-${{ runner.os }}-
+
+      - name: Setup JDK 25
+        run: |
+          mkdir -p /etc/apt/keyrings
+          wget -qO /etc/apt/keyrings/adoptium.asc https://packages.adoptium.net/artifactory/api/gpg/key/public
+          echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb jammy main" | tee /etc/apt/sources.list.d/adoptium.list
+          apt-get update && apt-get install -y temurin-25-jdk
+          export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
+          echo "JAVA_HOME=$JAVA_HOME" >> $GITHUB_ENV
+          echo "$JAVA_HOME/bin" >> $GITHUB_PATH
+
+      - name: Setup Android SDK
+        if: steps.cache-android.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p /opt/android-sdk/cmdline-tools
+          cd /tmp
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip
+          unzip -q commandlinetools-linux-13114758_latest.zip
+          mv cmdline-tools /opt/android-sdk/cmdline-tools/latest
+          export ANDROID_HOME=/opt/android-sdk
+          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
+          yes | sdkmanager --licenses > /dev/null 2>&1 || true
+          sdkmanager --channel=1 "platforms;android-37.0" "build-tools;37.0.0" "platform-tools"
+
+      - name: Set Android SDK env
+        run: |
+          echo "ANDROID_HOME=/opt/android-sdk" >> $GITHUB_ENV
+          echo "/opt/android-sdk/cmdline-tools/latest/bin:/opt/android-sdk/platform-tools" >> $GITHUB_PATH
+
+      - name: Setup Bun
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          echo "$HOME/.bun/bin" >> $GITHUB_PATH
+
+      - name: Clone revenge-xposed
+        run: |
+          git clone --depth 1 https://github.com/revenge-mod/revenge-xposed.git
+
+      - name: Install dependencies & build plugin-cli
+        env:
+          GITHUB_SERVER_URL: https://github.com
+          GITHUB_API_URL: https://api.github.com
+        run: |
+          bun install
+          cd node_modules/@revenge-mod/plugin-cli
+          bun run build
+
+      - name: Publish revenge-api to Maven Local
+        run: |
+          cd revenge-xposed
+          chmod +x gradlew
+          ./gradlew :api:publishToMavenLocal --no-daemon
+
+      - name: Build plugins
+        run: bun run release --base-url "https://rn.kmmiio99o.dev"
+
+      - name: Verify dist artifacts
+        run: |
+          echo "Final dist/:"
+          ls -la dist/
+
+      - name: Deploy to gh-pages branch
+        run: |
+          mkdir -p /tmp/ghpages && cd /tmp/ghpages
+          git init
+          git config user.name 'forgejo-actions[bot]'
+          git config user.email 'noreply@git.gay'
+          git remote add origin "https://x-access-token:${{ github.token }}@${GITHUB_SERVER_URL#https://}/${{ github.repository }}.git"
+          git fetch origin gh-pages --depth=1 || true
+          if git rev-parse --verify origin/gh-pages >/dev/null 2>&1; then
+            git checkout -b gh-pages origin/gh-pages
+          else
+            git checkout --orphan gh-pages
+          fi
+          cp -r "$GITHUB_WORKSPACE/dist/"* .
+          git add -A
+          git diff --cached --quiet || git commit -m "chore: publish plugins [skip ci]"
+          git push origin gh-pages

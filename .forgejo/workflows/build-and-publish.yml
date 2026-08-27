@@ -11,15 +11,6 @@ jobs:
       image: ubuntu:22.04
     timeout-minutes: 60
     steps:
-      - name: Cache apt archives
-        id: cache-apt
-        uses: actions/cache@v4
-        with:
-          path: /var/cache/apt/archives
-          key: apt-archives-${{ runner.os }}-node20
-          restore-keys: |
-            apt-archives-${{ runner.os }}-
-
       - name: Install dependencies
         run: |
           apt-get update

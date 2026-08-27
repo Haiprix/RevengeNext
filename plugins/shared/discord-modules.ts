@@ -10,4 +10,5 @@ export const discordModules = {
 	'modules/main_tabs_v2/native/tabs/you/utils/showYouAccountActionSheet.tsx': 15808,
 	'modules/main_tabs_v2/native/tabs/you/YouAccountActionSheet.tsx': 15810,
 	'modules/user_profile/native/showUserProfileActionSheet.tsx': 8998,
+	'asyncRequireImpl': 2009,
 } as const

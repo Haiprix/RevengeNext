@@ -35,26 +35,41 @@ export function forceLoadLazySheets(): void {
 	lazySheetsLoaded = true
 }
 
+const ASYNC_REQUIRE_ID = discordModules['asyncRequireImpl']
+
 function requireLazy(id: number): Promise<any> {
 	const r = (globalThis as any)?.__r
 	if (typeof r !== 'function') return Promise.resolve(undefined)
-	const mod = (() => { try { return r(2007) } catch { return undefined } })()
-	const fn = mod?.default ?? mod
-	if (typeof fn === 'function') {
-		try { const p = fn(id); if (p && typeof p.then === 'function') return p } catch {}
+	const asyncRequire = (() => {
+		try { return r(ASYNC_REQUIRE_ID)?.default ?? r(ASYNC_REQUIRE_ID) } catch { return undefined }
+	})()
+	if (typeof asyncRequire === 'function') {
+		try {
+			const p = asyncRequire(id)
+			if (p && typeof p.then === 'function') return p
+		} catch {}
+	}
+	if (typeof r.importDefault === 'function') {
+		try {
+			const result = r.importDefault(id)
+			if (result && typeof result.then === 'function') return result
+			return Promise.resolve(result)
+		} catch {}
 	}
 	try { return Promise.resolve(r(id)) } catch { return Promise.resolve(undefined) }
 }
 
 export function openAccountSheet(_userId: string, _channelId?: string) {
 	try {
-		const id = revenge.modules.finders.lookupModule(
-			revenge.modules.finders.filters.withProps('showYouAccountActionSheet'),
-		)?.[1]
-		if (typeof id !== 'number') { forceLoadLazySheets(); return }
+		const id = moduleId('showYouAccountActionSheet')
 		requireLazy(id)
 			.then((ns: any) => {
-				if (ns?.showYouAccountActionSheet) { ns.showYouAccountActionSheet(); return }
+				if (ns?.showYouAccountActionSheet) {
+					ns.showYouAccountActionSheet()
+					return
+				}
+				// Module loaded but the export isn't exposed yet; force-init the
+				// nearby modules so the sheet can resolve on retry.
 				forceLoadLazySheets()
 			})
 			.catch(() => forceLoadLazySheets())

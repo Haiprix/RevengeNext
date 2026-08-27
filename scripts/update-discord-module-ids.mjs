@@ -15,6 +15,11 @@ const TARGET = join(PLUGINS_DIR, 'shared/discord-modules.ts')
 
 const REPO = 'https://raw.githubusercontent.com/lvwmwm/decord/data'
 
+// Modules that are part of Metro/Discord's static runtime bootstrap rather than
+// normal path-mapped modules. Not present in module-paths.json; sourced from the
+// decord data branch source tree instead (see deriveAsyncRequireId).
+const STABLE_RUNTIME_MODULES = new Set(['asyncRequireImpl'])
+
 const current = await import(pathToFileURL(TARGET).href)
 const tracked = Object.keys(current.discordModules)
 
@@ -31,15 +36,42 @@ if (!versionRes.ok || !pathsRes.ok) {
 const remoteBuild = Number((await versionRes.text()).trim())
 const remotePaths = await pathsRes.json()
 
+async function deriveAsyncRequireId() {
+	const treeRes = await fetch(
+		`https://api.github.com/repos/lvwmwm/decord/git/trees/data?recursive=1`,
+	)
+	if (!treeRes.ok) return undefined
+	const tree = await treeRes.json()
+	const entry = tree.tree?.find(
+		(t) => t.type === 'blob' && /_asyncRequireImpl\.js$/.test(t.path),
+	)
+	if (!entry) return undefined
+	const fileRes = await fetch(`${REPO}/${entry.path}`)
+	if (!fileRes.ok) return undefined
+	const match = (await fileRes.text()).match(/\/\/ Module ID: (\d+)/)
+	return match ? Number(match[1]) : undefined
+}
+
 const nextIds = {}
 const missing = []
 for (const path of tracked) {
 	const entry = remotePaths.find(m => m.path === path)
 	if (!entry) {
 		missing.push(path)
+		nextIds[path] = current.discordModules[path]
 		continue
 	}
 	nextIds[path] = entry.id
+}
+
+// Resolve the async require module ID from decord's source tree so it tracks
+// Discord across builds instead of staying a hardcoded constant.
+const asyncRequireId = await deriveAsyncRequireId()
+if (asyncRequireId !== undefined) {
+	nextIds['asyncRequireImpl'] = asyncRequireId
+	// No longer "missing": successfully sourced from the decord source tree.
+	const i = missing.indexOf('asyncRequireImpl')
+	if (i !== -1) missing.splice(i, 1)
 }
 
 const buildChanged = remoteBuild !== current.discordBuild
@@ -75,11 +107,20 @@ if (buildChanged || idsChanged) {
 }
 
 if (missing.length > 0) {
-	console.error(`Missing modules in decord data branch: ${missing.join(', ')}`)
-	console.error(
-		'Keeping their current IDs; the plugin fallback still covers them.',
-	)
-	process.exitCode = 1
+	const stable = missing.filter(p => STABLE_RUNTIME_MODULES.has(p))
+	const unexpected = missing.filter(p => !STABLE_RUNTIME_MODULES.has(p))
+	if (stable.length > 0) {
+		console.log(
+			`Preserved stable runtime module IDs (not tracked by decord): ${stable.join(', ')}`,
+		)
+	}
+	if (unexpected.length > 0) {
+		console.error(`Missing modules in decord data branch: ${unexpected.join(', ')}`)
+		console.error(
+			'Keeping their current IDs; the plugin fallback still covers them.',
+		)
+		process.exitCode = 1
+	}
 }
 
 async function bumpDependentVersions() {

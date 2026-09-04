@@ -115,13 +115,13 @@
       "author": "kmmiio99o",
       "icon": "SettingsIcon",
       "channels": {
-        "latest": "1.1.7"
+        "latest": "1.1.8"
       },
       "versions": {
-        "1.1.7": {
-          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.lib@1.1.7.zip",
-          "sha256": "b6e6e7ed0265936b908b8d6f2355ad79808ef32db6941be9adfd74f72fde5b28",
-          "size": 28868,
+        "1.1.8": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.lib@1.1.8.zip",
+          "sha256": "0d6e66f158e46c010621202966d0b255d2b5f8c096b751d0185d6154b6896170",
+          "size": 28867,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

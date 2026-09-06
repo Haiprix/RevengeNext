@@ -1,5 +1,5 @@
 import { DEFAULTS } from './defaults'
-import { initKmmiioLib } from './lib/modules'
+import { forceLoadLazySheets, initKmmiioLib } from './lib/modules'
 import { patchChatInput } from './lib/patch'
 import { setStorage } from './lib/state'
 import Settings from './settings'
@@ -25,6 +25,10 @@ export default plugin<{ jsonStorage: ChatboxAvatarStorage }>({
 			getErrors: () => plugin.errors,
 		})
 		setStorage(jsonStorage)
+
+		try {
+			forceLoadLazySheets()
+		} catch {}
 
 		try {
 			cleanup(patchChatInput())

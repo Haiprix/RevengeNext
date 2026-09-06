@@ -18,10 +18,11 @@ const LAZY_SHEET_IDS = [
 	moduleId('YouAccountActionSheet'),
 ]
 
-let lazySheetsLoaded = false
-
 export function forceLoadLazySheets(): void {
-	if (lazySheetsLoaded) return
+	// Intentionally NOT permanently gated: plugin start() can run before Discord
+	// is fully initialized, and the on-press path must be able to re-attempt the
+	// load. __r(id) and lookupModule(...,{initialize:true}) are idempotent for
+	// already-initialized modules, so repeating them is safe.
 	const { lookupModule } = revenge.modules.finders
 	const { withProps } = revenge.modules.finders.filters
 	const forceInit = (filter: any) => { try { lookupModule(filter, { initialize: true }) } catch {} }
@@ -32,7 +33,6 @@ export function forceLoadLazySheets(): void {
 	if (typeof requireFn === 'function') {
 		for (const id of LAZY_SHEET_IDS) { try { requireFn(id) } catch {} }
 	}
-	lazySheetsLoaded = true
 }
 
 const ASYNC_REQUIRE_ID = discordModules['asyncRequireImpl']

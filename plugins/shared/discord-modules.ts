@@ -4,11 +4,11 @@
 // latest build. Module paths are stable across builds; you can add/remove entries
 // here and the script only updates the IDs.
 
-export const discordBuild = 345205
+export const discordBuild = 346200
 
 export const discordModules = {
-	'modules/main_tabs_v2/native/tabs/you/utils/showYouAccountActionSheet.tsx': 16369,
-	'modules/main_tabs_v2/native/tabs/you/YouAccountActionSheet.tsx': 16371,
+	'modules/main_tabs_v2/native/tabs/you/utils/showYouAccountActionSheet.tsx': 16372,
+	'modules/main_tabs_v2/native/tabs/you/YouAccountActionSheet.tsx': 16374,
 	'modules/user_profile/native/showUserProfileActionSheet.tsx': 8179,
 	'asyncRequireImpl': 1896,
 } as const

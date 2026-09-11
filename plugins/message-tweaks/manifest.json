@@ -2,7 +2,7 @@
 	"format": 1,
 	"id": "dev.kmmiio99o.message-tweaks",
 	"name": "Message Tweaks",
-	"description": "Message utilities: hide messages just for you, locally edit messages, log deleted and edited messages, precise timestamps and usernames next to nicknames.",
+	"description": "Keep deleted messages in chat with red tint and an edit-history trail, unspoiler everything, precise timestamps, and usernames next to nicknames.",
 	"author": "kmmiio99o",
 	"icon": "SendMessageIcon",
 	"version": "1.0.0",

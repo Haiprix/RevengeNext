@@ -12,6 +12,7 @@ A collection of plugins for the [**Revenge Next**](https://github.com/revenge-mo
 | **Declutter** | Hides profile clutter: avatar decorations, nameplates, profile effects, profile frames, server tags, and badges. |
 | **kmmiio Library** | Shared utility modules and native hooks used by other plugins (MediaSession Bridge, Discord module access, etc.). |
 | **Markdown Toolbar** | Floating markdown formatting bar under chat input. |
+| **Message Tweaks** | Keeps deleted messages in chat with red tint and an edit-history trail, unspoils every spoiler, shows precise timestamps, and usernames next to nicknames. |
 | **Multi Scrobbler** | Show your currently playing track from Last.fm, Libre.fm, ListenBrainz, or your device's media session as a rich presence activity on your Discord profile. |
 | **Server Info** | Displays detailed server information in an action sheet — name, description, icon, creation date, server ID, owner, and banner. |
 

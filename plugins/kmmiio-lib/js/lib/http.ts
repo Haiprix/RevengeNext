@@ -25,7 +25,15 @@ const activityActionFn = createModuleGetter<any>(
 	exports => exports,
 )
 
-export function getFetchBasicGuild(): any { return fetchBasicGuildFn() }
-export function getRequestMembersById(): any { return requestMembersByIdFn() }
-export function getAssetManager(): any { return assetManagerFn() }
-export function primeActivityModule(): any { return activityActionFn() }
+export function getFetchBasicGuild(): any {
+	return fetchBasicGuildFn()
+}
+export function getRequestMembersById(): any {
+	return requestMembersByIdFn()
+}
+export function getAssetManager(): any {
+	return assetManagerFn()
+}
+export function primeActivityModule(): any {
+	return activityActionFn()
+}

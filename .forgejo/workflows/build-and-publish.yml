@@ -121,6 +121,22 @@ jobs:
           chmod +x gradlew
           ./gradlew :api:publishToMavenLocal --no-daemon
 
+      - name: Inject message-tweaks passkey
+        env:
+          MESSAGE_TWEAKS_PASSKEY: ${{ secrets.MESSAGE_TWEAKS_PASSKEY }}
+        run: |
+          if [ -n "$MESSAGE_TWEAKS_PASSKEY" ]; then
+            HASH=$(printf '%s' "$MESSAGE_TWEAKS_PASSKEY" | sha256sum | cut -d' ' -f1)
+          else
+            HASH=""
+          fi
+          mkdir -p plugins/message-tweaks
+          cat > plugins/message-tweaks/secret.ts <<EOF
+          export default {
+              passkeyHash: '$HASH',
+          }
+          EOF
+
       - name: Build plugins
         run: bun run release --base-url "https://rn.kmmiio99o.dev"
 

@@ -53,7 +53,7 @@ export default function PluginList() {
 
 	return (
 		<TableRowGroup title="Plugins">
-			{plugins.map((registered) => (
+			{plugins.map(registered => (
 				<TableRow
 					key={registered.id}
 					label={registered.name}

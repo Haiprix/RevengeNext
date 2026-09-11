@@ -1,6 +1,6 @@
 import DonateCard from './DonateCard'
-import PluginList from './PluginList'
 import FallingStars from './FallingStars'
+import PluginList from './PluginList'
 
 export default function Settings() {
 	const { Page } =

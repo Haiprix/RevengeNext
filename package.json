@@ -10,6 +10,7 @@
 		"dist": "revenge-plugin serve --dist dist --base-url http://127.0.0.1:8080",
 		"version": "bun scripts/version.ts",
 		"release": "bun scripts/release.ts",
+		"gen:secret": "bun scripts/gen-secret.ts",
 		"gen:icons": "node scripts/gen-iconify-barrel.mjs",
 		"update:ids": "bun scripts/update-discord-module-ids.mjs",
 		"lint": "biome check",
@@ -22,10 +23,10 @@
 		"@revenge-mod/types": "git+https://github.com/revenge-mod/revenge-types.git"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.5.10",
+		"@biomejs/biome": "^2.5.13",
 		"@shopify/flash-list": "^2.3.2",
-		"@types/node": "^26.3.0",
-		"@types/react": "^19.2.18",
+		"@types/node": "^26.5.1",
+		"@types/react": "^19.3.0",
 		"react-native": "0.87.0",
 		"typescript": "^7.0.2"
 	},

@@ -1,0 +1,23 @@
+{
+	"format": 1,
+	"id": "dev.kmmiio99o.message-tweaks",
+	"name": "Message Tweaks",
+	"description": "Message utilities: hide messages just for you, locally edit messages, log deleted and edited messages, precise timestamps and usernames next to nicknames.",
+	"author": "kmmiio99o",
+	"icon": "SendMessageIcon",
+	"version": "1.0.0",
+	"dependencies": {
+		"revenge.api": {
+			"version": ">=1"
+		},
+		"discord": {
+			"version": "*"
+		},
+		"dev.kmmiio99o.lib": {
+			"version": ">=1"
+		}
+	},
+	"dist": {
+		"script": "index.js"
+	}
+}

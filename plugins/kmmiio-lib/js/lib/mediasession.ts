@@ -43,7 +43,10 @@ export function getCurrentMediaInfo(): Promise<MediaSessionInfo | null> {
 		.catch(() => null)
 }
 
-export function sendMediaCommand(action: string, ...params: any[]): Promise<boolean> {
+export function sendMediaCommand(
+	action: string,
+	...params: any[]
+): Promise<boolean> {
 	if (!isNativeAvailable()) return Promise.resolve(false)
 	return revenge.modules.native
 		.callNativeMethod('mediasession.sendMediaCommand', [action, ...params])

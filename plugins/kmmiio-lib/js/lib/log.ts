@@ -30,7 +30,13 @@ export function addLog(entry: Omit<LogEntry, 'timestamp'>) {
 	notify()
 }
 
-export function logUsage(pluginId: string, module: string, action: string, found: boolean, detail?: string) {
+export function logUsage(
+	pluginId: string,
+	module: string,
+	action: string,
+	found: boolean,
+	detail?: string,
+) {
 	addLog({ id: pluginId, module, action, attempt: 1, found, detail })
 }
 
@@ -59,5 +65,7 @@ export function clearLogs(pluginId?: string) {
 
 export function onLogChange(fn: () => void): () => void {
 	listeners.add(fn)
-	return () => { listeners.delete(fn) }
+	return () => {
+		listeners.delete(fn)
+	}
 }

@@ -1,4 +1,4 @@
-import { SPONSORS_URL, GITHUB_URL, WEBSITE_URL, AVATAR_URL } from './constants'
+import { AVATAR_URL, GITHUB_URL, SPONSORS_URL, WEBSITE_URL } from './constants'
 
 const { Dimensions } = revenge.react.ReactNative
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
@@ -23,9 +23,14 @@ const styles = {
 	},
 }
 
-export default function DonateCard({ onAvatarPress }: { onAvatarPress: () => void }) {
+export default function DonateCard({
+	onAvatarPress,
+}: {
+	onAvatarPress: () => void
+}) {
 	const { Stack, Card, Text, Button } = revenge.discord.design.Design
-	const { Animated, Image, Linking, Pressable, View } = revenge.react.ReactNative
+	const { Animated, Image, Linking, Pressable, View } =
+		revenge.react.ReactNative
 	const { useRef } = revenge.react.React
 
 	const spinAnim = useRef(new Animated.Value(0)).current
@@ -88,7 +93,9 @@ export default function DonateCard({ onAvatarPress }: { onAvatarPress: () => voi
 					},
 				]}
 			/>
-			<View style={{ flexDirection: 'row', padding: 16, alignItems: 'flex-start' }}>
+			<View
+				style={{ flexDirection: 'row', padding: 16, alignItems: 'flex-start' }}
+			>
 				<View style={{ flex: 1, marginRight: 16 }}>
 					<View style={{ marginBottom: 6 }}>
 						<Text variant="heading-lg/semibold" color="text-strong">
@@ -97,10 +104,18 @@ export default function DonateCard({ onAvatarPress }: { onAvatarPress: () => voi
 					</View>
 					<View style={{ marginBottom: 12 }}>
 						<Text variant="text-md/medium">
-							You can support the development of my plugins by sponsoring on GitHub!
+							You can support the development of my plugins by sponsoring on
+							GitHub!
 						</Text>
 					</View>
-					<View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+					<View
+						style={{
+							flexDirection: 'row',
+							flexWrap: 'wrap',
+							gap: 8,
+							alignItems: 'center',
+						}}
+					>
 						<Button
 							size="sm"
 							icon={revenge.assets.getAssetIdByName('HeartIcon')}
@@ -133,18 +148,15 @@ export default function DonateCard({ onAvatarPress }: { onAvatarPress: () => voi
 					style={styles.avatarWrapper}
 					hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 				>
-				<Animated.View
-					style={{
-						width: AVATAR_SIZE,
-						height: AVATAR_SIZE,
-						borderRadius: AVATAR_SIZE / 2,
-						transform: [{ rotate }, { scale: scaleAnim }],
-					}}
-				>
-						<Image
-							source={{ uri: AVATAR_URL }}
-							style={styles.avatar}
-						/>
+					<Animated.View
+						style={{
+							width: AVATAR_SIZE,
+							height: AVATAR_SIZE,
+							borderRadius: AVATAR_SIZE / 2,
+							transform: [{ rotate }, { scale: scaleAnim }],
+						}}
+					>
+						<Image source={{ uri: AVATAR_URL }} style={styles.avatar} />
 					</Animated.View>
 				</Pressable>
 			</View>

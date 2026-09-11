@@ -13,19 +13,34 @@ const registry = new Map<string, RegisteredPlugin>()
 const listeners = new Set<() => void>()
 
 function notify() {
-	console.log('[kmmiio-lib] registry: notify, size:', registry.size, 'keys:', Array.from(registry.keys()))
+	console.log(
+		'[kmmiio-lib] registry: notify, size:',
+		registry.size,
+		'keys:',
+		Array.from(registry.keys()),
+	)
 	for (const fn of listeners) fn()
 }
 
 export function registerPlugin(plugin: RegisteredPlugin) {
-	console.log('[kmmiio-lib] registry: registerPlugin called, id:', plugin.id, 'name:', plugin.name)
+	console.log(
+		'[kmmiio-lib] registry: registerPlugin called, id:',
+		plugin.id,
+		'name:',
+		plugin.name,
+	)
 	registry.set(plugin.id, plugin)
 	notify()
 }
 
 export function getRegisteredPlugin(id: string): RegisteredPlugin | undefined {
 	const result = registry.get(id)
-	console.log('[kmmiio-lib] registry: getRegisteredPlugin(', id, ') =>', result?.name ?? 'undefined')
+	console.log(
+		'[kmmiio-lib] registry: getRegisteredPlugin(',
+		id,
+		') =>',
+		result?.name ?? 'undefined',
+	)
 	return result
 }
 
@@ -34,7 +49,12 @@ export function getAllRegisteredPlugins(): RegisteredPlugin[] {
 }
 
 export function onRegistryChange(fn: () => void): () => void {
-	console.log('[kmmiio-lib] registry: onRegistryChange listener added, current size:', registry.size)
+	console.log(
+		'[kmmiio-lib] registry: onRegistryChange listener added, current size:',
+		registry.size,
+	)
 	listeners.add(fn)
-	return () => { listeners.delete(fn) }
+	return () => {
+		listeners.delete(fn)
+	}
 }

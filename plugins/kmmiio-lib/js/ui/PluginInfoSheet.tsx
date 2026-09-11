@@ -21,8 +21,18 @@ function getRegistry() {
 
 export default function PluginInfoSheet({ pluginId }: { pluginId: string }) {
 	const Design = revenge.discord.design.Design as any
-	const { ActionSheet, BottomSheetTitleHeader, ActionSheetCloseButton, TableRowGroup, TableRow, Stack, Card, Text } = Design
-	const ScrollContainer = getScrollContainer() ?? (revenge.react.ReactNative as any).ScrollView
+	const {
+		ActionSheet,
+		BottomSheetTitleHeader,
+		ActionSheetCloseButton,
+		TableRowGroup,
+		TableRow,
+		Stack,
+		Card,
+		Text,
+	} = Design
+	const ScrollContainer =
+		getScrollContainer() ?? (revenge.react.ReactNative as any).ScrollView
 
 	const kmmiio = getRegistry()
 	const registered = kmmiio?.getRegisteredPlugin?.(pluginId)
@@ -49,7 +59,9 @@ export default function PluginInfoSheet({ pluginId }: { pluginId: string }) {
 
 	let iconSource: number | undefined
 	try {
-		iconSource = revenge.assets.getAssetIdByName(registered.icon ?? 'PuzzlePieceIcon')
+		iconSource = revenge.assets.getAssetIdByName(
+			registered.icon ?? 'PuzzlePieceIcon',
+		)
 	} catch {}
 
 	return (
@@ -89,7 +101,10 @@ export default function PluginInfoSheet({ pluginId }: { pluginId: string }) {
 				<Stack spacing={16} style={{ paddingHorizontal: 16 }}>
 					<TableRowGroup title="Info">
 						<TableRow label="Version" subLabel={version} />
-						<TableRow label="Author" subLabel={registered.author ?? 'Unknown'} />
+						<TableRow
+							label="Author"
+							subLabel={registered.author ?? 'Unknown'}
+						/>
 						<TableRow label="Description" subLabel={registered.description} />
 						<TableRow label="Status" subLabel={status} />
 					</TableRowGroup>
@@ -117,10 +132,28 @@ export default function PluginInfoSheet({ pluginId }: { pluginId: string }) {
 											: revenge.assets.getAssetIdByName('CircleXIcon')
 										return (
 											<View key={i} style={{ marginBottom: 8 }}>
-												<View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-													<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+												<View
+													style={{
+														flexDirection: 'row',
+														justifyContent: 'space-between',
+														alignItems: 'center',
+													}}
+												>
+													<View
+														style={{
+															flexDirection: 'row',
+															alignItems: 'center',
+														}}
+													>
 														{iconId != null && (
-															<Image source={iconId} style={{ width: 16, height: 16, marginRight: 6 }} />
+															<Image
+																source={iconId}
+																style={{
+																	width: 16,
+																	height: 16,
+																	marginRight: 6,
+																}}
+															/>
 														)}
 														<Text variant="text-sm/semibold">{log.module}</Text>
 													</View>

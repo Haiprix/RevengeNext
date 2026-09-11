@@ -40,7 +40,8 @@ function createStar(): Star {
 
 function animateStar(star: Star) {
 	const rad = (star.angle * Math.PI) / 180
-	const travel = Math.sqrt(SCREEN_WIDTH * SCREEN_WIDTH + SCREEN_HEIGHT * SCREEN_HEIGHT) + 300
+	const travel =
+		Math.sqrt(SCREEN_WIDTH * SCREEN_WIDTH + SCREEN_HEIGHT * SCREEN_HEIGHT) + 300
 
 	const sx = -100 - Math.random() * 150
 	const sy = -100 - Math.random() * 200

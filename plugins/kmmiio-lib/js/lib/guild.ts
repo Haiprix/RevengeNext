@@ -1,15 +1,25 @@
-export function waitForGuildsBarGuildMenu(callback: (ns: any) => void): () => void {
+export function waitForGuildsBarGuildMenu(
+	callback: (ns: any) => void,
+): () => void {
 	let fired = false
 	const once = (exports: any) => {
 		if (fired) return
 		const ns = exports?.default !== undefined ? exports : { default: exports }
 		if (typeof ns.default !== 'function') return
 		fired = true
-		try { callback(ns) } catch {}
+		try {
+			callback(ns)
+		} catch {}
 	}
 	try {
 		const { getModules, filters } = revenge.modules.finders
-		return getModules(filters.withName('getGuildsBarGuildMenuItems'), (exports: any) => once(exports), { returnNamespace: true })
+		return getModules(
+			filters.withName('getGuildsBarGuildMenuItems'),
+			(exports: any) => once(exports),
+			{ returnNamespace: true },
+		)
 	} catch {}
-	return () => { fired = true }
+	return () => {
+		fired = true
+	}
 }

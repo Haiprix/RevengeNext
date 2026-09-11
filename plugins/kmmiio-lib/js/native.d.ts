@@ -18,7 +18,10 @@ declare module '#lib/modules/native' {
 			void,
 		]
 		'mediasession.getCurrentMediaInfo': [[], Record<string, any> | null]
-		'mediasession.sendMediaCommand': [[action: string, ...params: any[]], boolean]
+		'mediasession.sendMediaCommand': [
+			[action: string, ...params: any[]],
+			boolean,
+		]
 		'mediasession.isAvailable': [[], boolean]
 		'mediasession.openNotificationListenerSettings': [[], boolean]
 		'mediasession.getNotificationListenerStatus': [[], boolean]

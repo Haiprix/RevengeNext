@@ -1,8 +1,11 @@
 import { createModuleGetter } from './modules'
 
 const withGeneratedIconComponent = ((): any => {
-	try { return (revenge as any).utils.discord.withGeneratedIconComponent }
-	catch { return undefined }
+	try {
+		return (revenge as any).utils.discord.withGeneratedIconComponent
+	} catch {
+		return undefined
+	}
 })()
 
 const { withProps } = revenge.modules.finders.filters

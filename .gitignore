@@ -5,6 +5,9 @@ plugins/*/build/
 local.properties
 .kotlin/
 
+# Plugin secrets
+plugins/*/secret.ts
+
 # JS
 node_modules/
 bun.lockb

@@ -93,8 +93,8 @@
       "versions": {
         "1.1.1": {
           "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.declutter@1.1.1.zip",
-          "sha256": "d9a3c2a822bc9d452da1b6941295ea36320e3dd4f0ecc04d04817139f11b0e63",
-          "size": 3606,
+          "sha256": "ef831ad91ef33488f9dab4c117a1b059ba716f913f14edc5efbd7dd344db0032",
+          "size": 3599,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -115,13 +115,13 @@
       "author": "kmmiio99o",
       "icon": "SettingsIcon",
       "channels": {
-        "latest": "1.1.14"
+        "latest": "1.1.16"
       },
       "versions": {
-        "1.1.14": {
-          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.lib@1.1.14.zip",
-          "sha256": "2adf4672017f71b6dd5c33dc8c09d8df5b4d624f19b417807cf2f57070796fdd",
-          "size": 28857,
+        "1.1.16": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.lib@1.1.16.zip",
+          "sha256": "eb9fb7a3507e52dbf2a99ff35720974d6f24b7b1f8e49fee0dfd14680f83cb11",
+          "size": 28913,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -160,6 +160,33 @@
         }
       }
     },
+    "dev.kmmiio99o.message-tweaks": {
+      "name": "Message Tweaks",
+      "description": "Keep deleted messages in chat with red tint and an edit-history trail, unspoiler everything, precise timestamps, and usernames next to nicknames.",
+      "author": "kmmiio99o",
+      "icon": "SendMessageIcon",
+      "channels": {
+        "latest": "1.0.0"
+      },
+      "versions": {
+        "1.0.0": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.message-tweaks@1.0.0.zip",
+          "sha256": "b9ec6366958d13b54e04390bfb6b2be378a00f0806e543d5d9e319b47688b982",
+          "size": 6870,
+          "dependencies": {
+            "revenge.api": {
+              "version": ">=1"
+            },
+            "discord": {
+              "version": "*"
+            },
+            "dev.kmmiio99o.lib": {
+              "version": ">=1"
+            }
+          }
+        }
+      }
+    },
     "dev.kmmiio99o.multi-scrobbler": {
       "name": "Multi Scrobbler",
       "description": "Show off your music status from Last.fm, Libre.fm, or ListenBrainz on your Discord profile with comprehensive console logging.",
@@ -171,8 +198,8 @@
       "versions": {
         "1.2.0": {
           "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.multi-scrobbler@1.2.0.zip",
-          "sha256": "396b0de3958039a1742f4aa6301e0807d99dbb0f9313e90fd686681719fb98ae",
-          "size": 15220,
+          "sha256": "508f17b2c31ec618ba1cebb54035e5351224f028f1489dffa04c35d4b8abee22",
+          "size": 15209,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -198,8 +225,8 @@
       "versions": {
         "1.2.0": {
           "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.server-info@1.2.0.zip",
-          "sha256": "855bbfb3e7fe28dfd3ebb7266de787c611df9ec9eb143e81f43b9549e6b7bb8f",
-          "size": 4378,
+          "sha256": "e8818332d94834c92e4257a11460dd849087e73432f1708c7a6cccd9abe37db0",
+          "size": 4376,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

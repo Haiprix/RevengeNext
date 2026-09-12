@@ -1,0 +1,99 @@
+.admin-head {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 8px;
+}
+
+.login-screen {
+	min-height: calc(100dvh - 48px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.login-screen .card {
+	width: 100%;
+	max-width: 380px;
+}
+
+.admin-head .tabs {
+	flex: 1;
+	min-width: 0;
+}
+
+.admin-head .tabs__tab {
+	flex: 1;
+}
+
+.queue-grid {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.queue-grid .card + .card {
+	margin-top: 0;
+}
+
+@media (min-width: 700px) {
+	.queue-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+		align-items: stretch;
+	}
+}
+
+.db-toolbar {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin: 16px 0;
+	flex-wrap: wrap;
+}
+
+.db-filters {
+	display: flex;
+	gap: 6px;
+	flex-wrap: wrap;
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
+
+.chip {
+	font: inherit;
+	font-size: 13px;
+	line-height: 1;
+	border: 1px solid var(--md-outline);
+	border-radius: 999px;
+	padding: 7px 12px;
+	background: transparent;
+	color: inherit;
+	cursor: pointer;
+	text-transform: capitalize;
+	transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.chip:hover {
+	background: var(--md-surface-container-highest);
+}
+
+.chip--active {
+	background: var(--md-primary);
+	border-color: var(--md-primary);
+	color: var(--md-on-primary);
+}
+
+.db-count {
+	margin-left: auto;
+	font-variant-numeric: tabular-nums;
+}
+
+.db-pager {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	margin-top: 16px;
+}

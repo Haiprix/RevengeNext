@@ -1,0 +1,49 @@
+.card {
+	position: relative;
+	border-radius: 12px;
+	padding: 16px;
+}
+
+.card--elevated {
+	background: var(--md-surface-container-low);
+	box-shadow: var(--md-shadow-1);
+}
+
+.card--filled {
+	background: var(--md-surface-container-highest);
+}
+
+.card--outlined {
+	background: var(--md-surface);
+	border: 1px solid var(--md-outline-variant);
+}
+
+.card + .card {
+	margin-top: 12px;
+}
+
+.card__headline {
+	margin: 0 0 4px;
+	font-size: 16px;
+	font-weight: 500;
+	letter-spacing: 0.1px;
+	line-height: 1.4;
+}
+
+.card__supporting {
+	margin: 0;
+	color: var(--md-on-surface-variant);
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+.card__supporting + .card__supporting {
+	margin-top: 2px;
+}
+
+.card__actions {
+	display: flex;
+	gap: 8px;
+	margin-top: 12px;
+	flex-wrap: wrap;
+}

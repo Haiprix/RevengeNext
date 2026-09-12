@@ -1,0 +1,76 @@
+.text-field {
+	display: block;
+	margin: 8px 0;
+}
+
+.text-field__box {
+	position: relative;
+	display: block;
+	background: var(--md-surface-container-highest);
+	border-radius: 4px 4px 0 0;
+	border-bottom: 1px solid var(--md-on-surface-variant);
+	transition: border-color 0.15s, background 0.15s;
+}
+
+.text-field__box:focus-within {
+	border-bottom: 2px solid var(--md-primary);
+}
+
+.text-field__input {
+	width: 100%;
+	min-height: 56px;
+	padding: 22px 16px 6px;
+	border: 0;
+	outline: 0;
+	background: transparent;
+	color: var(--md-on-surface);
+	font-family: inherit;
+	font-size: 16px;
+}
+
+textarea.text-field__input {
+	resize: vertical;
+	font-family: inherit;
+}
+
+.text-field__label {
+	position: absolute;
+	left: 16px;
+	top: 17px;
+	color: var(--md-on-surface-variant);
+	font-size: 16px;
+	pointer-events: none;
+	transition: top 0.15s, font-size 0.15s, color 0.15s;
+}
+
+.text-field__input:focus + .text-field__label,
+.text-field__input:not(:placeholder-shown) + .text-field__label {
+	top: 9px;
+	font-size: 12px;
+	color: var(--md-primary);
+}
+
+.text-field__box:focus-within .text-field__label {
+	color: var(--md-primary);
+}
+
+.text-field__supporting {
+	display: block;
+	padding: 6px 16px 4px;
+	color: var(--md-on-surface-variant);
+	font-size: 12px;
+	line-height: 1.4;
+	min-height: 0;
+}
+
+.text-field__supporting--error {
+	color: var(--md-error);
+}
+
+.text-field__input[data-invalid='true'] ~ .text-field__label {
+	color: var(--md-error);
+}
+
+.text-field__box[data-invalid='true'] {
+	border-bottom: 2px solid var(--md-error);
+}

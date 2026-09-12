@@ -1,0 +1,77 @@
+.button {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	min-height: 40px;
+	padding: 0 24px;
+	border: 0;
+	border-radius: 20px;
+	background: transparent;
+	color: var(--md-primary);
+	font-family: inherit;
+	font-size: 14px;
+	font-weight: 500;
+	letter-spacing: 0.1px;
+	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+	overflow: hidden;
+	transition: opacity 0.15s, box-shadow 0.2s var(--ease-out),
+		transform 0.1s var(--ease-out);
+}
+
+.button::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	background: currentColor;
+	opacity: 0;
+	transform: scale(0.4);
+	transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+	pointer-events: none;
+}
+
+.button:active {
+	transform: scale(0.97);
+}
+
+.button:active::after {
+	opacity: 0.14;
+	transform: scale(1.6);
+}
+
+.button--filled {
+	background: var(--md-primary);
+	color: var(--md-on-primary);
+}
+
+.button--tonal {
+	background: var(--md-secondary-container);
+	color: var(--md-on-secondary-container);
+}
+
+.button--outlined {
+	border: 1px solid var(--md-outline);
+	color: var(--md-primary);
+}
+
+.button--elevated {
+	background: var(--md-surface-container-low);
+	color: var(--md-primary);
+	box-shadow: var(--md-shadow-1);
+}
+
+.button--text {
+	color: var(--md-primary);
+}
+
+.button--block {
+	width: 100%;
+}
+
+.button:disabled {
+	opacity: 0.38;
+	pointer-events: none;
+}

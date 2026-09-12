@@ -1,0 +1,30 @@
+.tabs {
+	display: flex;
+	gap: 8px;
+	padding: 4px;
+	margin: 0 -4px 12px;
+	border-radius: 12px;
+	background: var(--md-surface-container-high);
+	overflow-x: auto;
+}
+
+.tabs__tab {
+	flex: 1;
+	white-space: nowrap;
+	min-height: 40px;
+	padding: 0 16px;
+	border: 0;
+	border-radius: 10px;
+	background: transparent;
+	color: var(--md-on-surface-variant);
+	font-family: inherit;
+	font-size: 14px;
+	font-weight: 500;
+	cursor: pointer;
+}
+
+.tabs__tab--active {
+	background: var(--md-surface-container-lowest);
+	color: var(--md-on-surface);
+	box-shadow: var(--md-shadow-1);
+}

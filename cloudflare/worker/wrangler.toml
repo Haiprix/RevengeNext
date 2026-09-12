@@ -1,0 +1,13 @@
+name = "altmaster"
+main = "src/index.ts"
+compatibility_date = "2025-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "altmaster"
+database_id = "9608db8f-2c0a-46f5-93ab-8c55a54824dc"
+
+[assets]
+directory = "../web/dist"
+not_found_handling = "single-page-application"
+binding = "ASSETS"

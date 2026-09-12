@@ -1,0 +1,10 @@
+.user-avatar {
+	border-radius: 50%;
+	background: var(--md-surface-container-highest);
+	object-fit: cover;
+	flex-shrink: 0;
+}
+
+.user-avatar--default {
+	filter: saturate(0.9);
+}

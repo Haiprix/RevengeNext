@@ -1,0 +1,37 @@
+.snackbar {
+	position: fixed;
+	left: 16px;
+	right: 16px;
+	bottom: calc(84px + env(safe-area-inset-bottom));
+	z-index: 50;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	max-width: 720px;
+	margin: 0 auto;
+	padding: 14px 16px;
+	border-radius: 8px;
+	background: var(--md-inverse-surface);
+	color: var(--md-inverse-on-surface);
+	font-size: 14px;
+	line-height: 1.4;
+	box-shadow: var(--md-shadow-3);
+	animation: snackbar-in 0.2s ease-out;
+}
+
+@keyframes snackbar-in {
+	from {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@media (min-width: 900px) {
+	.snackbar {
+		bottom: 16px;
+	}
+}

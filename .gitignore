@@ -8,6 +8,12 @@ local.properties
 # Plugin secrets
 plugins/*/secret.ts
 
+# Vendor / decompiled sources
+Themelings/
+midroid/
+revenge-bundle-next/
+revenge-xposed/
+
 # JS
 node_modules/
 bun.lockb

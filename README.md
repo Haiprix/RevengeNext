@@ -6,6 +6,7 @@ A collection of plugins for the [**Revenge Next**](https://github.com/revenge-mo
 
 | Plugin | Description |
 |--------|-------------|
+| **AltMaster** | Lets you check which accounts a user is linked to, report suspected alt-account links, and dispute false positives — backed by a community-run website. |
 | **AlwaysTrust** | Removes the untrusted link confirmation when opening external links. |
 | **Chatbox Avatar** | Adds a quick tap target in the chatbox to view your own profile — press to open your profile, long-press to open your account sheet. |
 | **Chat Bubbles** | Styles messages into chat bubbles with rounded corners and a customizable accent color, plus a rounded-square profile picture. |
@@ -43,6 +44,8 @@ https://rn.kmmiio99o.dev/
 
 ### ℹ️ Notes
 
+- **AltMaster** works with a community-run website: search any Discord user ID to see linked accounts, report suspicious links, and dispute wrong ones at
+  [altmaster.kmmiio99o.workers.dev](https://altmaster.kmmiio99o.workers.dev). Moderators review reports and false-positive appeals before they go live.
 - This repository contains ports of plugins originally developed for
   [vd-plugins](https://github.com/kmmiio99o/vd-plugins) to **Revenge Next**.
 - **Libre.fm** uses a fixed 60-second update interval per the service's rate-limiting requirements.

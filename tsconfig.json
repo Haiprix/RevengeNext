@@ -15,5 +15,5 @@
 		}
 	},
 	"include": ["plugins", "types"],
-	"exclude": ["plugins/*/build"]
+	"exclude": ["plugins/*/build", "cloudflare"]
 }

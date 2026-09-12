@@ -4,6 +4,33 @@
   "description": "Revenge Next plugins by kmmiio99o. Ports of vd-plugins and other ones.",
   "icon": "SettingsIcon",
   "plugins": {
+    "dev.kmmiio99o.altmaster": {
+      "name": "AltMaster",
+      "description": "Check linked alt accounts, report a new alt, and appeal false positives — right from the user profile context menu.",
+      "author": "kmmiio99o",
+      "icon": "ShieldIcon",
+      "channels": {
+        "latest": "1.0.0"
+      },
+      "versions": {
+        "1.0.0": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.altmaster@1.0.0.zip",
+          "sha256": "43db66a68cb9f01b391142b092d10c7bb4a1d4737d8bb7f6b6d8944f456dd5e7",
+          "size": 5819,
+          "dependencies": {
+            "revenge.api": {
+              "version": ">=1"
+            },
+            "discord": {
+              "version": "*"
+            },
+            "dev.kmmiio99o.lib": {
+              "version": ">=1"
+            }
+          }
+        }
+      }
+    },
     "dev.kmmiio99o.alwaystrust": {
       "name": "Always Trust",
       "description": "Remove untrusted link confirmation.",

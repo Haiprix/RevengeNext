@@ -17,10 +17,10 @@ export function patchWishlist(): () => void {
 						if (!enabled()) return original(...args)
 						if (!Array.isArray(args[0]?.items)) return original(...args)
 						const items = args[0].items
-						if (!items.some((i: any) => i?.id === 'wishlist' || i?.id === 'board')) {
+						if (!items.some((i: any) => i?.id === 'wishlist' || i?.id === 'board' || i?.id === 'activity')) {
 							return original(...args)
 						}
-						const filtered = items.filter((i: any) => i?.id !== 'wishlist' && i?.id !== 'board')
+						const filtered = items.filter((i: any) => i?.id !== 'wishlist' && i?.id !== 'board' && i?.id !== 'activity')
 						return original({ ...args[0], items: filtered })
 					}),
 				)

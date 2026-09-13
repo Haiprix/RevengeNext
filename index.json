@@ -142,13 +142,13 @@
       "author": "kmmiio99o",
       "icon": "SettingsIcon",
       "channels": {
-        "latest": "1.1.17"
+        "latest": "1.2.0"
       },
       "versions": {
-        "1.1.17": {
-          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.lib@1.1.17.zip",
-          "sha256": "469276c6b0e62ccddec6168096606f2cded1757fee9ab55db3b32ae1c5b56466",
-          "size": 28914,
+        "1.2.0": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.lib@1.2.0.zip",
+          "sha256": "d34af010e8c01dc8b68fc65b5aec9cb955b2febabae5052bc5dbeadf3449a28e",
+          "size": 29202,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -236,6 +236,33 @@
             },
             "dev.kmmiio99o.lib": {
               "version": ">=1"
+            }
+          }
+        }
+      }
+    },
+    "dev.kmmiio99o.server-drawer": {
+      "name": "Server Drawer",
+      "description": "Server Drawer above the YouBar, manage your servers differently! Now fully hides the Quest Dock/GuildsBar, adds a DM tile, optional server-name labels, and a settings screen.",
+      "author": "kmmiio99o",
+      "icon": "FolderIcon",
+      "channels": {
+        "latest": "1.0.0"
+      },
+      "versions": {
+        "1.0.0": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.server-drawer@1.0.0.zip",
+          "sha256": "0e2f6e29882f7ef4582f48f5d44a21ee0f37a5de2dd7effb33c1319add4093ac",
+          "size": 9164,
+          "dependencies": {
+            "revenge.api": {
+              "version": ">=1"
+            },
+            "discord": {
+              "version": "*"
+            },
+            "dev.kmmiio99o.lib": {
+              "version": ">=1.2.0"
             }
           }
         }

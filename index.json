@@ -115,13 +115,13 @@
       "author": "kmmiio99o",
       "icon": "MagicWandIcon",
       "channels": {
-        "latest": "1.1.1"
+        "latest": "1.1.2"
       },
       "versions": {
-        "1.1.1": {
-          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.declutter@1.1.1.zip",
-          "sha256": "ef831ad91ef33488f9dab4c117a1b059ba716f913f14edc5efbd7dd344db0032",
-          "size": 3599,
+        "1.1.2": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.declutter@1.1.2.zip",
+          "sha256": "7e473d4160bad67fad88ecde900b52e24b724337b530ac2e47e711954a8c1340",
+          "size": 3610,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

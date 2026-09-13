@@ -1,5 +1,3 @@
-/// <reference types="@revenge-mod/types/hidden" />
-
 const { useRef, useEffect, useState } = revenge.react.React
 const { Animated, View, Dimensions } = revenge.react.ReactNative
 

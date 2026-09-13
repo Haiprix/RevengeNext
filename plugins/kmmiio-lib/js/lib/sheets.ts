@@ -37,28 +37,27 @@ export function forceLoadLazySheets(): void {
 	forceInit(withProps('showUserProfileActionSheetPostConnection'))
 	forceInit(withProps('showYouAccountActionSheet'))
 	forceInit(withProps('requestMembersById'))
-	const requireFn = (globalThis as any)?.__r
-	if (typeof requireFn === 'function') {
-		for (const id of LAZY_SHEET_IDS) {
-			try {
-				requireFn(id)
-			} catch {}
-		}
+	for (const id of LAZY_SHEET_IDS) {
+		forceLoadModule(id)
 	}
 }
 
-const ASYNC_REQUIRE_ID = discordModules['asyncRequireImpl']
+const ASYNC_REQUIRE_ID = discordModules.asyncRequireImpl
+
+function getAsyncRequire(): any {
+	const r = (globalThis as any)?.__r
+	if (typeof r !== 'function') return () => {}
+	try {
+		return r(ASYNC_REQUIRE_ID)?.default ?? r(ASYNC_REQUIRE_ID)
+	} catch {
+		return () => {}
+	}
+}
 
 function requireLazy(id: number): Promise<any> {
 	const r = (globalThis as any)?.__r
 	if (typeof r !== 'function') return Promise.resolve(undefined)
-	const asyncRequire = (() => {
-		try {
-			return r(ASYNC_REQUIRE_ID)?.default ?? r(ASYNC_REQUIRE_ID)
-		} catch {
-			return undefined
-		}
-	})()
+	const asyncRequire = getAsyncRequire()
 	if (typeof asyncRequire === 'function') {
 		try {
 			const p = asyncRequire(id)
@@ -77,6 +76,51 @@ function requireLazy(id: number): Promise<any> {
 	} catch {
 		return Promise.resolve(undefined)
 	}
+}
+
+// Force-load a module synchronously (asyncRequire then __r fallback).
+// Idempotent: __r and asyncRequire are safe to repeat for loaded modules.
+export function forceLoadModule(id: number): void {
+	const r = (globalThis as any)?.__r
+	if (typeof r !== 'function') return
+	if (typeof id !== 'number') return
+	try {
+		const asyncRequire = getAsyncRequire()
+		if (typeof asyncRequire === 'function') asyncRequire(id)
+	} catch {}
+	try {
+		r(id)
+	} catch {}
+}
+
+// Create-guild modal ActionCreators is in a lazy chunk (module ID from
+// plugins/shared/discord-modules.ts). It internally requires 12838 (the modal
+// component) once evaluated, so loading this one module is sufficient.
+const CREATE_GUILD_ID =
+	discordModules[
+		'modules/create_guild/native/CreateGuildModalActionCreators.tsx'
+	]
+
+export function forceLoadCreateGuild(): void {
+	if (typeof CREATE_GUILD_ID !== 'number') return
+	forceLoadModule(CREATE_GUILD_ID)
+}
+
+export function openCreateGuildModal() {
+	try {
+		forceLoadCreateGuild()
+	} catch {}
+	if (typeof CREATE_GUILD_ID !== 'number') return
+	requireLazy(CREATE_GUILD_ID)
+		.then((ns: any) => {
+			const create = ns?.default?.openCreateGuildModal ? ns.default : ns
+			if (typeof create?.openCreateGuildModal === 'function') {
+				create.openCreateGuildModal()
+				return
+			}
+			forceLoadCreateGuild()
+		})
+		.catch(() => forceLoadCreateGuild())
 }
 
 export function openAccountSheet(_userId: string, _channelId?: string) {

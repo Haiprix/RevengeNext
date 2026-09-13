@@ -1,5 +1,3 @@
-/// <reference types="@revenge-mod/types/hidden" />
-
 import * as Actions from './lib/actions'
 import * as Avatar from './lib/avatar'
 import * as Filters from './lib/filters'

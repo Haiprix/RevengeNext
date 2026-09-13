@@ -10,5 +10,6 @@ export const discordModules = {
 	'modules/main_tabs_v2/native/tabs/you/utils/showYouAccountActionSheet.tsx': 16464,
 	'modules/main_tabs_v2/native/tabs/you/YouAccountActionSheet.tsx': 16466,
 	'modules/user_profile/native/showUserProfileActionSheet.tsx': 8296,
+	'modules/create_guild/native/CreateGuildModalActionCreators.tsx': 12837,
 	'asyncRequireImpl': 1896,
 } as const

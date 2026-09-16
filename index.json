@@ -115,13 +115,13 @@
       "author": "kmmiio99o",
       "icon": "MagicWandIcon",
       "channels": {
-        "latest": "1.1.2"
+        "latest": "1.1.3"
       },
       "versions": {
-        "1.1.2": {
-          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.declutter@1.1.2.zip",
-          "sha256": "7e473d4160bad67fad88ecde900b52e24b724337b530ac2e47e711954a8c1340",
-          "size": 3610,
+        "1.1.3": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.declutter@1.1.3.zip",
+          "sha256": "d170627b9adf32bd3043705a46923799d95a7365d0263ffd6e0e8e441909abe3",
+          "size": 3765,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -142,13 +142,13 @@
       "author": "kmmiio99o",
       "icon": "SettingsIcon",
       "channels": {
-        "latest": "1.2.3"
+        "latest": "1.2.4"
       },
       "versions": {
-        "1.2.3": {
-          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.lib@1.2.3.zip",
-          "sha256": "5dd6e56b44bd3d8cebec547d714d9c36b9b8a1f7d0bd76e3bc8843580ae8def2",
-          "size": 29205,
+        "1.2.4": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.lib@1.2.4.zip",
+          "sha256": "d5f5cd424de0808d73ef1fb2aad3d361f4bb73b8122d8edcf7f96685f3e2487b",
+          "size": 29301,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -247,13 +247,13 @@
       "author": "kmmiio99o",
       "icon": "FolderIcon",
       "channels": {
-        "latest": "1.0.0"
+        "latest": "1.0.1"
       },
       "versions": {
-        "1.0.0": {
-          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.server-drawer@1.0.0.zip",
-          "sha256": "0e2f6e29882f7ef4582f48f5d44a21ee0f37a5de2dd7effb33c1319add4093ac",
-          "size": 9164,
+        "1.0.1": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.server-drawer@1.0.1.zip",
+          "sha256": "f0fdf13e4c72fd53e6ec53d37ed88ab5f37d519db968c2a3b1245f8e7ad68988",
+          "size": 9337,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

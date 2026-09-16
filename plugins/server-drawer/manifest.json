@@ -5,7 +5,7 @@
 	"description": "Server Drawer above the YouBar, manage your servers differently! Now fully hides the Quest Dock/GuildsBar, adds a DM tile, optional server-name labels, and a settings screen.",
 	"author": "kmmiio99o",
 	"icon": "FolderIcon",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"dependencies": {
 		"revenge.api": { "version": ">=1" },
 		"discord": { "version": "*" },

@@ -11,6 +11,7 @@ import {
 import { patchCreateElement } from './lib/registry'
 import { patchEmpty, patchExpanded } from './patches/content'
 import { patchHideGuildsBar } from './patches/hideGuildsBar'
+import { patchHomeDrawerExperiment } from './patches/homeDrawer'
 import { patchTransparentBackground } from './patches/transparentBackground'
 import Settings from './ui/Settings'
 import type { ServerDrawerStorage } from './lib/modules'
@@ -60,6 +61,7 @@ export default plugin<{ jsonStorage: ServerDrawerStorage }>({
 
 		patchHideGuildsBar(cleanup)
 		patchTransparentBackground(cleanup)
+		patchHomeDrawerExperiment(cleanup)
 
 		if (plugin.startedLate) plugin.requireReload()
 

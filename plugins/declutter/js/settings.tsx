@@ -1,4 +1,5 @@
 import { DEFAULTS } from './defaults'
+import { isServerDrawerInstalled } from './lib/state'
 import type { PluginApi } from '@revenge-mod/plugins/types'
 import type { DeclutterSettings } from './types'
 
@@ -8,20 +9,23 @@ function Toggle({
 	key_,
 	label,
 	subLabel,
+	disabled,
 }: {
 	s: DeclutterSettings
 	set: (patch: Partial<DeclutterSettings>) => void
 	key_: keyof DeclutterSettings
 	label: string
 	subLabel?: string
+	disabled?: boolean
 }) {
 	const { TableSwitchRow } = revenge.discord.design.Design
 	return (
 		<TableSwitchRow
 			label={label}
 			subLabel={subLabel}
-			value={s[key_]}
+			value={disabled ? false : s[key_]}
 			onValueChange={v => set({ [key_]: v } as Partial<DeclutterSettings>)}
+			disabled={disabled}
 		/>
 	)
 }
@@ -36,9 +40,11 @@ export default function Settings({
 	const { ScrollView } = revenge.react.ReactNative
 	const { Stack, TableRowGroup } = revenge.discord.design.Design
 
-	const s = { ...DEFAULTS, ...(api.jsonStorage.use() ?? {}) }
+	const serverDrawer = isServerDrawerInstalled()
+	const raw = { ...DEFAULTS, ...(api.jsonStorage.use() ?? {}) }
+	const s = serverDrawer ? { ...raw, questDock: false } : raw
 	const set = (patch: Partial<DeclutterSettings>) =>
-		api.jsonStorage.set({ ...s, ...patch })
+		api.jsonStorage.set({ ...raw, ...patch })
 
 	return (
 		<Page>
@@ -108,7 +114,12 @@ export default function Settings({
 							set={set}
 							key_="questDock"
 							label="Quest Dock"
-							subLabel="Floating quest bar at bottom of app"
+							subLabel={
+								serverDrawer
+									? 'Disabled while Server Drawer is installed'
+									: 'Floating quest bar at bottom of app'
+							}
+							disabled={serverDrawer}
 						/>
 						<Toggle
 							s={s}

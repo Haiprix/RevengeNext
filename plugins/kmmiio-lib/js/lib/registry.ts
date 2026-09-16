@@ -1,3 +1,7 @@
+import { existsSync } from '@revenge-mod/modules/native/fs'
+import { pList } from '@revenge-mod/plugins/_'
+import { pluginStorageDirFor } from '@revenge-mod/plugins/constants'
+
 export interface RegisteredPlugin {
 	id: string
 	name: string
@@ -7,6 +11,27 @@ export interface RegisteredPlugin {
 	version: { nums: number[]; label?: string }
 	getStatus: () => number
 	getErrors: () => readonly unknown[]
+}
+
+/**
+ * Whether a plugin is installed.
+ *
+ * Looks it up in the live plugin registry first. That registry is exposed
+ * through the hidden developer API (available when the "Developer Mode"
+ * plugin `revenge.api.hidden` is enabled), so it degrades to checking the
+ * plugin's storage directory on disk via the public fs/constants APIs when
+ * Developer Mode is off.
+ */
+export function isPluginInstalled(id: string): boolean {
+	try {
+		if (typeof pList?.has === 'function' && pList.has(id) === true) return true
+	} catch {}
+
+	try {
+		return existsSync(pluginStorageDirFor(id)) === true
+	} catch {
+		return false
+	}
 }
 
 const registry = new Map<string, RegisteredPlugin>()

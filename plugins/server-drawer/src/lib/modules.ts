@@ -303,3 +303,28 @@ export function getQuestDockMode(): any {
 		return undefined
 	}
 }
+
+let stableInsetsModule: any
+
+function getStableInsetsModule(): any {
+	if (stableInsetsModule !== undefined) return stableInsetsModule
+	try {
+		const reg = (revenge.react.ReactNative as any)?.TurboModuleRegistry
+		stableInsetsModule =
+			typeof reg?.getEnforcing === 'function'
+				? reg.getEnforcing('NativeSafeAreaInsetsModule')
+				: null
+	} catch {
+		stableInsetsModule = null
+	}
+	return stableInsetsModule
+}
+
+export function getBottomInset(): number {
+	try {
+		const bottom =
+			getStableInsetsModule()?.getStableSafeAreaInsets?.('main')?.bottom
+		if (typeof bottom === 'number' && bottom > 0) return bottom
+	} catch {}
+	return 0
+}

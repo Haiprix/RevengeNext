@@ -2,6 +2,7 @@ import { createGuild, logStatus, openDms, switchGuild } from '../lib/actions'
 import { kmmiio } from '../lib/kmmiio'
 import {
 	getAssetId,
+	getBottomInset,
 	getExternalCoordinationContext,
 	getGestureContext,
 	getQuestDockMode,
@@ -154,6 +155,8 @@ export default function ServerDrawerSheet({
 
 	const { hideDmTile, showGuildNames } = reactive()
 
+	const bottomPad = Math.max(16, getBottomInset() + 8)
+
 	React.useEffect(() => {
 		logStatus()
 	}, [])
@@ -161,7 +164,10 @@ export default function ServerDrawerSheet({
 	return (
 		<ScrollView style={st.alignTop} showsVerticalScrollIndicator={false}>
 			<View
-				style={[st.grid, { paddingHorizontal: padX, gap: GAP }]}
+				style={[
+					st.grid,
+					{ paddingHorizontal: padX, gap: GAP, paddingBottom: bottomPad },
+				]}
 				onLayout={onLayout}
 			>
 				{!hideDmTile && (

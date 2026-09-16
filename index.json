@@ -243,17 +243,17 @@
     },
     "dev.kmmiio99o.server-drawer": {
       "name": "Server Drawer",
-      "description": "Server Drawer above the YouBar, manage your servers differently! Now fully hides the Quest Dock/GuildsBar, adds a DM tile, optional server-name labels, and a settings screen.",
+      "description": "Manage your Discord servers from a drawer above the YouBar.",
       "author": "kmmiio99o",
       "icon": "FolderIcon",
       "channels": {
-        "latest": "1.0.1"
+        "latest": "1.0.2"
       },
       "versions": {
-        "1.0.1": {
-          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.server-drawer@1.0.1.zip",
-          "sha256": "f0fdf13e4c72fd53e6ec53d37ed88ab5f37d519db968c2a3b1245f8e7ad68988",
-          "size": 9337,
+        "1.0.2": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.server-drawer@1.0.2.zip",
+          "sha256": "379f4ea36097a04b2573b199976a60983a1b1137e1233a8314ae244448b4837d",
+          "size": 9413,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

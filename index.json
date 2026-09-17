@@ -142,13 +142,13 @@
       "author": "kmmiio99o",
       "icon": "SettingsIcon",
       "channels": {
-        "latest": "1.2.5"
+        "latest": "1.2.6"
       },
       "versions": {
-        "1.2.5": {
-          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.lib@1.2.5.zip",
-          "sha256": "2c05548f5dc999513ef339cc840423734a6ea2eb22f915feef5525c29db14467",
-          "size": 29301,
+        "1.2.6": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.lib@1.2.6.zip",
+          "sha256": "5a63ad97becd82edd7c3379207c4fd2b2ea95022d18d9d59a6864bccdd02f819",
+          "size": 29425,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -220,13 +220,13 @@
       "author": "kmmiio99o",
       "icon": "MusicIcon",
       "channels": {
-        "latest": "1.2.0"
+        "latest": "1.2.1"
       },
       "versions": {
-        "1.2.0": {
-          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.multi-scrobbler@1.2.0.zip",
-          "sha256": "508f17b2c31ec618ba1cebb54035e5351224f028f1489dffa04c35d4b8abee22",
-          "size": 15209,
+        "1.2.1": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.multi-scrobbler@1.2.1.zip",
+          "sha256": "6583628aa64f3b09609b09320f39e6cac5acc221c22e7f0fc1ec068a5761b064",
+          "size": 15213,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

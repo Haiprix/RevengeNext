@@ -189,8 +189,31 @@ internal object MediaSessionBridge {
 
     private fun isCompanionInstalled(): Boolean {
         val ctx = MediaSessionAccessor.getContext() ?: return false
-        return try {
+
+        // Works on Android 10 and below, and on 11+ whenever the host app happens
+        // to have visibility into the companion.
+        try {
             ctx.packageManager.getPackageInfo(COMPANION_PKG, 0)
+            return true
+        } catch (_: Throwable) {}
+
+        // Android 11+ (API 30) filters PackageManager by package visibility, so
+        // the lookup above fails even when the companion is installed. Fall back
+        // to sources that are not filtered. The companion is pointless without
+        // its notification listener, and that list stays readable.
+        if (isCompanionListenerEnabled()) return true
+
+        // An exported provider resolves even when the package is hidden.
+        return isCompanionProviderReachable()
+    }
+
+    private fun isCompanionProviderReachable(): Boolean {
+        val ctx = MediaSessionAccessor.getContext() ?: return false
+        return try {
+            val uri = android.net.Uri.parse("content://$COMPANION_PROVIDER/media")
+            // Any call that resolves without throwing proves the provider exists.
+            // A null result only means the companion does not know this method.
+            ctx.contentResolver.call(uri, "getVersion", null, null)
             true
         } catch (_: Throwable) {
             false
@@ -256,10 +279,18 @@ internal object MediaSessionBridge {
     /** Installed companion versionCode, or -1 when not installed. */
     private fun getCompanionVersion(): Long {
         val ctx = MediaSessionAccessor.getContext() ?: return -1L
-        return try {
+
+        try {
             val info = ctx.packageManager.getPackageInfo(COMPANION_PKG, 0)
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) info.longVersionCode
+            return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) info.longVersionCode
             else @Suppress("DEPRECATION") info.versionCode.toLong()
+        } catch (_: Throwable) {}
+
+        // Same package-visibility problem as isCompanionInstalled(): ask the
+        // companion for its own version over its exported provider instead.
+        return try {
+            val uri = android.net.Uri.parse("content://$COMPANION_PROVIDER/media")
+            ctx.contentResolver.call(uri, "getVersion", null, null)?.getLong("versionCode") ?: -1L
         } catch (_: Throwable) {
             -1L
         }

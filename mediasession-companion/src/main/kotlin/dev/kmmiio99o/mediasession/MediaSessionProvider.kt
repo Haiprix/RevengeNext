@@ -2,6 +2,7 @@ package dev.kmmiio99o.mediasession
 
 import android.content.ComponentName
 import android.database.MatrixCursor
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.content.ContentProvider
@@ -38,11 +39,23 @@ class MediaSessionProvider : ContentProvider() {
         return when (method) {
             "getMediaInfo" -> svc?.snapshot() ?: Bundle()
             "isListenerEnabled" -> Bundle().apply { putBoolean("enabled", isListenerEnabled()) }
+            "getVersion" -> Bundle().apply { putLong("versionCode", installedVersionCode()) }
             "sendCommand" -> Bundle().apply {
                 putBoolean("ok", svc?.sendCommand(arg, extras) == true)
             }
 
             else -> null
+        }
+    }
+
+    private fun installedVersionCode(): Long {
+        val ctx = context ?: return -1L
+        return try {
+            val info = ctx.packageManager.getPackageInfo(ctx.packageName, 0)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) info.longVersionCode
+            else @Suppress("DEPRECATION") info.versionCode.toLong()
+        } catch (_: Throwable) {
+            -1L
         }
     }
 

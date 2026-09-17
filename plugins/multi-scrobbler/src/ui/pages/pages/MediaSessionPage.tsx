@@ -82,7 +82,8 @@ export default function MediaSessionPage() {
 					fetchLatestCompanionVersion(),
 					kmmiio.getCompanionVersion() as Promise<number>,
 				])
-				if (alive && remote !== null && remote > local) setCompanionUpdate(remote)
+				if (alive && remote !== null && local > 0 && remote > local)
+					setCompanionUpdate(remote)
 			} catch {}
 		}
 

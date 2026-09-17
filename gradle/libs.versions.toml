@@ -17,8 +17,8 @@ workRuntime = "2.10.1"
 coreKtx = "1.15.0"
 
 # Companion Android app (:mediasession-companion) release metadata.
-companionAppVersion = "1.0.0"
-companionAppCode = "1000"
+companionAppVersion = "1.0.1"
+companionAppCode = "1001"
 
 [libraries]
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }

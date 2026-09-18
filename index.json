@@ -15,8 +15,8 @@
       "versions": {
         "1.0.0": {
           "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.altmaster@1.0.0.zip",
-          "sha256": "43db66a68cb9f01b391142b092d10c7bb4a1d4737d8bb7f6b6d8944f456dd5e7",
-          "size": 5819,
+          "sha256": "7e5e560e3b7d523cbe8b82ee776660f80cdfcaae2953628b2424592ea4c0e836",
+          "size": 5871,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -66,8 +66,8 @@
       "versions": {
         "1.2.1": {
           "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.chatbox-avatar@1.2.1.zip",
-          "sha256": "63def0dad31d6cf11e2df5cc8043476db494b21075ef343e3d43018cd8af8d31",
-          "size": 2370,
+          "sha256": "ecb02853a8e12f9122f90c85c441b55a4b01ae36cf858c02a9a6036dff4c463f",
+          "size": 2396,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -93,8 +93,8 @@
       "versions": {
         "1.1.0": {
           "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.chatbubbles@1.1.0.zip",
-          "sha256": "33f77b8ded5d5cf0d7851d0c71fc81c1d7d496f82d7febfb2ea58e0f422f99d7",
-          "size": 2461,
+          "sha256": "3a3dc2183fd76150e91bddbed3eafd42670cee94c619270f0edd2e313bcbf78a",
+          "size": 2486,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -120,8 +120,8 @@
       "versions": {
         "1.1.3": {
           "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.declutter@1.1.3.zip",
-          "sha256": "d170627b9adf32bd3043705a46923799d95a7365d0263ffd6e0e8e441909abe3",
-          "size": 3765,
+          "sha256": "ab2a8988c282c2f4840d841c09ea7e7c1b9d3adfc88b7f82accd1c0797d49cbd",
+          "size": 3799,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -142,13 +142,13 @@
       "author": "kmmiio99o",
       "icon": "SettingsIcon",
       "channels": {
-        "latest": "1.2.6"
+        "latest": "1.2.8"
       },
       "versions": {
-        "1.2.6": {
-          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.lib@1.2.6.zip",
-          "sha256": "5a63ad97becd82edd7c3379207c4fd2b2ea95022d18d9d59a6864bccdd02f819",
-          "size": 29425,
+        "1.2.8": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.lib@1.2.8.zip",
+          "sha256": "1991b66cfc8157cc26162a0f72419a964ce41d418ee44389c09cfd33b103433d",
+          "size": 29396,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -171,8 +171,8 @@
       "versions": {
         "1.1.0": {
           "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.markdown.toolbar@1.1.0.zip",
-          "sha256": "f00d9ce92618bd28d8b0acad67d9a7bc683356b344de96d7486db93ab1ae4d36",
-          "size": 2205,
+          "sha256": "e17fad308abe868912a215ab1b027132e7d6b6197752f60e1320c0ad1199a014",
+          "size": 2234,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -198,8 +198,8 @@
       "versions": {
         "1.0.0": {
           "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.message-tweaks@1.0.0.zip",
-          "sha256": "b9ec6366958d13b54e04390bfb6b2be378a00f0806e543d5d9e319b47688b982",
-          "size": 6870,
+          "sha256": "1dc22aad4d2162458caabfa8cf34d75dc23ddda87299ed110a84be1fe69acf52",
+          "size": 6919,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -225,8 +225,8 @@
       "versions": {
         "1.2.1": {
           "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.multi-scrobbler@1.2.1.zip",
-          "sha256": "6583628aa64f3b09609b09320f39e6cac5acc221c22e7f0fc1ec068a5761b064",
-          "size": 15213,
+          "sha256": "7485bb8f354b37929b38fbb7c7bb93aa06915432ca57772fe975a546899b8c9b",
+          "size": 15361,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -252,8 +252,8 @@
       "versions": {
         "1.0.2": {
           "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.server-drawer@1.0.2.zip",
-          "sha256": "379f4ea36097a04b2573b199976a60983a1b1137e1233a8314ae244448b4837d",
-          "size": 9413,
+          "sha256": "e5db293a396007c69d82dc975d0f89602c950cbb92dfe9df8fa473ab5b6aed1e",
+          "size": 9469,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -279,8 +279,8 @@
       "versions": {
         "1.2.0": {
           "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.server-info@1.2.0.zip",
-          "sha256": "e8818332d94834c92e4257a11460dd849087e73432f1708c7a6cccd9abe37db0",
-          "size": 4376,
+          "sha256": "123c4ff5aac27cbe2e1bfc77dddde4b7b0bd62ac0563870b4677f99b068e0ddd",
+          "size": 4410,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

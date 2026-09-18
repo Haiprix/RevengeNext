@@ -1,0 +1,23 @@
+{
+	"format": 1,
+	"id": "dev.kmmiio99o.better-devices",
+	"name": "Better Devices",
+	"description": "Better session control: multi-select logout, new-device alerts, and clearer device details.",
+	"author": "kmmiio99o",
+	"icon": "LaptopPhoneIcon",
+	"version": "1.0.0",
+	"dependencies": {
+		"revenge.api": {
+			"version": ">=1"
+		},
+		"dev.kmmiio99o.lib": {
+			"version": "*"
+		},
+		"discord": {
+			"version": "*"
+		}
+	},
+	"dist": {
+		"script": "index.js"
+	}
+}

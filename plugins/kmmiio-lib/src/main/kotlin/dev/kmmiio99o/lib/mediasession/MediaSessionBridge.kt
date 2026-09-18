@@ -42,8 +42,10 @@ internal object MediaSessionBridge {
         scope.registerNativeMethod("mediasession.isAvailable") {
             try {
                 if (isCompanionInstalled() && isCompanionListenerEnabled()) {
-                    val info = getCompanionMediaInfo()
-                    info != null && info["title"] != null && info["title"] != ""
+                    // The bridge is established as soon as the companion answers
+                    // on its provider. An empty title just means nothing is
+                    // playing right now — that is not an availability failure.
+                    getCompanionMediaInfo() != null
                 } else {
                     MediaSessionAccessor.getActiveSessions().isNotEmpty()
                 }
@@ -198,18 +200,23 @@ internal object MediaSessionBridge {
         } catch (_: Throwable) {}
 
         // Android 11+ (API 30) filters PackageManager by package visibility, so
-        // the lookup above fails even when the companion is installed. Fall back
-        // to sources that are not filtered. The companion is pointless without
-        // its notification listener, and that list stays readable.
-        if (isCompanionListenerEnabled()) return true
+        // the lookup above fails even when the companion is installed. Content
+        // providers are not subject to that filtering, so resolution + a version
+        // round-trip prove the package exists regardless of the listener state.
+        if (isCompanionProviderReachable()) return true
 
-        // An exported provider resolves even when the package is hidden.
-        return isCompanionProviderReachable()
+        // The listener can only be enabled when the package is installed, so an
+        // enabled listener also proves installation (last resort).
+        return isCompanionListenerEnabled()
     }
 
     private fun isCompanionProviderReachable(): Boolean {
         val ctx = MediaSessionAccessor.getContext() ?: return false
         return try {
+            // resolveContentProvider is not gated by package visibility: the
+            // provider authority is enough to look through the filter.
+            val resolved = ctx.packageManager.resolveContentProvider(COMPANION_PROVIDER, 0)
+            if (resolved?.applicationInfo != null) return true
             val uri = android.net.Uri.parse("content://$COMPANION_PROVIDER/media")
             // Any call that resolves without throwing proves the provider exists.
             // A null result only means the companion does not know this method.

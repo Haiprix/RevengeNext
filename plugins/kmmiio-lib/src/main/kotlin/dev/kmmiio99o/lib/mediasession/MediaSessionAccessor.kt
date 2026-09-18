@@ -1,7 +1,6 @@
 package dev.kmmiio99o.lib.mediasession
 
 import android.app.NotificationManager
-import android.content.ComponentName
 import android.content.Context
 import android.media.session.MediaController
 import android.media.session.MediaSessionManager
@@ -12,7 +11,6 @@ internal object MediaSessionAccessor {
     private var context: Context? = null
     private var mediaSessionManager: MediaSessionManager? = null
     private var activeListener: MediaSessionManager.OnActiveSessionsChangedListener? = null
-    private var listenerComponent: ComponentName? = null
     var cachedSessions: List<MediaController> = emptyList()
         private set
 
@@ -40,18 +38,9 @@ internal object MediaSessionAccessor {
         return null
     }
 
-    fun getListenerComponent(): ComponentName {
-        if (listenerComponent != null) return listenerComponent!!
-        val ctx = context!!
-        val nlsClass = Class.forName("android.service.notification.NotificationListenerService")
-        listenerComponent = ComponentName(ctx.packageName, nlsClass.name)
-        return listenerComponent!!
-    }
-
     fun ensureListener() {
         if (activeListener != null) return
         val msm = getManager() ?: return
-        val component = getListenerComponent()
         val handler = Handler(Looper.getMainLooper())
 
         activeListener = MediaSessionManager.OnActiveSessionsChangedListener { sessions ->
@@ -59,8 +48,11 @@ internal object MediaSessionAccessor {
         }
 
         try {
-            msm.addOnActiveSessionsChangedListener(activeListener!!, component, handler)
-            cachedSessions = msm.getActiveSessions(component)
+            // Android 11+ rejects a fabricates listener ComponentName that is not
+            // an enabled NotificationListenerService. Register with null so the
+            // host can still observe the sessions it has visibility into.
+            msm.addOnActiveSessionsChangedListener(activeListener!!, null, handler)
+            cachedSessions = msm.getActiveSessions(null)
         } catch (_: Throwable) {}
     }
 
@@ -68,7 +60,8 @@ internal object MediaSessionAccessor {
         ensureListener()
         val msm = getManager() ?: return emptyList()
         return try {
-            msm.getActiveSessions(getListenerComponent())
+            cachedSessions = msm.getActiveSessions(null)
+            cachedSessions
         } catch (_: Throwable) {
             cachedSessions
         }

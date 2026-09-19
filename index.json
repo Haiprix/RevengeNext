@@ -55,6 +55,33 @@
         }
       }
     },
+    "dev.kmmiio99o.better-devices": {
+      "name": "Better Devices",
+      "description": "Better session control: multi-select logout, new-device alerts, and clearer device details.",
+      "author": "kmmiio99o",
+      "icon": "LaptopPhoneIcon",
+      "channels": {
+        "latest": "1.0.0"
+      },
+      "versions": {
+        "1.0.0": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.better-devices@1.0.0.zip",
+          "sha256": "272df6e188be021b12df95673450b2b9a040cee99e72eacee97188becf1ad43e",
+          "size": 5456,
+          "dependencies": {
+            "revenge.api": {
+              "version": ">=1"
+            },
+            "dev.kmmiio99o.lib": {
+              "version": "*"
+            },
+            "discord": {
+              "version": "*"
+            }
+          }
+        }
+      }
+    },
     "dev.kmmiio99o.chatbox-avatar": {
       "name": "Chatbox Avatar",
       "description": "Quickly view your profile from the chatbox.",

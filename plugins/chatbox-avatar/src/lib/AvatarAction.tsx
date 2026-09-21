@@ -13,6 +13,7 @@ import {
 	getUserStore,
 	isComponentType,
 	openAccountSheet,
+	resolveColor,
 } from './modules'
 import type { ChatboxAvatarStorage } from '../types'
 
@@ -107,6 +108,11 @@ export default function AvatarAction() {
 				user={self}
 				guildId={guildId}
 				status={s.showStatusCutout ? status : undefined}
+				statusStyle={
+					s.showStatusCutout
+						? { backgroundColor: resolveColor('BACKGROUND_SURFACE_HIGH') }
+						: undefined
+				}
 				avatarDecoration={self?.avatarDecoration}
 				animate={true}
 			/>

@@ -29,6 +29,10 @@ export function getAvatar(): any {
 	return result
 }
 
+export function resolveColor(semToken: string): string | undefined {
+	return kmmiio?.resolveColor?.(semToken)
+}
+
 export function getUserStore(): any {
 	const result = kmmiio?.getUserStore()
 	log('store:UserStore', 'resolve', result != null)

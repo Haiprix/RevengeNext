@@ -1,8 +1,8 @@
 #!/usr/bin/env bun
 import { existsSync } from 'node:fs'
 // Refreshes Discord module IDs in plugins/shared/discord-modules.ts from
-// lvwmwm/decord's data branch (latest build), then bumps the patch version of
-// every plugin that imports the shared store.
+// lvwmwm/decord's data branch (alpha channel, latest build), then bumps the
+// patch version of every plugin that imports the shared store.
 //
 // Usage: bun scripts/update-discord-module-ids.mjs
 import { readdir, readFile, writeFile } from 'node:fs/promises'
@@ -14,6 +14,7 @@ const PLUGINS_DIR = join(ROOT, 'plugins')
 const TARGET = join(PLUGINS_DIR, 'shared/discord-modules.ts')
 
 const REPO = 'https://raw.githubusercontent.com/lvwmwm/decord/data'
+const CHANNEL = 'alpha'
 
 // Modules that are part of Metro/Discord's static runtime bootstrap rather than
 // normal path-mapped modules. Not present in module-paths.json; sourced from the
@@ -24,8 +25,8 @@ const current = await import(pathToFileURL(TARGET).href)
 const tracked = Object.keys(current.discordModules)
 
 const [versionRes, pathsRes] = await Promise.all([
-	fetch(`${REPO}/version.txt`),
-	fetch(`${REPO}/module-paths.json`),
+	fetch(`${REPO}/${CHANNEL}/version.txt`),
+	fetch(`${REPO}/${CHANNEL}/module-paths.json`),
 ])
 if (!versionRes.ok || !pathsRes.ok) {
 	throw new Error(
@@ -43,7 +44,10 @@ async function deriveAsyncRequireId() {
 	if (!treeRes.ok) return undefined
 	const tree = await treeRes.json()
 	const entry = tree.tree?.find(
-		(t) => t.type === 'blob' && /_asyncRequireImpl\.js$/.test(t.path),
+		(t) =>
+			t.type === 'blob' &&
+			t.path.startsWith(`${CHANNEL}/source/`) &&
+			/_asyncRequireImpl\.js$/.test(t.path),
 	)
 	if (!entry) return undefined
 	const fileRes = await fetch(`${REPO}/${entry.path}`)

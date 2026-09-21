@@ -88,13 +88,13 @@
       "author": "kmmiio99o",
       "icon": "UserSquareIcon",
       "channels": {
-        "latest": "1.2.1"
+        "latest": "1.2.2"
       },
       "versions": {
-        "1.2.1": {
-          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.chatbox-avatar@1.2.1.zip",
-          "sha256": "ecb02853a8e12f9122f90c85c441b55a4b01ae36cf858c02a9a6036dff4c463f",
-          "size": 2396,
+        "1.2.2": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.chatbox-avatar@1.2.2.zip",
+          "sha256": "2004decf3963e005fe747d97ee8e6fc78be2b733b613e1cafa866380e93b3a4c",
+          "size": 2454,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

@@ -61,6 +61,10 @@ class MediaSessionProvider : ContentProvider() {
 
     private fun isListenerEnabled(): Boolean {
         val ctx = context ?: return false
+        // A live instance means the system actually bound the listener (granted
+        // access). This is authoritative and immune to settings quirks, so trust
+        // it first and fall back to the durable secure-settings read.
+        if (MediaListenerService.instance != null) return true
         val raw = Settings.Secure.getString(ctx.contentResolver, "enabled_notification_listeners") ?: ""
         return raw.split(":").any {
             ComponentName.unflattenFromString(it)?.let { cn ->

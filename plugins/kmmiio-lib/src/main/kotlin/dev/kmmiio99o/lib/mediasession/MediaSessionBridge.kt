@@ -229,14 +229,49 @@ internal object MediaSessionBridge {
 
     private fun isCompanionListenerEnabled(): Boolean {
         val ctx = MediaSessionAccessor.getContext() ?: return false
+
+        // First ask the companion itself. Its answer is computed in its own
+        // process (which IS the listener), so Android 11+ package-visibility or
+        // host-side secure-setting quirks cannot skew it. Uses the same provider
+        // channel already serving media info and version.
+        try {
+            val uri = android.net.Uri.parse("content://$COMPANION_PROVIDER/media")
+            val result = ctx.contentResolver.call(uri, "isListenerEnabled", null, null)
+            // A null bundle means the provider does not know the method (older
+            // companion build) — fall through, it is not an answer.
+            if (result != null) return result.getBoolean("enabled", false)
+        } catch (_: Throwable) {}
+
+        // The companion is not responding (not installed). Fall back to the
+        // public sanctioned API, which is not subject to package visibility.
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
+            try {
+                val nm = ctx.getSystemService(android.app.NotificationManager::class.java)
+                val cn = android.content.ComponentName(
+                    COMPANION_PKG,
+                    "$COMPANION_PKG.MediaListenerService",
+                )
+                if (nm.isNotificationListenerAccessGranted(cn)) return true
+            } catch (_: Throwable) {}
+        }
+
+        // Last resort: parse the listener list locally with exact component
+        // matching (immune to class-name formatting differences).
+        return enabledListenerComponents().any {
+            it.packageName == COMPANION_PKG && it.className.endsWith(".MediaListenerService")
+        }
+    }
+
+    private fun enabledListenerComponents(): List<android.content.ComponentName> {
+        val ctx = MediaSessionAccessor.getContext() ?: return emptyList()
         return try {
-            val flat = Settings.Secure.getString(ctx.contentResolver, "enabled_notification_listeners")
-                ?: return false
-            // The companion ships exactly one listener service, so matching by
-            // package prefix is immune to class-name formatting differences.
-            flat.split(":").any { it.trim().startsWith("$COMPANION_PKG/") }
+            val flat = Settings.Secure.getString(
+                ctx.contentResolver,
+                "enabled_notification_listeners",
+            ) ?: return emptyList()
+            flat.split(":").mapNotNull { android.content.ComponentName.unflattenFromString(it.trim()) }
         } catch (_: Throwable) {
-            false
+            emptyList()
         }
     }
 

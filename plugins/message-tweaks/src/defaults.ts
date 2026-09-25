@@ -14,4 +14,8 @@ export const DEFAULTS: MessageTweaksStorage = {
 	showEditTrail: true,
 	keepDeleted: true,
 	deleteLogLimit: 50,
+	translatorService: 'google',
+	translatorTargetLang: 'en',
+	translatorImmersive: true,
+	translatorEnabled: true,
 }

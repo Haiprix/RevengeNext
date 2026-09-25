@@ -17,5 +17,9 @@ export interface MessageTweaksStorage {
 	showEditTrail: boolean
 	keepDeleted: boolean
 	deleteLogLimit: number
+	translatorService: 'google' | 'deepl'
+	translatorTargetLang: string
+	translatorImmersive: boolean
+	translatorEnabled: boolean
 	persisted?: { hidden: Record<string, Record<string, string>> }
 }

@@ -1,6 +1,7 @@
 import secret from '../secret'
 import { DEFAULTS } from './defaults'
 import { sha256Hex } from './lib/sha256'
+import { TranslatorGroup } from './lib/translatorSettings'
 import type { PluginApi } from '@revenge-mod/plugins/types'
 import type { ReactNode } from 'react'
 import type { MessageTweaksStorage } from './types'
@@ -143,6 +144,7 @@ export default function Settings({
 									onValueChange={v => set({ showUsername: v })}
 								/>
 							</TableRowGroup>
+							<TranslatorGroup s={s} set={set} />
 						</Stack>
 					</ScrollView>
 				),

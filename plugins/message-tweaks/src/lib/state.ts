@@ -174,6 +174,10 @@ export function setMessageStore(store: any) {
 	messageStoreRef = store
 }
 
+export function getMessageStore(): any {
+	return messageStoreRef
+}
+
 export function forceRerenderMessage(
 	channelId: string,
 	messageId: string,

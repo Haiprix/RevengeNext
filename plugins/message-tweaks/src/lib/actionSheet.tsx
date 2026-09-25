@@ -1,5 +1,11 @@
 import { startLocalEdit } from './editing'
-import { getIcon, onChannelMessages, onImportedPath } from './modules'
+import {
+	forceInitModule,
+	getIcon,
+	getPropsFilter,
+	onChannelMessages,
+	onImportedPath,
+} from './modules'
 import {
 	getSettings,
 	hideMessage,
@@ -7,6 +13,7 @@ import {
 	setChannelMessagesCache,
 	setMessageStore,
 } from './state'
+import { isTranslated, translateMessage } from './translator'
 
 let msg: any = null
 let ch: any = null
@@ -73,12 +80,87 @@ function makeRow(tpl: any, label: string, icon: any, onPress: () => void): any {
 	return React.createElement(Row, { key: label, label, icon: iconEl, onPress })
 }
 
+// getIcon resolves icons lazily from modules that may still be loading; a
+// lookup that returns null leaves the injected row icon-less. Cache the first
+// successful resolution (stable reference across renders) and keep retrying
+// until the icon module is available so the icon never stays blank.
+const iconCache = new Map<string, any>()
+
+function retryIcon(name: string): any {
+	let icon = iconCache.get(name)
+	if (!icon) {
+		icon = getIcon(name)
+		if (icon) iconCache.set(name, icon)
+	}
+	return icon
+}
+
+// Discord imports the icon modules its own rows use (CopyIcon,
+// ChatMarkUnreadIcon), but none of ours (LanguageIcon, PencilIcon, TrashIcon)
+// load until some unrelated surface imports them — first message-sheet opens
+// then render icon-less rows. Force-initialize them at patch time with the same
+// filter family kmmiio-lib's getIcon uses, so they're cached from the start.
+const WARM_ICONS = [
+	'LanguageIcon',
+	'PencilIcon',
+	'TrashIcon',
+	'CopyIcon',
+	'ChatMarkUnreadIcon',
+]
+
+function forceInitIcon(name: string): void {
+	try {
+		const lib = (revenge as any).utils?.discord?.withGeneratedIconComponent
+			? (revenge as any).utils.discord.withGeneratedIconComponent(name)
+			: getPropsFilter(name)
+		if (lib) forceInitModule(lib)
+	} catch {}
+}
+
+function warmIcons(): void {
+	for (const name of WARM_ICONS) {
+		forceInitIcon(name)
+		retryIcon(name)
+	}
+}
+
+// A row's `icon` prop is built by Discord as `<ActionSheetRow.Icon
+// IconComponent={…} />`, so the glyph lives at props.icon.props.IconComponent.
+// Anchor the translate row between "Copy Text" (CopyIcon) and "Mark Unread"
+// (ChatMarkUnreadIcon) by comparing that reference, immune to localization.
+function findAnchor(
+	groups: any[][],
+): { rowArr: any[]; index: number; tpl: any } | null {
+	const markUnread = retryIcon('ChatMarkUnreadIcon')
+	const copyText = retryIcon('CopyIcon')
+	const register = (row: any) => row?.props?.icon?.props?.IconComponent
+	if (markUnread) {
+		for (const rowArr of groups) {
+			for (let i = 0; i < rowArr.length; i++) {
+				if (register(rowArr[i]) === markUnread) {
+					return { rowArr, index: i, tpl: rowArr[i] }
+				}
+			}
+		}
+	}
+	if (copyText) {
+		for (const rowArr of groups) {
+			for (let i = 0; i < rowArr.length; i++) {
+				if (register(rowArr[i]) === copyText) {
+					return { rowArr, index: i + 1, tpl: rowArr[i] }
+				}
+			}
+		}
+	}
+	return null
+}
+
 function inject(res: any): any {
 	if (!res || !msg?.id || !isSentMessage(msg)) return res
 	const s = getSettings()
-	if (!s.showLocalEditButton && !s.showHideButton) return res
 	const channelId = ch?.id ?? msg?.channel_id ?? ''
 	const groups = walkRows(res)
+	if (groups.length === 0) return res
 
 	let editArr: any[] | null = null
 	let hideArr: any[] | null = null
@@ -106,7 +188,7 @@ function inject(res: any): any {
 		const tpl = editArr.find((r: any) => r?.props?.label != null) ?? editArr[0]
 		if (tpl) {
 			editArr.unshift(
-				makeRow(tpl, 'Edit Locally', getIcon('PencilIcon'), () => {
+				makeRow(tpl, 'Edit Locally', retryIcon('PencilIcon'), () => {
 					hideSheet()
 					startLocalEdit(channelId, msg)
 				}),
@@ -121,10 +203,35 @@ function inject(res: any): any {
 		const tpl = arr.find((r: any) => r?.props?.label != null) ?? arr[0]
 		if (tpl) {
 			arr.unshift(
-				makeRow(tpl, 'Delete Locally', getIcon('TrashIcon'), () => {
+				makeRow(tpl, 'Delete Locally', retryIcon('TrashIcon'), () => {
 					hideSheet()
 					hideForMe()
 				}),
+			)
+		}
+	}
+
+	const content = msg?.content
+	if (
+		s.translatorEnabled &&
+		typeof content === 'string' &&
+		content.trim() !== ''
+	) {
+		const anchor = findAnchor(groups)
+		if (anchor) {
+			const { rowArr, index, tpl } = anchor
+			rowArr.splice(
+				index,
+				0,
+				makeRow(
+					tpl,
+					isTranslated(msg.id) ? 'Revert Translation' : 'Translate Message',
+					retryIcon('LanguageIcon'),
+					() => {
+						hideSheet()
+						void translateMessage(channelId, msg.id, content)
+					},
+				),
 			)
 		}
 	}
@@ -151,6 +258,7 @@ function installWrapper(ns: any) {
 
 export function patchActionSheet(): () => void {
 	const unpatch: Array<() => void> = []
+	warmIcons()
 
 	unpatch.push(
 		onImportedPath('stores/MessageStore.tsx', (ns: any) => {

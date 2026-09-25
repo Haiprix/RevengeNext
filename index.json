@@ -169,13 +169,13 @@
       "author": "kmmiio99o",
       "icon": "SettingsIcon",
       "channels": {
-        "latest": "1.2.14"
+        "latest": "1.2.15"
       },
       "versions": {
-        "1.2.14": {
-          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.lib@1.2.14.zip",
-          "sha256": "7c62859d2f8538a8de9de04d75291ccf1e78b0ebbf8bdf6f5ad31383b45a76b8",
-          "size": 29397,
+        "1.2.15": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.lib@1.2.15.zip",
+          "sha256": "ea3294d11488e19e8bba55bed1859cde0ac433a18266ea2b44b22c9b7bcff536",
+          "size": 30109,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -220,13 +220,13 @@
       "author": "kmmiio99o",
       "icon": "SendMessageIcon",
       "channels": {
-        "latest": "1.0.0"
+        "latest": "1.1.0"
       },
       "versions": {
-        "1.0.0": {
-          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.message-tweaks@1.0.0.zip",
-          "sha256": "1dc22aad4d2162458caabfa8cf34d75dc23ddda87299ed110a84be1fe69acf52",
-          "size": 6919,
+        "1.1.0": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.message-tweaks@1.1.0.zip",
+          "sha256": "d1c9027be0b7f4f8a1944b6da86266f62bafc6989e7e96abcba15aadd771b032",
+          "size": 10035,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -274,13 +274,13 @@
       "author": "kmmiio99o",
       "icon": "FolderIcon",
       "channels": {
-        "latest": "1.0.2"
+        "latest": "1.1.0"
       },
       "versions": {
-        "1.0.2": {
-          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.server-drawer@1.0.2.zip",
-          "sha256": "e5db293a396007c69d82dc975d0f89602c950cbb92dfe9df8fa473ab5b6aed1e",
-          "size": 9469,
+        "1.1.0": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.server-drawer@1.1.0.zip",
+          "sha256": "45a6b08a764f7b395ba0ccd313d5c09fab9c10f05af28f4d158020719afaf3e7",
+          "size": 12375,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

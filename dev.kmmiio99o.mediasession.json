@@ -2,10 +2,10 @@
   "id": "dev.kmmiio99o.mediasession",
   "name": "MediaSession Bridge",
   "type": "android-apk",
-  "versionName": "1.0.1",
-  "versionCode": 1001,
+  "versionName": "1.0.2",
+  "versionCode": 1002,
   "minSdk": 24,
   "file": "dev.kmmiio99o.mediasession.apk",
   "sizeBytes": 13068819,
-  "sha256": "b2f270351357fe4500e77c7f6e71948bc00960d670e66e591a1f2257d011a5f8"
+  "sha256": "5e15ab5f6374169dc4c56b19c179788504481c914ed01efd67bb4df25d3300ef"
 }

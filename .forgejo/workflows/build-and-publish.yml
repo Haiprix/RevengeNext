@@ -49,9 +49,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /opt/android-sdk
-          key: android-sdk-${{ runner.os }}-37.0.0-bt36-1
+          key: android-sdk-${{ runner.os }}-37.0.0-bt36-1-bt37-1
           restore-keys: |
-            android-sdk-${{ runner.os }}-37.0.0-bt36-1-
+            android-sdk-${{ runner.os }}-37.0.0-bt36-1-bt37-1-
 
       - name: Cache JDK 25
         id: cache-jdk
@@ -86,9 +86,12 @@ jobs:
           # Direct install; sdkmanager's manifest fetch fails on the runner.
           wget -q https://dl.google.com/android/repository/platform-37.0_r02.zip
           wget -q https://dl.google.com/android/repository/build-tools_r36_linux.zip
+          wget -q https://dl.google.com/android/repository/build-tools_r37_linux.zip
           unzip -q platform-37.0_r02.zip -d /opt/android-sdk/platforms
           unzip -q build-tools_r36_linux.zip -d /opt/android-sdk/build-tools
+          unzip -q build-tools_r37_linux.zip -d /opt/android-sdk/build-tools
           mv /opt/android-sdk/build-tools/android-16 /opt/android-sdk/build-tools/36.0.0
+          mv /opt/android-sdk/build-tools/android-37.0 /opt/android-sdk/build-tools/37.0.0
 
       - name: Accept Android SDK licenses
         run: |

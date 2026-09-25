@@ -115,7 +115,7 @@ if (missing.length > 0) {
 	const unexpected = missing.filter(p => !STABLE_RUNTIME_MODULES.has(p))
 	if (stable.length > 0) {
 		console.log(
-			`Preserved stable runtime module IDs (not tracked by decord): ${stable.join(', ')}`,
+			`Preserved stable runtime module IDs (absent from module-paths.json): ${stable.join(', ')}`,
 		)
 	}
 	if (unexpected.length > 0) {

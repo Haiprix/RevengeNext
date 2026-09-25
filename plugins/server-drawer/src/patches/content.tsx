@@ -1,3 +1,4 @@
+import CollapsedDockContent from '../components/CollapsedDockContent'
 import ServerDrawerSheet from '../components/ServerDrawerSheet'
 import { getGestureContext } from '../lib/modules'
 import {
@@ -108,6 +109,30 @@ export function patchExpanded(cleanups: (fn: () => void) => void): boolean {
 		ServerDrawerSheet,
 		cleanups,
 		{ gestureContext: gestureCtx },
+	)
+
+	return true
+}
+
+export function patchCollapsed(cleanups: (fn: () => void) => void): boolean {
+	registerTypeDetector(
+		'ServerDrawer.Collapsed',
+		(type: any) => hasName(type, 'QuestDockContentCollapsed'),
+		(type: any) => {
+			registerIntercept(type, CollapsedDockContent)
+			console.log(
+				TAG,
+				'PATCH: QuestDockContentCollapsed replaced (type detector)',
+			)
+		},
+		{ persistent: true },
+	)
+
+	patchByModule(
+		QUEST_DOCK_MODULE_PATHS.QuestDockContentCollapsed,
+		'QuestDockContentCollapsed',
+		CollapsedDockContent,
+		cleanups,
 	)
 
 	return true

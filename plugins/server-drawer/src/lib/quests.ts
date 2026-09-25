@@ -1,5 +1,10 @@
 const TAG = '[ServerDrawer]'
 
+// Collapsed dock height override (stock QUEST_DOCK_COLLAPSED_HEIGHT = 56).
+// Exactly one icon row: 12 top pad + 48 icon + 8 bottom pad = 68. No clipping,
+// no second-row peek, and small enough to not feel bulky next to the messages.
+export const COLLAPSED_DOCK_HEIGHT = 68
+
 export const HERO_MEDIA_URL =
 	'https://media.discordapp.net/attachments/0/0/1.png'
 export const FAKE_HERO_URL =

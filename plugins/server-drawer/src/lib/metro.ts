@@ -24,14 +24,6 @@ export function findModuleByProps(...props: string[]): any {
 	}
 }
 
-export function findStoreModule(name: string): any {
-	try {
-		return lookupModule(withStoreName(name), { cached: false })[0]
-	} catch {
-		return undefined
-	}
-}
-
 // Scope the filter to both initialised and uninitialised modules so the
 // dependency-walk can target modules that are registered but not yet loaded.
 const withModuleIds = createFilterGenerator<[number[]]>(
@@ -85,6 +77,76 @@ export function findModuleByPropsUsingStore(
 	}
 }
 
+// Resolves the lazy create-guild ActionCreators the way the stock GuildsBar
+// button does. Returns an opener that force-initializes the chunk and fires
+// openCreateGuildModal() once the module is ready. Candidate ids come from
+// GuildsBarCreateJoinButton's runtime dependency map, static 12187 as a
+// last resort (verified to resolve openCreateGuildModal on device).
+export function findLazyCreateOpener(
+	log: (msg: string) => void,
+): (() => void) | undefined {
+	try {
+		let deps: readonly (number | string)[] | undefined
+		try {
+			const tuple =
+				revenge.discord.utils.modules.finders.lookupModuleWithImportedPath(
+					'modules/guilds_bar/native/GuildsBarCreateJoinButton.tsx',
+				)
+			const gbId = tuple?.[1]
+			if (typeof gbId === 'number') {
+				deps = getModuleDependencies(gbId)
+			}
+		} catch {
+			// ignore
+		}
+		const derived = deps ?? []
+		log(
+			`guildsBar deps = ${
+				derived.length > 0 ? derived.join(',') : 'MISS'
+			} len=${derived.length}`,
+		)
+
+		// GuildsBar loads paths[8] first, then paths[10] (the ActionCreators).
+		// Prefer the derived ids in that order, static 12187 as a last resort.
+		const candidates = [
+			...(typeof derived[10] === 'number' ? [derived[10] as number] : []),
+			...(typeof derived[8] === 'number' ? [derived[8] as number] : []),
+			12187,
+		].filter((id, i, arr) => typeof id === 'number' && arr.indexOf(id) === i)
+
+		for (const id of candidates) {
+			log(`candidate ${id}: via=lookup.initialize`)
+			try {
+				const ns = lookupModule(withModuleIds([id]), {
+					cached: false,
+					initialize: true,
+				})[0]
+				const open =
+					ns?.default?.openCreateGuildModal ?? ns?.openCreateGuildModal
+				if (typeof open === 'function') {
+					log(`candidate ${id}: openCreateGuildModal resolved`)
+					return () => {
+						try {
+							open()
+							log(`create: fired openCreateGuildModal (runtime id ${id})`)
+						} catch (e) {
+							log(`create: runtime threw ${String(e)}`)
+						}
+					}
+				}
+			} catch {
+				// ignore
+			}
+		}
+
+		log(`create: no candidate opened`)
+		return undefined
+	} catch (e) {
+		log(`create: findLazyCreateOpener threw ${String(e)}`)
+		return undefined
+	}
+}
+
 // Finds a function with the exact export name; also handles default-exported
 // named functions (the guilds bar util) and named functions nested anywhere in
 // the exports object.
@@ -101,42 +163,6 @@ export function findFunctionByName(name: string): any {
 				const value = mod[key]
 				if (typeof value === 'function' && value.name === name) return value
 			}
-		}
-		return undefined
-	} catch {
-		return undefined
-	}
-}
-
-// Walks (up to 2 levels of) module dependency ids to reach lazy modules that
-// export `props`, without requiring the import tracker.
-export function findModuleByPropsInDependencies(
-	anchorProps: string[],
-	...props: string[]
-): any {
-	if (anchorProps.length === 0 || props.length === 0) return undefined
-	try {
-		const direct = lookupModule(withProps(props[0], ...props.slice(1)), {
-			cached: false,
-		})[0]
-		if (direct) return direct
-		const filter = withProps(props[0], ...props.slice(1))
-		let ids = [
-			...lookupModules(withProps(anchorProps[0], ...anchorProps.slice(1)), {
-				cached: false,
-			}),
-		].map(([, id]: any) => id)
-		const visited = new Set(ids)
-		for (let depth = 0; depth < 2; depth++) {
-			ids = [
-				...new Set(ids.flatMap(id => getModuleDependencies(id) ?? [])),
-			].filter(id => !visited.has(id))
-			ids.forEach(id => visited.add(id))
-			if (ids.length === 0) return undefined
-			const result = lookupModule(withModuleIds(ids).and(filter), {
-				cached: false,
-			})[0]
-			if (result) return result
 		}
 		return undefined
 	} catch {

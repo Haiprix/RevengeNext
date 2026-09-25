@@ -1,10 +1,11 @@
 import { kmmiio } from './kmmiio'
 import {
 	findFunctionByName,
+	findLazyCreateOpener,
 	findModuleByProps,
 	findModuleByPropsUsingStore,
 } from './metro'
-import { getFluxStore, getME, haptic } from './modules'
+import { byImported, getFluxStore, getME, haptic } from './modules'
 
 const TAG = '[ServerDrawer.Nav]'
 
@@ -168,22 +169,65 @@ let createNoopLogged = false
 
 export function createGuild(): void {
 	haptic('SOFT')
+	console.log(TAG, 'create: pressed')
 
-	// The create-guild ActionCreators live in a lazy Discord chunk; loading
-	// them is handled by the lib plugin (asyncRequireImpl via __r).
+	// The create-guild ActionCreators live in a lazy Discord chunk. Resolve
+	// the opener by several strategies in order of precision, logging each so
+	// a failing build is traceable in logcat.
+	// 1. Exact imported-path lookup (must already be initialized).
+	// 2. Props-based finder (self-initializes matching registered modules).
+	// 3. kmmiio-lib (asyncRequireImpl over __r).
+	const attempts: { name: string; open: (() => void) | undefined }[] = []
+
+	try {
+		const ns = byImported(
+			'modules/create_guild/native/CreateGuildModalActionCreators.tsx',
+		)
+		const viaPath =
+			ns?.default?.openCreateGuildModal ?? ns?.openCreateGuildModal
+		if (typeof viaPath === 'function')
+			attempts.push({ name: 'byImported', open: () => viaPath() })
+	} catch {
+		// ignore
+	}
+
+	try {
+		const mod = findModuleByProps('openCreateGuildModal')
+		const viaProps = mod?.openCreateGuildModal
+		if (typeof viaProps === 'function')
+			attempts.push({ name: 'findModuleByProps', open: () => viaProps() })
+	} catch {
+		// ignore
+	}
+
 	const create = kmmiio()?.openCreateGuildModal
-	if (typeof create === 'function') {
-		console.log(TAG, 'create: firing')
+	if (typeof create === 'function')
+		attempts.push({ name: 'kmmiio', open: () => create() })
+
+	const runtimeOpen = findLazyCreateOpener(msg => console.log(TAG, msg))
+	if (typeof runtimeOpen === 'function')
+		attempts.push({ name: 'runtime', open: () => runtimeOpen() })
+
+	console.log(
+		TAG,
+		'create: resolvers =',
+		attempts.map(a => a.name).join(', ') || 'none',
+	)
+
+	const best = attempts[0]?.open
+	if (typeof best === 'function') {
+		console.log(TAG, `create: firing (${attempts[0].name})`)
 		try {
-			create()
+			best()
 		} catch (e) {
 			console.warn(TAG, `create: threw ${String(e)}`)
 		}
 		return
 	}
+
 	if (!createNoopLogged) {
 		createNoopLogged = true
-		console.warn(TAG, 'create: kmmiio-lib unavailable - no-op')
+		console.warn(TAG, 'create: no opener available - no-op')
 	}
 }
 

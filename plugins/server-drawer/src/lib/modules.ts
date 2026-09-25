@@ -18,38 +18,6 @@ export function reactive(): ServerDrawerStorage {
 	return { ...defaults, ...(storageRef?.use() ?? {}) }
 }
 
-export function findModule(
-	predicate: (exports: any) => boolean,
-): any | undefined {
-	try {
-		const generator = revenge.modules.finders.filters.createFilterGenerator(
-			(args: [(e: any) => boolean], _id: number, exports: any) => {
-				if (exports == null) return false
-				const [match] = args
-				try {
-					return match(exports)
-				} catch {
-					return false
-				}
-			},
-			() => `server-drawer.findModule`,
-		)
-		const [exports] = revenge.modules.finders.lookupModule(
-			generator(predicate),
-			{ cached: false },
-		)
-		return exports ?? undefined
-	} catch {
-		return undefined
-	}
-}
-
-export function findByProps(...props: string[]): any {
-	return findModule(exports =>
-		props.every(p => typeof exports?.[p] !== 'undefined'),
-	)
-}
-
 const importedCache = new Map<string, any>()
 
 export function byImported(path: string): any {
@@ -74,6 +42,15 @@ export function getFluxStore(storeName: string): any {
 	} catch {
 		return undefined
 	}
+}
+
+// id of the guild the user is currently in; null while inside DMs.
+export function useSelectedGuildId(): string | null {
+	return useFluxStore(
+		'SelectedGuildStore',
+		store => store?.getGuildId?.() ?? null,
+		null,
+	)
 }
 
 export function useFluxStore<T>(
@@ -155,106 +132,6 @@ export function haptic(kind: string): void {
 	}
 }
 
-export function findIconComponent(...names: string[]): any {
-	try {
-		const lookup = (revenge as any).utils.discord?.lookupGeneratedIconComponent
-		if (typeof lookup === 'function') {
-			const comp = lookup(...names)
-			if (typeof comp === 'function') return comp
-		}
-	} catch {
-		// ignore
-	}
-	try {
-		const tuple = revenge.modules.finders.lookupModule(
-			(revenge as any).utils.discord.withGeneratedIconComponent(...names),
-			{ cached: false },
-		)
-		const ns = tuple?.[0] ?? tuple
-		const flat = ns?.[names[0]]
-		if (typeof flat === 'function') return flat
-		const def = ns?.default?.[names[0]]
-		if (typeof def === 'function') return def
-	} catch {
-		// ignore
-	}
-	try {
-		const { lookupModule } = revenge.modules.finders
-		const { or, withProps } = revenge.modules.finders.filters
-		const anyOr = or as (...filters: unknown[]) => any
-		const propsFilters = names.map(name => withProps(name))
-		const filter =
-			propsFilters.length > 1 ? anyOr(...propsFilters) : propsFilters[0]
-		const tuple = lookupModule(filter, {
-			cached: false,
-			initialize: true,
-		})
-		const ns = tuple?.[0] ?? tuple
-		for (const name of names) {
-			const flat = ns?.[name]
-			if (typeof flat === 'function') return flat
-			const def = ns?.default?.[name]
-			if (typeof def === 'function') return def
-		}
-	} catch {
-		// ignore
-	}
-	return undefined
-}
-
-export function useIconComponent(...names: string[]): any {
-	const React = revenge.react.React
-	const key = names.length > 0 ? names.join('|') : names[0]
-	const [result, setResult] = React.useState(() => findIconComponent(...names))
-
-	React.useEffect(() => {
-		let cancelled = false
-
-		if (!result) {
-			const candidate = findIconComponent(...names)
-			if (!cancelled && candidate) setResult(candidate)
-		}
-
-		let unsub: (() => void) | undefined
-		try {
-			const { getModules } = revenge.modules.finders
-			const { or, withProps } = revenge.modules.finders.filters
-			const anyOr = or as (...filters: unknown[]) => any
-			const generated = (revenge as any).utils.discord
-				?.withGeneratedIconComponent
-			const filters = names.map(name => withProps(name))
-			if (typeof generated === 'function') filters.push(generated(...names))
-			const filter = filters.length > 1 ? anyOr(...filters) : filters[0]
-			unsub = getModules(
-				filter,
-				exports => {
-					for (const name of names) {
-						const candidate = exports?.[name] ?? exports?.default?.[name]
-						if (typeof candidate === 'function') {
-							setResult(candidate)
-							break
-						}
-					}
-				},
-				{ returnNamespace: true, max: 1 },
-			)
-		} catch {
-			// ignore
-		}
-
-		return () => {
-			cancelled = true
-			try {
-				unsub?.()
-			} catch {
-				// ignore
-			}
-		}
-	}, [key])
-
-	return result
-}
-
 export function getAssetId(name: string): number | undefined {
 	try {
 		return revenge.assets.getAssetIdByName(name)
@@ -304,27 +181,77 @@ export function getQuestDockMode(): any {
 	}
 }
 
-let stableInsetsModule: any
+export function useQuestDockExpanded(): boolean {
+	const React = revenge.react.React
+	const [expanded, setExpanded] = React.useState(false)
+	const lastRef = React.useRef(false)
 
-function getStableInsetsModule(): any {
-	if (stableInsetsModule !== undefined) return stableInsetsModule
-	try {
-		const reg = (revenge.react.ReactNative as any)?.TurboModuleRegistry
-		stableInsetsModule =
-			typeof reg?.getEnforcing === 'function'
-				? reg.getEnforcing('NativeSafeAreaInsetsModule')
-				: null
-	} catch {
-		stableInsetsModule = null
-	}
-	return stableInsetsModule
-}
+	React.useEffect(() => {
+		const flux = revenge.discord.flux
+		console.log(
+			'[ServerDrawer] dock: flux.getStore type =',
+			typeof flux?.getStore,
+		)
+		if (typeof flux?.getStore !== 'function') return
 
-export function getBottomInset(): number {
-	try {
-		const bottom =
-			getStableInsetsModule()?.getStableSafeAreaInsets?.('main')?.bottom
-		if (typeof bottom === 'number' && bottom > 0) return bottom
-	} catch {}
-	return 0
+		let store: any
+		const { QuestDockMode } = getQuestDockMode() ?? {}
+		// The client's enum field is a stable string pair ("collapsed"/"expanded"),
+		// and QuestConstants may not be initialized yet, so anchor on the literal.
+		const expandedMode = QuestDockMode?.EXPANDED ?? 'expanded'
+		console.log('[ServerDrawer] dock: QuestDockMode.EXPANDED =', expandedMode)
+
+		const onChange = () => {
+			try {
+				const mode = store?.prevRestingQuestDockMode
+				const next = mode === expandedMode
+				if (next !== lastRef.current) {
+					lastRef.current = next
+					console.log(
+						'[ServerDrawer] dock: prevRestingQuestDockMode =',
+						mode,
+						'-> isExpanded =',
+						next,
+					)
+					setExpanded(next)
+				}
+			} catch {
+				// ignore
+			}
+		}
+
+		let unsubWait: (() => void) | undefined
+		try {
+			unsubWait = flux.getStore('QuestDockStore', (s: any) => {
+				store = s
+				console.log(
+					'[ServerDrawer] dock: store resolved, getName =',
+					store?.getName?.(),
+					'hasToken =',
+					Boolean(store?._dispatchToken),
+					'listener =',
+					typeof store?.addReactChangeListener,
+				)
+				store?.addReactChangeListener?.(onChange)
+				onChange()
+			})
+		} catch (e) {
+			console.log('[ServerDrawer] dock: flux.getStore threw', e)
+		}
+
+		return () => {
+			try {
+				unsubWait?.()
+			} catch {
+				// ignore
+			}
+			try {
+				store?.removeReactChangeListener?.(onChange)
+			} catch {
+				// ignore
+			}
+		}
+	}, [])
+
+	return expanded
 }

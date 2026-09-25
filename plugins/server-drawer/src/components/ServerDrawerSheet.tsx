@@ -2,14 +2,15 @@ import { createGuild, logStatus, openDms, switchGuild } from '../lib/actions'
 import { kmmiio } from '../lib/kmmiio'
 import {
 	getAssetId,
-	getBottomInset,
 	getExternalCoordinationContext,
 	getGestureContext,
 	getQuestDockMode,
 	lazy,
 	reactive,
 	useFluxStore,
+	useQuestDockExpanded,
 } from '../lib/modules'
+import { COLLAPSED_DOCK_HEIGHT } from '../lib/quests'
 import DmTile from './DmTile'
 import FolderItem from './FolderItem'
 import GuildItem from './GuildItem'
@@ -27,14 +28,14 @@ const {
 } = revenge.react.ReactNative
 
 const ICON = 48
-const GAP = 6
-const PAD = 12
+const GAP = 8
+const ROW_GAP = 13
 const HIT_SLOP = { top: 4, left: 12, bottom: 4, right: 12 }
 
 const FallbackGestureContext = revenge.react.React.createContext(null)
 const FallbackExternalContext = revenge.react.React.createContext(null)
 
-function CreateJoinButton({ onPress }: { onPress: () => void }) {
+export function CreateJoinButton({ onPress }: { onPress: () => void }) {
 	const React = revenge.react.React
 	const scale = React.useRef(
 		new revenge.react.ReactNative.Animated.Value(1),
@@ -149,69 +150,186 @@ export default function ServerDrawerSheet({
 
 	const { width: winW } = Dimensions.get('window')
 
-	const cols = Math.max(3, Math.floor((winW - PAD * 2 + GAP) / (ICON + GAP)))
+	// Measure the slot width exactly once and freeze it. The card is narrower
+	// than the window (e.g. 328 vs 360) and its width is re-animated on every
+	// open/close (snap + dimensionsLayoutTransition), so deriving columns from a
+	// live measurement would re-wrap the rows mid-motion: an icon keeps trying
+	// to join the first row, then changes its mind, round and round. Fixing the
+	// geometry to the first stable measurement makes the rows unable to reflow.
+	const [layoutW, setLayoutW] = React.useState(0)
+	const firstW = React.useRef(0)
+	const onCardLayout = React.useCallback((e: any) => {
+		if (firstW.current === 0) {
+			const w = e.nativeEvent.layout.width
+			if (w > 0) {
+				firstW.current = w
+				setLayoutW(w)
+			}
+		}
+	}, [])
+
+	// The first layout may fire before the card's animated width is applied
+	// (transient/undefined), which would otherwise freeze an absurd col count.
+	// The card is never wider than the window in any mode, so clamp to winW.
+	const base = Math.max(0, Math.min(layoutW > 0 ? layoutW : winW, winW))
+	// 6 icons (6*48 + 5*8 = 328) fill the collapsed card flush edge-to-edge;
+	// the ScrollView content container centers the grid, so the same on-screen
+	// x holds in collapsed and expanded. Columns stay constant between states
+	// so an icon never jumps to another row.
+	const cols = Math.max(3, Math.floor((base + GAP) / (ICON + GAP)))
 	const totalW = cols * ICON + (cols - 1) * GAP
-	const padX = Math.max(0, (winW - totalW) / 2)
+
+	React.useEffect(() => {
+		if (firstW.current !== 0) {
+			console.log(
+				'[ServerDrawer] grid geometry: cardW =',
+				firstW.current,
+				'clamped base =',
+				base,
+				'cols =',
+				cols,
+				'totalW =',
+				totalW,
+			)
+		}
+	}, [base, cols, totalW])
 
 	const { hideDmTile, showGuildNames } = reactive()
 
-	const bottomPad = Math.max(16, getBottomInset() + 8)
+	const isExpanded = useQuestDockExpanded()
 
 	React.useEffect(() => {
 		logStatus()
-	}, [])
+		console.log(
+			'[ServerDrawer] dock anchor: isExpanded =',
+			isExpanded,
+			'layout = single-grid (card height clips)',
+		)
+	}, [isExpanded])
+
+	// Safety net: keep the collapsed wrapper taller than stock so the first
+	// row's icons (and their badges/rings) are not clipped top/bottom and the
+	// second row peeks. QuestDockHooks writes QUEST_DOCK_COLLAPSED_HEIGHT on
+	// collapse; if it already initialized with the stock value, bump it here.
+	React.useEffect(() => {
+		if (!specs || isExpanded) return
+		const cur = specs.get()?.height
+		if (typeof cur === 'number' && cur < COLLAPSED_DOCK_HEIGHT) {
+			specs.set({ ...(specs.get() ?? {}), height: COLLAPSED_DOCK_HEIGHT })
+			console.log(
+				'[ServerDrawer] collapsed dock height override ->',
+				COLLAPSED_DOCK_HEIGHT,
+				'(was',
+				cur,
+				')',
+			)
+		}
+	}, [isExpanded, specs])
+
+	const tiles: any[] = []
+	if (!hideDmTile) {
+		tiles.push(
+			<DmTile
+				key="dm"
+				onPress={() => {
+					collapseDock()
+					openDms()
+				}}
+			/>,
+		)
+	}
+	for (const node of nodes) {
+		tiles.push(
+			node.type === 'folder' ? (
+				<FolderItem
+					key={node.id}
+					node={node}
+					onPick={pick}
+					showNames={!!showGuildNames}
+				/>
+			) : (
+				<GuildItem
+					key={node.id}
+					node={node}
+					onPick={pick}
+					showNames={!!showGuildNames}
+				/>
+			),
+		)
+	}
+	tiles.push(<CreateJoinButton key="create" onPress={openCreateJoin} />)
+
+	React.useEffect(() => {
+		console.log(
+			'[ServerDrawer] grid rows: tiles =',
+			tiles.length,
+			'cols =',
+			cols,
+		)
+		console.log(
+			'[ServerDrawer] node dump: dmHidden =',
+			hideDmTile,
+			'nodes =',
+			nodes.map((n: any) => ({
+				t: n.type,
+				id: String(n.id).slice(0, 8),
+				kids: n.children?.length ?? 0,
+			})),
+		)
+	}, [tiles.length, cols, nodes, hideDmTile])
 
 	return (
-		<ScrollView style={st.alignTop} showsVerticalScrollIndicator={false}>
-			<View
-				style={[
-					st.grid,
-					{ paddingHorizontal: padX, gap: GAP, paddingBottom: bottomPad },
-				]}
-				onLayout={onLayout}
+		<View style={st.slot} onLayout={onCardLayout}>
+			<ScrollView
+				style={st.alignTop}
+				contentContainerStyle={st.content}
+				showsVerticalScrollIndicator={false}
 			>
-				{!hideDmTile && (
-					<DmTile
-						onPress={() => {
-							collapseDock()
-							openDms()
-						}}
-					/>
-				)}
-				{nodes.map((node: any) =>
-					node.type === 'folder' ? (
-						<FolderItem
-							key={node.id}
-							node={node}
-							onPick={pick}
-							showNames={!!showGuildNames}
-						/>
-					) : (
-						<GuildItem
-							key={node.id}
-							node={node}
-							onPick={pick}
-							showNames={!!showGuildNames}
-						/>
-					),
-				)}
-				<CreateJoinButton onPress={openCreateJoin} />
-			</View>
-		</ScrollView>
+				<View
+					style={[
+						st.grid,
+						{
+							width: totalW,
+							paddingTop: 12,
+							paddingBottom: 8,
+							columnGap: GAP,
+							rowGap: ROW_GAP,
+						},
+					]}
+					onLayout={onLayout}
+				>
+					{tiles}
+				</View>
+			</ScrollView>
+		</View>
 	)
 }
 
 const st = StyleSheet.create({
+	// Single-grid mode: the grid lives only in this (expanded) slot and is
+	// always mounted/visible; the collapsed slot renders null. The card is
+	// overflow:hidden, so its native height animation clips the top rows in
+	// collapse and reveals the rest on open — no crossfade, no row reflow.
+	slot: {
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+	},
 	alignTop: {
 		flex: 1,
 		justifyContent: 'flex-start',
 		alignItems: 'flex-start',
 	},
+	content: {
+		width: '100%',
+		alignItems: 'center',
+	},
 	grid: {
 		flexDirection: 'row',
 		flexWrap: 'wrap',
-		paddingTop: 4,
-		paddingBottom: 16,
+		alignContent: 'flex-start',
 	},
 	createJoin: {
 		width: ICON,

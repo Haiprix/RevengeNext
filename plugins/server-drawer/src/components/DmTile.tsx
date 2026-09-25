@@ -1,8 +1,10 @@
 import { openDms } from '../lib/actions'
 import { kmmiio } from '../lib/kmmiio'
-import { getME, lazy, useFluxStore } from '../lib/modules'
+import { getFluxStore, getME, lazy, useFluxStore } from '../lib/modules'
+import MentionBadge from './MentionBadge'
 
-const { Pressable, View, Image, StyleSheet } = revenge.react.ReactNative
+const { Pressable, View, Image, StyleSheet, Animated } =
+	revenge.react.ReactNative
 
 const ICON = 48
 const ChatIcon = lazy(() => {
@@ -32,35 +34,91 @@ function useDmTileColors() {
 	return { selected, bg, tint }
 }
 
+function useDmMentionCount(): number {
+	return useFluxStore(
+		'PrivateChannelReadStateStore',
+		store => {
+			const ids = store?.getUnreadPrivateChannelIds?.() ?? []
+			if (ids.length === 0) return 0
+			const readState = getFluxStore('ReadStateStore')
+			let total = 0
+			for (const id of ids) {
+				total += readState?.getMentionCount?.(id) ?? 0
+			}
+			return total
+		},
+		0,
+	)
+}
+
+function usePressScale(): [any, (pressed: boolean) => void] {
+	const React = revenge.react.React
+	const scale = React.useRef(
+		new revenge.react.ReactNative.Animated.Value(1),
+	).current
+	const [pressed, setPressed] = React.useState(false)
+	React.useEffect(() => {
+		Animated.spring(scale, {
+			toValue: pressed ? 0.8 : 1,
+			useNativeDriver: true,
+			damping: 14,
+			stiffness: 220,
+		}).start()
+	}, [pressed])
+	return [scale, setPressed]
+}
+
 export default function DmTile({ onPress }: { onPress?: () => void }) {
 	const { bg, tint } = useDmTileColors()
+	const dmCount = useDmMentionCount()
+	const [scale, setPressed] = usePressScale()
 
 	return (
-		<Pressable onPress={onPress ?? openDms} style={st.outer}>
-			<View style={[st.icon, { backgroundColor: bg }]}>
+		<Pressable
+			onPress={onPress ?? openDms}
+			onPressIn={() => setPressed(true)}
+			onPressOut={() => setPressed(false)}
+			style={st.outer}
+		>
+			<Animated.View
+				style={[st.icon, { backgroundColor: bg, transform: [{ scale }] }]}
+			>
 				{ChatIcon() != null && (
 					<Image
 						source={ChatIcon()}
 						style={{ width: 24, height: 24, tintColor: tint }}
 					/>
 				)}
-			</View>
+			</Animated.View>
+			<MentionBadge count={dmCount} />
 		</Pressable>
 	)
 }
 
 export function RailDmTile() {
 	const { tint, bg } = useDmTileColors()
+	const dmCount = useDmMentionCount()
+	const [scale, setPressed] = usePressScale()
 
 	return (
-		<Pressable onPress={openDms} style={railSt.outer}>
-			<View style={[railSt.icon, { backgroundColor: bg }]}>
-				{ChatIcon() != null && (
-					<Image
-						source={ChatIcon()}
-						style={{ width: 24, height: 24, tintColor: tint }}
-					/>
-				)}
+		<Pressable
+			onPress={openDms}
+			onPressIn={() => setPressed(true)}
+			onPressOut={() => setPressed(false)}
+			style={railSt.outer}
+		>
+			<View style={railSt.iconWrap} collapsable={false}>
+				<Animated.View
+					style={[railSt.icon, { backgroundColor: bg, transform: [{ scale }] }]}
+				>
+					{ChatIcon() != null && (
+						<Image
+							source={ChatIcon()}
+							style={{ width: 24, height: 24, tintColor: tint }}
+						/>
+					)}
+				</Animated.View>
+				<MentionBadge count={dmCount} />
 			</View>
 		</Pressable>
 	)
@@ -84,6 +142,7 @@ const railSt = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
+	iconWrap: { width: ICON, height: ICON },
 	icon: {
 		width: ICON,
 		height: ICON,

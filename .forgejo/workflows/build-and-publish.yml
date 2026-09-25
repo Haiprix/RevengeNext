@@ -72,11 +72,7 @@ jobs:
 
       - name: Set JAVA_HOME
         run: |
-          if command -v java >/dev/null 2>&1; then
-            export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
-          else
-            export JAVA_HOME=/usr/lib/jvm/temurin-25-jdk-amd64
-          fi
+          export JAVA_HOME=/usr/lib/jvm/temurin-25-jdk-amd64
           echo "JAVA_HOME=$JAVA_HOME" >> $GITHUB_ENV
           echo "$JAVA_HOME/bin" >> $GITHUB_PATH
           rm -f "$JAVA_HOME/lib/security/cacerts"

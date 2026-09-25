@@ -41,7 +41,7 @@ jobs:
             git config user.email 'noreply@git.gay'
             git add .
             git commit -m "chore(kmmiio-lib): update Discord module IDs (build ${BUILD})"
-            git push "https://x-access-token:${{ secrets.PAT }}@${GITHUB_SERVER_URL#https://}/${{ github.repository }}.git" HEAD:main
+            git push "https://x-access-token:${{ secrets.PAT }}@${GITHUB_SERVER_URL#https://}/${{ github.repository }}.git" HEAD:dev
           else
             echo 'No module ID changes'
           fi

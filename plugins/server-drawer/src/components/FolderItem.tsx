@@ -1,8 +1,11 @@
 import { toggleFolder } from '../lib/actions'
+import { openContextMenu, useMenuState } from '../lib/contextMenu'
 import { kmmiio } from '../lib/kmmiio'
-import { lazy, useFluxStore } from '../lib/modules'
+import { buildFolderMenuItems } from '../lib/menuItems'
+import { lazy, useFluxStore, useSelectedGuildId } from '../lib/modules'
 import GuildIcon from './GuildIcon'
 import GuildItem from './GuildItem'
+import MentionBadge from './MentionBadge'
 import type { ReactNode } from 'react'
 
 const { View, Text, Image, Animated, Pressable, StyleSheet } =
@@ -44,16 +47,7 @@ function FolderBadge({ node }: { node: any }) {
 		0,
 	)
 
-	if (total > 0) {
-		return (
-			<View style={fbd.outline}>
-				<View style={fbd.badge}>
-					<Text style={fbd.text}>{total > 99 ? '99+' : String(total)}</Text>
-				</View>
-			</View>
-		)
-	}
-	return null
+	return <MentionBadge count={total} />
 }
 
 function FolderCover({ node }: { node: any }) {
@@ -142,7 +136,41 @@ export default function FolderItem({
 		springTo(1)
 	}, [open, springTo])
 
-	const labelColor = kmmiio()?.resolveColor?.('TEXT_NORMAL')
+	const guildIdToShow = useSelectedGuildId()
+	const folderSelected = node.children.some(
+		(ch: any) => ch.id === guildIdToShow,
+	)
+	const labelColor = kmmiio()?.resolveColor?.('TEXT_DEFAULT')
+	const brandColor = kmmiio()?.resolveColor?.('TEXT_BRAND')
+
+	const menuState = useMenuState()
+	const menuRef = React.useRef<any>(null)
+
+	const title =
+		typeof node.name === 'string' && node.name.length > 0 ? node.name : 'Folder'
+
+	const suppressPick = React.useRef(false)
+
+	const openMenu = React.useCallback(() => {
+		const menuItems = buildFolderMenuItems(node)
+		console.log(
+			'[ServerDrawer] folder long-press: items =',
+			menuItems.length,
+			'menuState =',
+			Boolean(menuState),
+		)
+		if (!menuState || menuItems.length === 0) return
+		suppressPick.current = true
+		openContextMenu({
+			state: menuState,
+			ref: menuRef,
+			items: menuItems,
+			title,
+			onClose: () => {
+				suppressPick.current = false
+			},
+		})
+	}, [menuState, node, title])
 
 	const folderContent = (icon: ReactNode) => (
 		<View style={fo.wrap}>
@@ -151,7 +179,12 @@ export default function FolderItem({
 				<Text
 					numberOfLines={2}
 					ellipsizeMode="tail"
-					style={[fo.label, { color: labelColor }]}
+					style={[
+						fo.label,
+						{
+							color: folderSelected && brandColor ? brandColor : labelColor,
+						},
+					]}
 				>
 					{node.name}
 				</Text>
@@ -159,13 +192,19 @@ export default function FolderItem({
 		</View>
 	)
 
-	const folderButton = (content: ReactNode) => (
+	const folderButton = (content: ReactNode, buttonProps?: any) => (
 		<Pressable
-			onPress={() => toggleFolder(node.id as string)}
-			onPressIn={() => setPressed(true)}
+			onPress={() => {
+				if (!suppressPick.current) toggleFolder(node.id as string)
+			}}
+			onLongPress={openMenu}
+			onPressIn={() => {
+				suppressPick.current = false
+				setPressed(true)
+			}}
 			onPressOut={() => setPressed(false)}
 		>
-			<View collapsable={false}>
+			<View {...buttonProps} ref={menuRef} collapsable={false}>
 				<Animated.View style={{ transform: [{ scale }] }}>
 					{content}
 				</Animated.View>
@@ -173,36 +212,72 @@ export default function FolderItem({
 		</Pressable>
 	)
 
-	return open ? (
+	const folderMenu = (content: ReactNode) => folderButton(content)
+
+	return (
 		<>
-			{folderButton(
-				folderContent(
-					<View
-						style={[fo.openIcon, { backgroundColor: folderColor(node.color) }]}
-					>
-						{FolderIcon() != null && (
-							<Image
-								source={FolderIcon()}
-								style={fo.folderImg}
-								tintColor="#fff"
+			{open ? (
+				<>
+					{folderMenu(
+						folderContent(
+							<View
+								style={[
+									fo.openIcon,
+									{ backgroundColor: folderColor(node.color) },
+								]}
+							>
+								{FolderIcon() != null && (
+									<Image
+										source={FolderIcon()}
+										style={fo.folderImg}
+										tintColor="#fff"
+									/>
+								)}
+							</View>,
+						),
+					)}
+					{node.children.map((ch: any) => (
+						<FadeIn key={ch.id}>
+							<GuildItem
+								node={ch}
+								onPick={onPick}
+								showNames={showNames}
+								selected={ch.id === guildIdToShow}
 							/>
-						)}
-					</View>,
-				),
+						</FadeIn>
+					))}
+				</>
+			) : (
+				folderMenu(
+					folderContent(
+						<View style={fo.coverWrap} collapsable={false}>
+							{folderSelected && (
+								<View
+									pointerEvents="none"
+									style={[fo.selection, { borderColor: brandColor }]}
+								/>
+							)}
+							<FolderCover node={node} />
+						</View>,
+					),
+				)
 			)}
-			{node.children.map((ch: any) => (
-				<FadeIn key={ch.id}>
-					<GuildItem node={ch} onPick={onPick} showNames={showNames} />
-				</FadeIn>
-			))}
 		</>
-	) : (
-		folderButton(folderContent(<FolderCover node={node} />))
 	)
 }
 
 const fo = StyleSheet.create({
 	wrap: { width: ICON, alignItems: 'center' },
+	coverWrap: { width: ICON, height: ICON },
+	selection: {
+		position: 'absolute',
+		top: -5,
+		left: -5,
+		right: -5,
+		bottom: -5,
+		borderWidth: 3,
+		borderRadius: 20,
+	},
 	openIcon: {
 		width: ICON,
 		height: ICON,
@@ -218,33 +293,5 @@ const fo = StyleSheet.create({
 		lineHeight: 12,
 		fontWeight: '600',
 		textAlign: 'center',
-	},
-})
-
-const fbd = StyleSheet.create({
-	outline: {
-		position: 'absolute',
-		bottom: -3,
-		right: -3,
-		padding: 2,
-		borderRadius: 999,
-		backgroundColor: '#1a1a2e',
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	badge: {
-		minWidth: 19,
-		height: 19,
-		borderRadius: 999,
-		backgroundColor: '#ed4245',
-		alignItems: 'center',
-		justifyContent: 'center',
-		paddingHorizontal: 5,
-	},
-	text: {
-		color: '#fff',
-		fontSize: 10,
-		fontWeight: '700',
-		lineHeight: 19,
 	},
 })

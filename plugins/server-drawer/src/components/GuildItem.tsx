@@ -1,6 +1,9 @@
+import { openContextMenu, useMenuState } from '../lib/contextMenu'
 import { kmmiio } from '../lib/kmmiio'
-import { useFluxStore } from '../lib/modules'
+import { buildGuildMenuItems } from '../lib/menuItems'
+import { useFluxStore, useSelectedGuildId } from '../lib/modules'
 import GuildIcon from './GuildIcon'
+import MentionBadge from './MentionBadge'
 
 const { View, Text, Pressable, Animated, StyleSheet } =
 	revenge.react.ReactNative
@@ -20,15 +23,7 @@ function GuildBadge({ guildId }: { guildId: string }) {
 	)
 
 	if (mentionCount > 0) {
-		return (
-			<View style={bd.outline}>
-				<View style={bd.badge}>
-					<Text style={bd.text}>
-						{mentionCount > 99 ? '99+' : String(mentionCount)}
-					</Text>
-				</View>
-			</View>
-		)
+		return <MentionBadge count={mentionCount} />
 	}
 
 	if (hasUnread) {
@@ -46,10 +41,12 @@ export default function GuildItem({
 	node,
 	onPick,
 	showNames,
+	selected,
 }: {
 	node: any
 	onPick: (id: string) => void
 	showNames?: boolean
+	selected?: boolean
 }) {
 	const React = revenge.react.React
 
@@ -79,18 +76,62 @@ export default function GuildItem({
 		store => store?.getGuild?.(guildId)?.name ?? '',
 		'',
 	)
-	const labelColor = kmmiio()?.resolveColor?.('TEXT_NORMAL')
+	const selectedGuildId = useSelectedGuildId()
+	const selectedItem = selected ?? selectedGuildId === guildId
+	const resolveColor = kmmiio()?.resolveColor
+	const labelColor = resolveColor?.('TEXT_DEFAULT')
+	const brandColor = resolveColor?.('TEXT_BRAND') ?? '#5865f2'
 
-	return (
+	const menuState = useMenuState()
+	const menuRef = React.useRef<any>(null)
+
+	const suppressPick = React.useRef(false)
+
+	const openMenu = React.useCallback(() => {
+		const menuItems = buildGuildMenuItems(guildId)
+		console.log(
+			'[ServerDrawer] guild long-press: items =',
+			menuItems.length,
+			'menuState =',
+			Boolean(menuState),
+		)
+		if (!menuState || menuItems.length === 0) return
+		suppressPick.current = true
+		openContextMenu({
+			state: menuState,
+			ref: menuRef,
+			items: menuItems,
+			title: name || guildId,
+			onClose: () => {
+				suppressPick.current = false
+			},
+		})
+	}, [menuState, guildId, name])
+
+	const tile = (buttonProps?: any) => (
 		<Pressable
-			onPress={() => onPick(guildId)}
-			onPressIn={() => setPressed(true)}
+			onPress={() => {
+				if (!suppressPick.current) onPick(guildId)
+			}}
+			onLongPress={openMenu}
+			onPressIn={() => {
+				suppressPick.current = false
+				setPressed(true)
+			}}
 			onPressOut={() => setPressed(false)}
 		>
-			<View style={st.outer}>
-				<View style={st.iconWrap} collapsable={false}>
-					<Animated.View style={[st.icon, { transform: [{ scale }] }]}>
-						<GuildIcon id={guildId} />
+			<View {...buttonProps} ref={menuRef} collapsable={false} style={st.outer}>
+				<View style={st.iconWrap}>
+					<Animated.View style={[st.tile, { transform: [{ scale }] }]}>
+						{selectedItem && (
+							<View
+								pointerEvents="none"
+								style={[st.selection, { borderColor: brandColor }]}
+							/>
+						)}
+						<View style={st.icon}>
+							<GuildIcon id={guildId} />
+						</View>
 					</Animated.View>
 					<GuildBadge guildId={guildId} />
 				</View>
@@ -98,7 +139,12 @@ export default function GuildItem({
 					<Text
 						numberOfLines={2}
 						ellipsizeMode="tail"
-						style={[st.label, { color: labelColor }]}
+						style={[
+							st.label,
+							{
+								color: selectedItem && brandColor ? brandColor : labelColor,
+							},
+						]}
 					>
 						{name}
 					</Text>
@@ -106,11 +152,23 @@ export default function GuildItem({
 			</View>
 		</Pressable>
 	)
+
+	return tile()
 }
 
 const st = StyleSheet.create({
 	outer: { width: ICON, alignItems: 'center' },
 	iconWrap: { width: ICON, height: ICON },
+	tile: { width: ICON, height: ICON },
+	selection: {
+		position: 'absolute',
+		top: -5,
+		left: -5,
+		right: -5,
+		bottom: -5,
+		borderWidth: 3,
+		borderRadius: 20,
+	},
 	icon: { width: ICON, height: ICON, borderRadius: 16, overflow: 'hidden' },
 	label: {
 		marginTop: 4,
@@ -123,31 +181,6 @@ const st = StyleSheet.create({
 })
 
 const bd = StyleSheet.create({
-	outline: {
-		position: 'absolute',
-		bottom: -3,
-		right: -3,
-		padding: 2,
-		borderRadius: 999,
-		backgroundColor: '#1a1a2e',
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	badge: {
-		minWidth: 19,
-		height: 19,
-		borderRadius: 999,
-		backgroundColor: '#ed4245',
-		alignItems: 'center',
-		justifyContent: 'center',
-		paddingHorizontal: 5,
-	},
-	text: {
-		color: '#fff',
-		fontSize: 10,
-		fontWeight: '700',
-		lineHeight: 19,
-	},
 	dotOutline: {
 		position: 'absolute',
 		bottom: -2,

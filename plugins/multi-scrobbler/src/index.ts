@@ -1,6 +1,6 @@
 import { DEFAULTS } from './defaults'
-import { initKmmiioLib } from './lib/modules'
 import { stop, tryInitialize } from './lib/manager'
+import { initKmmiioLib } from './lib/modules'
 import { getSettings, setStorage } from './lib/state'
 import { applySidebarSettings, registerPages } from './ui/pages/routes'
 import Settings from './ui/pages/Settings'
@@ -15,9 +15,9 @@ export default plugin<{ jsonStorage: MultiScrobblerStorage }>({
 		default: DEFAULTS,
 	},
 	start({ cleanup, jsonStorage, plugin }) {
-		const kmmiio = (globalThis as any).__kmmiio
+		const kmmiio = plugin.api?.unscoped?.kmmiio
 		kmmiio?.setActivePlugin?.(plugin.manifest.id)
-		initKmmiioLib(kmmiio)
+		initKmmiioLib(plugin.api)
 		kmmiio?.registerPlugin({
 			id: plugin.manifest.id,
 			name: plugin.manifest.name,

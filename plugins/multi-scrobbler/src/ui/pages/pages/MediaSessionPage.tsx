@@ -1,5 +1,6 @@
 /// <reference types="@revenge-mod/types/hidden" />
 
+import { kmmiioLib } from '../../../lib/modules'
 import { useEffect, useState } from 'react'
 
 interface MediaInfo {
@@ -43,7 +44,7 @@ export default function MediaSessionPage() {
 
 	useEffect(() => {
 		let alive = true
-		const kmmiio = (globalThis as any).__kmmiio
+		const kmmiio = kmmiioLib()
 
 		const refresh = async () => {
 			if (!kmmiio?.getCurrentMediaInfo) return
@@ -103,12 +104,12 @@ export default function MediaSessionPage() {
 	}, [])
 
 	const openNotifSettings = async () => {
-		const kmmiio = (globalThis as any).__kmmiio
+		const kmmiio = kmmiioLib()
 		await kmmiio?.openNotificationListenerSettings?.()
 	}
 
 	const installCompanion = async () => {
-		const kmmiio = (globalThis as any).__kmmiio
+		const kmmiio = kmmiioLib()
 		await kmmiio?.installCompanion?.()
 	}
 

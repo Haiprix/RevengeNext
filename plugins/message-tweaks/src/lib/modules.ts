@@ -1,36 +1,48 @@
-let kmmiio: any
+let container: any
 const PLUGIN_ID = 'dev.kmmiio99o.message-tweaks'
 
 export function initKmmiioLib(api: any) {
-	kmmiio = api
+	container = api
+}
+
+/**
+ * The library instance, read through the api on every call.
+ *
+ * The api object is stable but `unscoped.kmmiio` is filled in by the lib
+ * plugin's `decorate`, which can land after this plugin's `start` runs. Holding
+ * the value instead of the api would freeze `undefined` into the stash and
+ * every later call, `forceLoadLazySheets` among them, would stay a no-op.
+ */
+export function kmmiioLib(): any {
+	return container?.unscoped?.kmmiio
 }
 
 function log(module: string, action: string, found: boolean) {
-	kmmiio?.logUsage?.(PLUGIN_ID, module, action, found)
+	kmmiioLib()?.logUsage?.(PLUGIN_ID, module, action, found)
 }
 
 export function isComponentType(v: any): boolean {
-	return kmmiio?.isComponentType(v) ?? false
+	return kmmiioLib()?.isComponentType(v) ?? false
 }
 
 export function resolveComponent(exports: any): any {
-	return kmmiio?.resolveComponent(exports)
+	return kmmiioLib()?.resolveComponent(exports)
 }
 
 export function getDisplayNameFilter(name: string) {
-	const result = kmmiio?.getDisplayNameFilter(name)
+	const result = kmmiioLib()?.getDisplayNameFilter(name)
 	log('filter:displayName', 'create', result != null)
 	return result
 }
 
 export function getPropsFilter(...props: string[]) {
-	const result = kmmiio?.getPropsFilter(...props)
+	const result = kmmiioLib()?.getPropsFilter(...props)
 	log('filter:props', 'create', result != null)
 	return result
 }
 
 export function getUserStore(): any {
-	const result = kmmiio?.getUserStore?.()
+	const result = kmmiioLib()?.getUserStore?.()
 	log('store:UserStore', 'resolve', result != null)
 	return result
 }
@@ -44,7 +56,7 @@ export function getCurrentUserId(): string | undefined {
 }
 
 export function getIcon(name: string): () => any {
-	const result = kmmiio?.getIcon(name)
+	const result = kmmiioLib()?.getIcon(name)
 	log('icon', `resolve:${name}`, result != null)
 	return result
 }
@@ -54,13 +66,13 @@ export function onImportedPath<T = any>(
 	path: string,
 	cb: (namespace: T) => void,
 ): () => void {
-	const result = kmmiio?.onImportedPath?.(path, cb)
+	const result = kmmiioLib()?.onImportedPath?.(path, cb)
 	log('finder:importedPath', path, result != null)
 	return result ?? (() => {})
 }
 
 export function forceInitModule(filter: any): void {
-	kmmiio?.forceInitModule?.(filter)
+	kmmiioLib()?.forceInitModule?.(filter)
 }
 
 let channelMessages: any
@@ -68,7 +80,7 @@ let channelMessages: any
 export function getChannelMessagesCache(): any {
 	if (!channelMessages) {
 		try {
-			kmmiio?.onImportedPath?.('lib/ChannelMessages.tsx', (ns: any) => {
+			kmmiioLib()?.onImportedPath?.('lib/ChannelMessages.tsx', (ns: any) => {
 				channelMessages = ns?.default ?? ns
 			})
 		} catch {}

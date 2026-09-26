@@ -17,7 +17,12 @@ export function patchChatInput(): () => void {
 	unpatch.push(
 		getModules(getDisplayNameFilter('ChatInputActions'), (exports: any) => {
 			const component = resolveComponent(exports)
-			if (!component) return
+			if (!component) {
+				console.warn(
+					'[chatbox-avatar] ChatInputActions matched but resolved no component',
+				)
+				return
+			}
 			unpatch.push(
 				afterJSX(component, el => {
 					const position = getSettings().position
@@ -37,7 +42,12 @@ export function patchChatInput(): () => void {
 	unpatch.push(
 		getModules(getDisplayNameFilter('ChatInputSendButton'), (exports: any) => {
 			const component = resolveComponent(exports)
-			if (!component) return
+			if (!component) {
+				console.warn(
+					'[chatbox-avatar] ChatInputSendButton matched but resolved no component',
+				)
+				return
+			}
 			unpatch.push(
 				afterJSX(component, el => {
 					const position = getSettings().position

@@ -8,11 +8,11 @@ import {
 	getHapticFeedbackTypes,
 	getSelectedChannelStore,
 	getSelfPresenceStore,
-	getShowUserProfileActionSheet,
 	getTriggerHapticFeedback,
 	getUserStore,
 	isComponentType,
 	openAccountSheet,
+	openUserProfileSheet,
 	resolveColor,
 } from './modules'
 import type { ChatboxAvatarStorage } from '../types'
@@ -59,21 +59,18 @@ export default function AvatarAction() {
 	const profileChannelId =
 		s.profileType === 'server' ? (channel?.id ?? channelId) : undefined
 
-	const openProfileSheet = () => {
+	const openProfile = () => {
 		try {
 			forceLoadLazySheets()
-			getShowUserProfileActionSheet()?.({
-				userId: self.id,
-				channelId: profileChannelId,
-			})
+			openUserProfileSheet(self.id, profileChannelId)
 		} catch {}
 	}
 
 	const handlePress = () => {
 		if (s.pressAction === 'server') {
-			openAccountSheet(self.id, channel?.id ?? channelId)
+			openAccountSheet()
 		} else {
-			openProfileSheet()
+			openProfile()
 		}
 	}
 
@@ -83,9 +80,9 @@ export default function AvatarAction() {
 			getTriggerHapticFeedback()?.(types?.SOFT)
 		} catch {}
 		if (s.longPressAction === 'server') {
-			openAccountSheet(self.id, channel?.id ?? channelId)
+			openAccountSheet()
 		} else {
-			openProfileSheet()
+			openProfile()
 		}
 	}
 

@@ -30,3 +30,21 @@ export function getDisplayNameFilter(name: string) {
 export function resolveComponent(exports: any): any {
 	return kmmiioLib()?.resolveComponent(exports)
 }
+
+/**
+ * Semantic/raw colour resolution is delegated to the library rather than
+ * re-derived here: it locates the token module through `lookupModule` and
+ * understands every theme Discord ships (light, dark, midnight, darker/onyx,
+ * ash), all of which a local `ThemeStore.theme === 'light'` check gets wrong.
+ */
+export function resolveColor(semToken: string): string | undefined {
+	return kmmiioLib()?.resolveColor?.(semToken)
+}
+
+export function rawColor(name: string): string | undefined {
+	return kmmiioLib()?.rawColor?.(name)
+}
+
+export function getTheme(): string {
+	return kmmiioLib()?.getTheme?.() ?? 'dark'
+}

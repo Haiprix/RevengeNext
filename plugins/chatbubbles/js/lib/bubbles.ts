@@ -1,7 +1,9 @@
+import { kmmiio } from './kmmiio'
+
 const PLUGIN_ID = 'dev.kmmiio99o.chatbubbles'
 
 function log(module: string, action: string, found: boolean) {
-	;(globalThis as any).__kmmiio?.logUsage?.(PLUGIN_ID, module, action, found)
+	kmmiio()?.logUsage?.(PLUGIN_ID, module, action, found)
 }
 
 export function isNativeAvailable(): boolean {

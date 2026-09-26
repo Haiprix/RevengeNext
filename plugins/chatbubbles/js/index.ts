@@ -1,4 +1,5 @@
 import { DEFAULTS } from './defaults'
+import { initKmmiioLib } from './lib/kmmiio'
 import { startBubbles } from './lib/manager'
 import { setStorage } from './lib/state'
 import Settings from './settings'
@@ -13,7 +14,8 @@ export default plugin<{ jsonStorage: ChatBubblesStorage }>({
 		default: DEFAULTS,
 	},
 	start({ cleanup, jsonStorage, plugin }) {
-		const kmmiio = (globalThis as any).__kmmiio
+		const kmmiio = plugin.api?.unscoped?.kmmiio
+		initKmmiioLib(plugin.api)
 		kmmiio?.setActivePlugin?.(plugin.manifest.id)
 		setStorage(jsonStorage)
 		kmmiio?.registerPlugin({

@@ -11,9 +11,9 @@ export default plugin<{ jsonStorage: ChatboxAvatarStorage }>({
 		default: DEFAULTS,
 	},
 	start({ cleanup, jsonStorage, plugin }) {
-		const kmmiio = (globalThis as any).__kmmiio
+		const kmmiio = plugin.api?.unscoped?.kmmiio
 		kmmiio?.setActivePlugin?.(plugin.manifest.id)
-		initKmmiioLib(kmmiio)
+		initKmmiioLib(plugin.api)
 		kmmiio?.registerPlugin({
 			id: plugin.manifest.id,
 			name: plugin.manifest.name,
@@ -28,11 +28,15 @@ export default plugin<{ jsonStorage: ChatboxAvatarStorage }>({
 
 		try {
 			forceLoadLazySheets()
-		} catch {}
+		} catch (error) {
+			console.warn('[chatbox-avatar] sheet warm-up failed', error)
+		}
 
 		try {
 			cleanup(patchChatInput())
-		} catch {}
+		} catch (error) {
+			console.warn('[chatbox-avatar] chat input patch failed', error)
+		}
 	},
 	SettingsComponent: Settings,
 })

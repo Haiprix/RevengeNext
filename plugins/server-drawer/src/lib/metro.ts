@@ -1,13 +1,10 @@
 import { withStoreName } from '@revenge-mod/discord/flux'
 import { lookupModule, lookupModules } from '@revenge-mod/modules/finders'
 import {
-	createFilterGenerator,
-	FilterScopes,
 	withDependencies,
 	withName,
 	withProps,
 } from '@revenge-mod/modules/finders/filters'
-import { getModuleDependencies } from '@revenge-mod/modules/metro'
 
 // Mirrors the working serverdrawer (revenge-plugins) finder strategy:
 // plain lookupModule with { cached: false }, and a dependency-walk to reach
@@ -23,14 +20,6 @@ export function findModuleByProps(...props: string[]): any {
 		return undefined
 	}
 }
-
-// Scope the filter to both initialised and uninitialised modules so the
-// dependency-walk can target modules that are registered but not yet loaded.
-const withModuleIds = createFilterGenerator<[number[]]>(
-	([ids], id) => ids.includes(id),
-	([ids]) => `server-drawer.dependencies(${ids.join(',')})`,
-	FilterScopes.Initialized | FilterScopes.Uninitialized,
-)
 
 // Finds a module exporting all of `props`, initialising lazy modules that only
 // depend on a known-initialised store (e.g. transitionToChannel).
@@ -73,76 +62,6 @@ export function findModuleByPropsUsingStore(
 	try {
 		return lookupUsingStore(storeName, withProps(props[0], ...props.slice(1)))
 	} catch {
-		return undefined
-	}
-}
-
-// Resolves the lazy create-guild ActionCreators the way the stock GuildsBar
-// button does. Returns an opener that force-initializes the chunk and fires
-// openCreateGuildModal() once the module is ready. Candidate ids come from
-// GuildsBarCreateJoinButton's runtime dependency map, static 12187 as a
-// last resort (verified to resolve openCreateGuildModal on device).
-export function findLazyCreateOpener(
-	log: (msg: string) => void,
-): (() => void) | undefined {
-	try {
-		let deps: readonly (number | string)[] | undefined
-		try {
-			const tuple =
-				revenge.discord.utils.modules.finders.lookupModuleWithImportedPath(
-					'modules/guilds_bar/native/GuildsBarCreateJoinButton.tsx',
-				)
-			const gbId = tuple?.[1]
-			if (typeof gbId === 'number') {
-				deps = getModuleDependencies(gbId)
-			}
-		} catch {
-			// ignore
-		}
-		const derived = deps ?? []
-		log(
-			`guildsBar deps = ${
-				derived.length > 0 ? derived.join(',') : 'MISS'
-			} len=${derived.length}`,
-		)
-
-		// GuildsBar loads paths[8] first, then paths[10] (the ActionCreators).
-		// Prefer the derived ids in that order, static 12187 as a last resort.
-		const candidates = [
-			...(typeof derived[10] === 'number' ? [derived[10] as number] : []),
-			...(typeof derived[8] === 'number' ? [derived[8] as number] : []),
-			12187,
-		].filter((id, i, arr) => typeof id === 'number' && arr.indexOf(id) === i)
-
-		for (const id of candidates) {
-			log(`candidate ${id}: via=lookup.initialize`)
-			try {
-				const ns = lookupModule(withModuleIds([id]), {
-					cached: false,
-					initialize: true,
-				})[0]
-				const open =
-					ns?.default?.openCreateGuildModal ?? ns?.openCreateGuildModal
-				if (typeof open === 'function') {
-					log(`candidate ${id}: openCreateGuildModal resolved`)
-					return () => {
-						try {
-							open()
-							log(`create: fired openCreateGuildModal (runtime id ${id})`)
-						} catch (e) {
-							log(`create: runtime threw ${String(e)}`)
-						}
-					}
-				}
-			} catch {
-				// ignore
-			}
-		}
-
-		log(`create: no candidate opened`)
-		return undefined
-	} catch (e) {
-		log(`create: findLazyCreateOpener threw ${String(e)}`)
 		return undefined
 	}
 }

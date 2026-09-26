@@ -10,8 +10,7 @@
 		"resolveJsonModule": true,
 		"types": ["@revenge-mod/types"],
 		"paths": {
-			"#lib/*": ["./node_modules/@revenge-mod/types/lib/*.d.ts"],
-			"@shared": ["./plugins/shared/discord-modules.ts"]
+			"#lib/*": ["./node_modules/@revenge-mod/types/lib/*.d.ts"]
 		}
 	},
 	"include": ["plugins", "types"],

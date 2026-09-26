@@ -1,11 +1,11 @@
-import { initKmmiioLib } from './lib/modules'
 import { patchGuildsBarContextMenu } from './lib/contextMenu'
+import { initKmmiioLib } from './lib/modules'
 
 export default plugin({
 	start({ cleanup, plugin }) {
-		const kmmiio = (globalThis as any).__kmmiio
+		const kmmiio = plugin.api?.unscoped?.kmmiio
 		kmmiio?.setActivePlugin?.(plugin.manifest.id)
-		initKmmiioLib(kmmiio)
+		initKmmiioLib(plugin.api)
 		kmmiio?.registerPlugin({
 			id: plugin.manifest.id,
 			name: plugin.manifest.name,

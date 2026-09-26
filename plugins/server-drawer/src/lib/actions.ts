@@ -1,11 +1,10 @@
 import { kmmiio } from './kmmiio'
 import {
 	findFunctionByName,
-	findLazyCreateOpener,
 	findModuleByProps,
 	findModuleByPropsUsingStore,
 } from './metro'
-import { byImported, getFluxStore, getME, haptic } from './modules'
+import { getFluxStore, getME, haptic } from './modules'
 
 const TAG = '[ServerDrawer.Nav]'
 
@@ -165,69 +164,36 @@ export function openDms(): void {
 	}, 900)
 }
 
-let createNoopLogged = false
+/**
+ * The create-guild modal this plugin opens.
+ *
+ * The library resolves sheets generically, so each plugin declares the ones it
+ * owns. Stable object because the library memoizes per spec.
+ */
+const CREATE_GUILD_SHEET = {
+	prop: 'openCreateGuildModal',
+	anchor: 'pushLazy',
+} as const
+
+/** Warms the modal without opening one, so the first tap is not wasted. */
+export function forceLoadCreateGuild(): void {
+	kmmiio()?.resolveSheet?.(CREATE_GUILD_SHEET)
+}
 
 export function createGuild(): void {
 	haptic('SOFT')
-	console.log(TAG, 'create: pressed')
 
-	// The create-guild ActionCreators live in a lazy Discord chunk. Resolve
-	// the opener by several strategies in order of precision, logging each so
-	// a failing build is traceable in logcat.
-	// 1. Exact imported-path lookup (must already be initialized).
-	// 2. Props-based finder (self-initializes matching registered modules).
-	// 3. kmmiio-lib (asyncRequireImpl over __r).
-	const attempts: { name: string; open: (() => void) | undefined }[] = []
-
-	try {
-		const ns = byImported(
-			'modules/create_guild/native/CreateGuildModalActionCreators.tsx',
-		)
-		const viaPath =
-			ns?.default?.openCreateGuildModal ?? ns?.openCreateGuildModal
-		if (typeof viaPath === 'function')
-			attempts.push({ name: 'byImported', open: () => viaPath() })
-	} catch {
-		// ignore
-	}
-
-	try {
-		const mod = findModuleByProps('openCreateGuildModal')
-		const viaProps = mod?.openCreateGuildModal
-		if (typeof viaProps === 'function')
-			attempts.push({ name: 'findModuleByProps', open: () => viaProps() })
-	} catch {
-		// ignore
-	}
-
-	const create = kmmiio()?.openCreateGuildModal
-	if (typeof create === 'function')
-		attempts.push({ name: 'kmmiio', open: () => create() })
-
-	const runtimeOpen = findLazyCreateOpener(msg => console.log(TAG, msg))
-	if (typeof runtimeOpen === 'function')
-		attempts.push({ name: 'runtime', open: () => runtimeOpen() })
-
-	console.log(
-		TAG,
-		'create: resolvers =',
-		attempts.map(a => a.name).join(', ') || 'none',
-	)
-
-	const best = attempts[0]?.open
-	if (typeof best === 'function') {
-		console.log(TAG, `create: firing (${attempts[0].name})`)
-		try {
-			best()
-		} catch (e) {
-			console.warn(TAG, `create: threw ${String(e)}`)
-		}
+	const open = kmmiio()?.resolveSheet?.(CREATE_GUILD_SHEET)
+	if (typeof open !== 'function') {
+		console.warn(TAG, 'create: no opener available - no-op')
 		return
 	}
 
-	if (!createNoopLogged) {
-		createNoopLogged = true
-		console.warn(TAG, 'create: no opener available - no-op')
+	console.log(TAG, 'create: firing (kmmiio)')
+	try {
+		open()
+	} catch (e) {
+		console.warn(TAG, `create: threw ${String(e)}`)
 	}
 }
 
@@ -295,7 +261,9 @@ export function logStatus(): void {
 			? 'yes'
 			: 'no'
 	const create =
-		typeof kmmiio()?.openCreateGuildModal === 'function' ? 'lib' : 'no-lib'
+		typeof kmmiio()?.resolveSheet?.(CREATE_GUILD_SHEET) === 'function'
+			? 'lib'
+			: 'no-lib'
 	const toggle = findModuleByProps('toggleGuildFolderExpand')
 	const folder = toggle ? 'loaded' : 'MISS'
 

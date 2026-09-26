@@ -1,4 +1,4 @@
-import { startNavigation } from './lib/actions'
+import { forceLoadCreateGuild, startNavigation } from './lib/actions'
 import { bindKmmiio, kmmiio } from './lib/kmmiio'
 import { defaults, setStorageRef } from './lib/modules'
 import {
@@ -40,7 +40,7 @@ export default plugin<{ jsonStorage: ServerDrawerStorage }>({
 
 		// Pre-load the create-guild lazy chunk so the first tap isn't async.
 		try {
-			kmmiio()?.forceLoadCreateGuild?.()
+			forceLoadCreateGuild()
 		} catch {}
 
 		startNavigation()

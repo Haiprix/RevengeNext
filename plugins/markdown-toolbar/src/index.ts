@@ -18,7 +18,9 @@ export default plugin({
 		})
 		try {
 			cleanup(patchChatInput())
-		} catch {}
+		} catch (e) {
+			console.error('[kmmiio-md] patchChatInput threw', e)
+		}
 
 		if (plugin.startedLate) {
 			plugin.requireReload()

@@ -1,3 +1,4 @@
+import { kmmiioLib } from '../lib/modules'
 import { BaseService } from './BaseService'
 import { findAlbumArtUrl } from '../lib/artwork'
 import type { Track } from '../types'
@@ -8,7 +9,7 @@ export class MediaSessionService extends BaseService {
 	}
 
 	async validateCredentials(): Promise<boolean> {
-		const kmmiio = (globalThis as any).__kmmiio
+		const kmmiio = kmmiioLib()
 		if (!kmmiio?.isMediaSessionAvailable) return false
 
 		const companionInstalled = kmmiio.isCompanionInstalled
@@ -43,7 +44,7 @@ export class MediaSessionService extends BaseService {
 	}
 
 	async fetchLatestScrobble(): Promise<Track> {
-		const kmmiio = (globalThis as any).__kmmiio
+		const kmmiio = kmmiioLib()
 		if (!kmmiio?.getCurrentMediaInfo) {
 			throw new Error('MediaSession bridge not available')
 		}

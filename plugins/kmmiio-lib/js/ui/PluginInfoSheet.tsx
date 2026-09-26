@@ -1,3 +1,5 @@
+import { KmmiioLib } from '../lib/api'
+
 const { Image, View } = revenge.react.ReactNative
 const React = revenge.react.React
 
@@ -15,9 +17,7 @@ function getScrollContainer(): any {
 	return scrollContainerModule
 }
 
-function getRegistry() {
-	return (globalThis as any).__kmmiio
-}
+const getRegistry = () => KmmiioLib
 
 export default function PluginInfoSheet({ pluginId }: { pluginId: string }) {
 	const Design = revenge.discord.design.Design as any

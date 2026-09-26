@@ -1,8 +1,7 @@
+import { KmmiioLib } from '../lib/api'
 import PluginInfoSheet from './PluginInfoSheet'
 
-function getRegistry() {
-	return (globalThis as any).__kmmiio
-}
+const getRegistry = () => KmmiioLib
 
 function openPluginInfoSheet(pluginId: string) {
 	const actions = revenge.discord.actions.ActionSheetActionCreators

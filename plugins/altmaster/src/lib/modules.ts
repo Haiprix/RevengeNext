@@ -1,11 +1,23 @@
-let kmmiio: any
+let container: any
 
 export function initKmmiioLib(api: any) {
-	kmmiio = api
+	container = api
+}
+
+/**
+ * The library instance, read through the api on every call.
+ *
+ * The api object is stable but `unscoped.kmmiio` is filled in by the lib
+ * plugin's `decorate`, which can land after this plugin's `start` runs. Holding
+ * the value instead of the api would freeze `undefined` into the stash and
+ * every later call, `forceLoadLazySheets` among them, would stay a no-op.
+ */
+export function kmmiioLib(): any {
+	return container?.unscoped?.kmmiio
 }
 
 export function getUserStore(): any {
-	return kmmiio?.getUserStore?.()
+	return kmmiioLib()?.getUserStore?.()
 }
 
 export function getCurrentUserId(): string | undefined {
@@ -17,15 +29,34 @@ export function getCurrentUserId(): string | undefined {
 }
 
 export function getIcon(name: string): (() => any) | undefined {
-	return kmmiio?.getIcon?.(name)
+	return kmmiioLib()?.getIcon?.(name)
 }
 
-export function getShowUserProfileActionSheet(): any {
-	return kmmiio?.getShowUserProfileActionSheet?.()
-}
+/**
+ * The profile sheet this plugin opens.
+ *
+ * The library resolves sheets generically, so each plugin declares the ones it
+ * owns. Stable object because the library memoizes per spec.
+ */
+const PROFILE_SHEET = {
+	prop: [
+		'showUserProfileActionSheetPostConnection',
+		'getUserProfileActionSheetKey',
+	],
+	anchor: 'openLazy',
+} as const
 
-export function forceLoadLazySheets(): void {
-	kmmiio?.forceLoadLazySheets?.()
+export function openUserProfileSheet(
+	options: Record<string, unknown>,
+): boolean {
+	const opener = kmmiioLib()?.resolveSheet?.(PROFILE_SHEET)
+	if (typeof opener !== 'function') return false
+	try {
+		opener(options)
+		return true
+	} catch {
+		return false
+	}
 }
 
 /** Resolve a Discord module by its stable source path and call `cb` once it's loaded. */
@@ -33,7 +64,7 @@ export function onImportedPath<T = any>(
 	path: string,
 	cb: (namespace: T) => void,
 ): () => void {
-	const result = kmmiio?.onImportedPath?.(path, cb)
+	const result = kmmiioLib()?.onImportedPath?.(path, cb)
 	return result ?? (() => {})
 }
 

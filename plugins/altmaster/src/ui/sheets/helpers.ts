@@ -1,9 +1,8 @@
 import { resolveUser } from '../../lib/api'
 import {
-	forceLoadLazySheets,
 	getDesign,
-	getShowUserProfileActionSheet,
 	getUserStore,
+	openUserProfileSheet,
 } from '../../lib/modules'
 
 export { getDesign }
@@ -174,17 +173,5 @@ export function openSheet(Component: any, runtimeProps: any): string | null {
 }
 
 export function openAccountProfile(userId: string): boolean {
-	const opener = getShowUserProfileActionSheet()
-	if (typeof opener !== 'function') return false
-	try {
-		forceLoadLazySheets()
-		setTimeout(() => {
-			try {
-				opener({ userId, ignoreBlockedSpeedBump: false })
-			} catch {}
-		}, 0)
-		return true
-	} catch {
-		return false
-	}
+	return openUserProfileSheet({ userId, ignoreBlockedSpeedBump: false })
 }

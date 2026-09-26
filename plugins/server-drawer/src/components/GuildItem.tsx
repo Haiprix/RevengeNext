@@ -1,4 +1,4 @@
-import { openContextMenu, useMenuState } from '../lib/contextMenu'
+import { openContextMenu } from '../lib/contextMenu'
 import { kmmiio } from '../lib/kmmiio'
 import { buildGuildMenuItems } from '../lib/menuItems'
 import { useFluxStore, useSelectedGuildId } from '../lib/modules'
@@ -82,23 +82,15 @@ export default function GuildItem({
 	const labelColor = resolveColor?.('TEXT_DEFAULT')
 	const brandColor = resolveColor?.('TEXT_BRAND') ?? '#5865f2'
 
-	const menuState = useMenuState()
 	const menuRef = React.useRef<any>(null)
 
 	const suppressPick = React.useRef(false)
 
 	const openMenu = React.useCallback(() => {
 		const menuItems = buildGuildMenuItems(guildId)
-		console.log(
-			'[ServerDrawer] guild long-press: items =',
-			menuItems.length,
-			'menuState =',
-			Boolean(menuState),
-		)
-		if (!menuState || menuItems.length === 0) return
+		if (menuItems.length === 0) return
 		suppressPick.current = true
 		openContextMenu({
-			state: menuState,
 			ref: menuRef,
 			items: menuItems,
 			title: name || guildId,
@@ -106,7 +98,7 @@ export default function GuildItem({
 				suppressPick.current = false
 			},
 		})
-	}, [menuState, guildId, name])
+	}, [guildId, name])
 
 	const tile = (buttonProps?: any) => (
 		<Pressable
@@ -120,8 +112,8 @@ export default function GuildItem({
 			}}
 			onPressOut={() => setPressed(false)}
 		>
-			<View {...buttonProps} ref={menuRef} collapsable={false} style={st.outer}>
-				<View style={st.iconWrap}>
+			<View {...buttonProps} collapsable={false} style={st.outer}>
+				<View ref={menuRef} collapsable={false} style={st.iconWrap}>
 					<Animated.View style={[st.tile, { transform: [{ scale }] }]}>
 						{selectedItem && (
 							<View

@@ -37,14 +37,7 @@ export function getTokens(): CompactTokens | undefined {
 export function getTheme(): string {
 	try {
 		const theme = (revenge.discord.flux.Stores as any).ThemeStore?.theme
-		if (
-			theme === 'light' ||
-			theme === 'dark' ||
-			theme === 'midnight' ||
-			theme === 'darker'
-		) {
-			return theme
-		}
+		if (typeof theme === 'string' && theme.length > 0) return theme
 	} catch {}
 	return 'dark'
 }
@@ -63,8 +56,14 @@ export function resolveColor(semToken: string): string | undefined {
 		if (!tokens) return undefined
 		const semObj = tokens.colors?.[semToken]
 		if (!semObj) return undefined
+		const resolve = tokens.internal.resolveSemanticColor
 		const theme = getTheme()
-		return toHex(tokens.internal.resolveSemanticColor(theme, semObj))
+		const direct = toHex(resolve(theme, semObj))
+		if (direct !== undefined) return direct
+		if (theme !== 'dark') {
+			const againstDark = toHex(resolve('dark', semObj))
+			if (againstDark !== undefined) return againstDark
+		}
 	} catch {}
 	return undefined
 }

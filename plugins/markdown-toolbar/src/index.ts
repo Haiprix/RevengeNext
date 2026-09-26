@@ -3,9 +3,9 @@ import { patchChatInput } from './lib/patch'
 
 export default plugin({
 	start({ cleanup, plugin }) {
-		const kmmiio = (globalThis as any).__kmmiio
+		const kmmiio = plugin.api?.unscoped?.kmmiio
 		kmmiio?.setActivePlugin?.(plugin.manifest.id)
-		initKmmiioLib(kmmiio)
+		initKmmiioLib(plugin.api)
 		kmmiio?.registerPlugin({
 			id: plugin.manifest.id,
 			name: plugin.manifest.name,

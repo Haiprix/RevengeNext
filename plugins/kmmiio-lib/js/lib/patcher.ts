@@ -1,3 +1,9 @@
+const TAG = '[kmmiio-lib/patcher]'
+
+function failed(kind: string, error: unknown) {
+	console.warn(TAG, `${kind} did not apply:`, error)
+}
+
 export function safeInstead<
 	Parent extends Record<Key, any>,
 	Key extends keyof Parent,
@@ -8,7 +14,8 @@ export function safeInstead<
 ): () => void {
 	try {
 		return revenge.patcher.instead(parent, key, hook as any)
-	} catch {
+	} catch (error) {
+		failed(`instead(${String(key)})`, error)
 		return () => {}
 	}
 }
@@ -19,7 +26,8 @@ export function safeInsteadJSX(
 ): () => void {
 	try {
 		return revenge.react.jsxRuntime.insteadJSX(component, hook)
-	} catch {
+	} catch (error) {
+		failed('insteadJSX', error)
 		return () => {}
 	}
 }
@@ -30,7 +38,8 @@ export function safeAfterJSX(
 ): () => void {
 	try {
 		return revenge.react.jsxRuntime.afterJSX(component, hook)
-	} catch {
+	} catch (error) {
+		failed('afterJSX', error)
 		return () => {}
 	}
 }

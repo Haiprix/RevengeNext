@@ -1,7 +1,4 @@
-import {
-	forceLoadLazySheets,
-	getShowUserProfileActionSheet,
-} from '../lib/modules'
+import { openUserProfileSheet } from '../lib/modules'
 
 export interface FriendsRowsProps {
 	guildId: string
@@ -56,24 +53,23 @@ export function FriendsRows({ guildId, friends }: FriendsRowsProps) {
 										)}
 									</View>
 								}
-								onPress={
-									() => {
-										forceLoadLazySheets()
-										setTimeout(() => {
-											getShowUserProfileActionSheet()?.({
-												userId,
-												guildId,
-												ignoreBlockedSpeedBump: false,
-											})
-										}, 0)
-									}
-								}
+								onPress={() => {
+									openUserProfileSheet({
+										userId,
+										guildId,
+										ignoreBlockedSpeedBump: false,
+									})
+								}}
 							/>
 						)
 					})}
 					{hasMore && (
 						<TableRow
-							label={expanded ? `Show less (${friends.length})` : `Show all ${friends.length} friends`}
+							label={
+								expanded
+									? `Show less (${friends.length})`
+									: `Show all ${friends.length} friends`
+							}
 							color="text-default"
 							onPress={() => setExpanded(!expanded)}
 						/>

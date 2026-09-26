@@ -1,7 +1,4 @@
-import {
-	forceLoadLazySheets,
-	getShowUserProfileActionSheet,
-} from '../lib/modules'
+import { openUserProfileSheet } from '../lib/modules'
 
 export interface ServerRowsProps {
 	guildId: string
@@ -50,14 +47,11 @@ export function ServerRows({
 				onPress={
 					ownerId
 						? () => {
-								forceLoadLazySheets()
-								setTimeout(() => {
-									getShowUserProfileActionSheet()?.({
-										userId: ownerId,
-										guildId,
-										ignoreBlockedSpeedBump: false,
-									})
-								}, 0)
+								openUserProfileSheet({
+									userId: ownerId,
+									guildId,
+									ignoreBlockedSpeedBump: false,
+								})
 							}
 						: undefined
 				}

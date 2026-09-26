@@ -136,6 +136,33 @@
         }
       }
     },
+    "dev.kmmiio99o.custom.rpc": {
+      "name": "Custom RPC",
+      "description": "Set a fully custom Rich Presence activity on your profile.",
+      "author": "kmmiio99o",
+      "icon": "GameControllerIcon",
+      "channels": {
+        "latest": "1.0.0"
+      },
+      "versions": {
+        "1.0.0": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.custom.rpc@1.0.0.zip",
+          "sha256": "250e7660c4d7c14156739d9697c1daa884ef3695bebacb1ca5bd471596200082",
+          "size": 11900,
+          "dependencies": {
+            "revenge.api": {
+              "version": ">=1"
+            },
+            "discord": {
+              "version": "*"
+            },
+            "dev.kmmiio99o.lib": {
+              "version": ">=1"
+            }
+          }
+        }
+      }
+    },
     "dev.kmmiio99o.declutter": {
       "name": "Declutter",
       "description": "Hide profile clutter: avatar decorations, nameplates, profile effects, profile frames, server tags, and badges. Aswell as Nitro/Payment settings.",
@@ -169,13 +196,13 @@
       "author": "kmmiio99o",
       "icon": "SettingsIcon",
       "channels": {
-        "latest": "1.2.15"
+        "latest": "1.2.16"
       },
       "versions": {
-        "1.2.15": {
-          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.lib@1.2.15.zip",
-          "sha256": "ea3294d11488e19e8bba55bed1859cde0ac433a18266ea2b44b22c9b7bcff536",
-          "size": 30109,
+        "1.2.16": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.lib@1.2.16.zip",
+          "sha256": "ef43a159449c58996b6b9f0b0b33ec8f1e92cb8364fecac59c62ada6d9defa49",
+          "size": 30108,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

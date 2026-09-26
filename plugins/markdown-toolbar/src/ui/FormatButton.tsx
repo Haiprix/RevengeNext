@@ -1,7 +1,6 @@
-import type { FormatAction } from '../lib/actions'
+import { Pressable } from 'react-native'
 import { num } from '../lib/tokens'
-
-const { Pressable } = revenge.react.ReactNative
+import type { FormatAction } from '../lib/actions'
 
 interface Props {
 	action: FormatAction
@@ -30,6 +29,10 @@ export default function FormatButton({ action, onPress }: Props) {
 				variant="text-md/semibold"
 				color="text-muted"
 				style={{
+					...(action.fontWeight
+						? { fontWeight: action.fontWeight as any }
+						: {}),
+					...(action.fontStyle ? { fontStyle: action.fontStyle as any } : {}),
 					...(action.textDecoration && action.textDecoration !== 'none'
 						? { textDecorationLine: action.textDecoration as any }
 						: {}),

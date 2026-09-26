@@ -10,8 +10,18 @@ export interface FormatAction {
 export const FORMAT_ACTIONS: FormatAction[] = [
 	{ id: 'bold', label: 'B', fontWeight: '700', syntax: ['**', '**'] },
 	{ id: 'italic', label: 'I', fontStyle: 'italic', syntax: ['*', '*'] },
-	{ id: 'underline', label: 'U', textDecoration: 'underline', syntax: ['__', '__'] },
-	{ id: 'strikethrough', label: 'S', textDecoration: 'line-through', syntax: ['~~', '~~'] },
+	{
+		id: 'underline',
+		label: 'U',
+		textDecoration: 'underline',
+		syntax: ['__', '__'],
+	},
+	{
+		id: 'strikethrough',
+		label: 'S',
+		textDecoration: 'line-through',
+		syntax: ['~~', '~~'],
+	},
 	{ id: 'spoiler', label: '||', syntax: ['||', '||'] },
 	{ id: 'code', label: '`', syntax: ['`', '`'] },
 	{ id: 'codeblock', label: '{ }', syntax: ['```\n', '\n```'] },

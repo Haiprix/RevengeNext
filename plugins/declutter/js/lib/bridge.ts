@@ -1,9 +1,10 @@
+import { kmmiioLib } from './modules'
 import { getSettings } from './state'
 
 const PLUGIN_ID = 'dev.kmmiio99o.declutter'
 
 function log(module: string, action: string, found: boolean) {
-	;(globalThis as any).__kmmiio?.logUsage?.(PLUGIN_ID, module, action, found)
+	kmmiioLib()?.logUsage?.(PLUGIN_ID, module, action, found)
 }
 
 /**

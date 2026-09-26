@@ -1,4 +1,5 @@
 import { DEFAULTS } from '../defaults'
+import { kmmiioLib } from './modules'
 import type { JsonStorage } from '@revenge-mod/json-storage'
 import type { DeclutterSettings } from '../types'
 
@@ -22,11 +23,7 @@ export function getStorage() {
 // to the filesystem when the developer API is unavailable.
 export function isServerDrawerInstalled(): boolean {
 	try {
-		return (
-			(globalThis as any).__kmmiio?.isPluginInstalled?.(
-				SERVER_DRAWER_PLUGIN_ID,
-			) === true
-		)
+		return kmmiioLib()?.isPluginInstalled?.(SERVER_DRAWER_PLUGIN_ID) === true
 	} catch {
 		return false
 	}

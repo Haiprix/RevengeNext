@@ -1,3 +1,4 @@
+import ContextMenuHost from '../components/ContextMenuHost'
 import { RailDmTile } from '../components/DmTile'
 import { reactive, snapshot } from '../lib/modules'
 import {
@@ -21,6 +22,7 @@ function HomePanelContentPatch() {
 	return (
 		<View collapsable={false} style={{ flex: 1, width: RAIL_WIDTH }}>
 			{hideDmTile && <RailDmTile />}
+			<ContextMenuHost />
 		</View>
 	)
 }

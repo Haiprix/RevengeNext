@@ -5,6 +5,7 @@ import {
 	withName,
 	withProps,
 } from '@revenge-mod/modules/finders/filters'
+import type { Filter } from '@revenge-mod/modules/finders/filters'
 
 // Mirrors the working serverdrawer (revenge-plugins) finder strategy:
 // plain lookupModule with { cached: false }, and a dependency-walk to reach
@@ -23,10 +24,7 @@ export function findModuleByProps(...props: string[]): any {
 
 // Finds a module exporting all of `props`, initialising lazy modules that only
 // depend on a known-initialised store (e.g. transitionToChannel).
-function lookupUsingStore(
-	storeName: string,
-	filter: ReturnType<typeof withProps>,
-): any {
+function lookupUsingStore(storeName: string, filter: Filter): any {
 	const direct = lookupModule(filter, { cached: false })[0]
 	if (direct) return direct
 	const stores = [storeName, 'GuildStore', 'UserSettingsProtoStore']
@@ -61,6 +59,24 @@ export function findModuleByPropsUsingStore(
 	if (props.length === 0) return undefined
 	try {
 		return lookupUsingStore(storeName, withProps(props[0], ...props.slice(1)))
+	} catch {
+		return undefined
+	}
+}
+
+// Same store-anchored walk, but for a default-exported named function. The stock
+// guild menu builder (`getGuildsBarGuildMenuItems`) is only ever required from
+// inside the stock long-press gesture, which never runs once this plugin
+// replaces the guilds bar, so it needs the dependency walk to be reachable.
+export function findFunctionByNameUsingStore(
+	storeName: string,
+	name: string,
+): any {
+	try {
+		const found = lookupUsingStore(storeName, withName(name))
+		return typeof found === 'function' && found.name === name
+			? found
+			: undefined
 	} catch {
 		return undefined
 	}

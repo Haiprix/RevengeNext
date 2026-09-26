@@ -1,5 +1,5 @@
 import { toggleFolder } from '../lib/actions'
-import { openContextMenu, useMenuState } from '../lib/contextMenu'
+import { openContextMenu } from '../lib/contextMenu'
 import { kmmiio } from '../lib/kmmiio'
 import { buildFolderMenuItems } from '../lib/menuItems'
 import { lazy, useFluxStore, useSelectedGuildId } from '../lib/modules'
@@ -143,7 +143,6 @@ export default function FolderItem({
 	const labelColor = kmmiio()?.resolveColor?.('TEXT_DEFAULT')
 	const brandColor = kmmiio()?.resolveColor?.('TEXT_BRAND')
 
-	const menuState = useMenuState()
 	const menuRef = React.useRef<any>(null)
 
 	const title =
@@ -153,16 +152,9 @@ export default function FolderItem({
 
 	const openMenu = React.useCallback(() => {
 		const menuItems = buildFolderMenuItems(node)
-		console.log(
-			'[ServerDrawer] folder long-press: items =',
-			menuItems.length,
-			'menuState =',
-			Boolean(menuState),
-		)
-		if (!menuState || menuItems.length === 0) return
+		if (menuItems.length === 0) return
 		suppressPick.current = true
 		openContextMenu({
-			state: menuState,
 			ref: menuRef,
 			items: menuItems,
 			title,
@@ -170,11 +162,13 @@ export default function FolderItem({
 				suppressPick.current = false
 			},
 		})
-	}, [menuState, node, title])
+	}, [node, title])
 
 	const folderContent = (icon: ReactNode) => (
 		<View style={fo.wrap}>
-			{icon}
+			<View ref={menuRef} collapsable={false}>
+				{icon}
+			</View>
 			{showNames && node.name ? (
 				<Text
 					numberOfLines={2}
@@ -204,7 +198,7 @@ export default function FolderItem({
 			}}
 			onPressOut={() => setPressed(false)}
 		>
-			<View {...buttonProps} ref={menuRef} collapsable={false}>
+			<View {...buttonProps} collapsable={false}>
 				<Animated.View style={{ transform: [{ scale }] }}>
 					{content}
 				</Animated.View>

@@ -5,11 +5,11 @@
 	"description": "Quickly view your profile from the chatbox.",
 	"author": "kmmiio99o",
 	"icon": "UserSquareIcon",
-	"version": "1.2.2",
+	"version": "1.2.3",
 	"dependencies": {
 		"revenge.api": { "version": ">=1" },
 		"discord": { "version": "*" },
-		"dev.kmmiio99o.lib": { "version": ">=1" }
+		"dev.kmmiio99o.lib": { "version": ">=1.2.17" }
 	},
 	"dist": {
 		"script": "index.js"

@@ -5,11 +5,11 @@
 	"description": "Hide profile clutter: avatar decorations, nameplates, profile effects, profile frames, server tags, and badges. Aswell as Nitro/Payment settings.",
 	"author": "kmmiio99o",
 	"icon": "MagicWandIcon",
-	"version": "1.1.3",
+	"version": "1.1.4",
 	"dependencies": {
 		"revenge.api": { "version": ">=1" },
 		"discord": { "version": "*" },
-		"dev.kmmiio99o.lib": { "version": ">=1" }
+		"dev.kmmiio99o.lib": { "version": ">=1.2.17" }
 	},
 	"dist": {
 		"script": "index.js"

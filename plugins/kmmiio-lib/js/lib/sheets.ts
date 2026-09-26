@@ -1,141 +1,159 @@
-import { discordModules } from '@shared'
+import { getModules, lookupModule } from '@revenge-mod/modules/finders'
+import {
+	withDependencies,
+	withProps,
+} from '@revenge-mod/modules/finders/filters'
 
-const MODULE_PATHS = {
-	showUserProfileActionSheet:
-		'modules/user_profile/native/showUserProfileActionSheet.tsx',
-	showYouAccountActionSheet:
-		'modules/main_tabs_v2/native/tabs/you/utils/showYouAccountActionSheet.tsx',
-	YouAccountActionSheet:
-		'modules/main_tabs_v2/native/tabs/you/YouAccountActionSheet.tsx',
-} as const
+/**
+ * Matches modules whose dependencies contain the sheet's creator.
+ *
+ * The helpers are read on each call, never at module load: the runtime hands out
+ * `revenge.modules.finders.filters` late, and touching it while this module
+ * evaluates throws and takes the whole library down with it.
+ *
+ * The published types are also ahead of the runtime. They mark `includes` as
+ * deprecated in favour of `unordered`, but a runtime on the older set leaves
+ * that `undefined`, and calling it throws where `includes` works. Prefer the
+ * replacement, fall back otherwise, which also survives `includes` being
+ * removed later.
+ */
+function dependsOn(creator: unknown, maxDeps: number) {
+	const helpers = withDependencies as unknown as {
+		atMost?: (count: number, deps: unknown) => unknown
+		unordered?: (deps: unknown) => unknown
+		includes?: (deps: unknown) => unknown
+	}
+	const contains = helpers.unordered ?? helpers.includes
+	// Both helpers mutate and return the array, so the id has to be wrapped.
+	const deps = contains === undefined ? [creator] : contains([creator])
+	const bounded =
+		helpers.atMost === undefined ? deps : helpers.atMost(maxDeps, deps)
+	return withDependencies(bounded as never)
+}
+export type Sheet = (...args: unknown[]) => unknown
 
-function moduleId(name: keyof typeof MODULE_PATHS): number {
-	const id = discordModules[MODULE_PATHS[name]]
-	if (typeof id !== 'number')
-		throw new Error(`kmmiio-lib: missing module id for "${MODULE_PATHS[name]}"`)
-	return id
+/**
+ * How to find a sheet that Discord only evaluates when it opens the real one.
+ *
+ * This module deliberately knows about no specific sheet. Each plugin declares
+ * the sheets it owns, so a new sheet never requires a change here.
+ */
+export type SheetSpec = {
+	/**
+	 * Export the sheet is reached by.
+	 *
+	 * Match every export the module is known to have when the name is uncertain
+	 * across Discord versions; `withProps` requires all of them to be present.
+	 */
+	prop: string | string[]
+	/**
+	 * A member of the creator the sheet calls into, used to find the sheet among
+	 * the modules that depend on it. `openLazy` for action sheets, `pushLazy`
+	 * for modals.
+	 */
+	anchor: string
+	/**
+	 * Upper bound on the sheet's dependency count, to keep force-init cheap.
+	 *
+	 * @default 20
+	 */
+	maxDeps?: number
 }
 
-const LAZY_SHEET_IDS = [
-	moduleId('showUserProfileActionSheet'),
-	moduleId('showYouAccountActionSheet'),
-	moduleId('YouAccountActionSheet'),
-]
+const DEFAULT_MAX_DEPS = 20
 
-export function forceLoadLazySheets(): void {
-	// Intentionally NOT permanently gated: plugin start() can run before Discord
-	// is fully initialized, and the on-press path must be able to re-attempt the
-	// load. __r(id) and lookupModule(...,{initialize:true}) are idempotent for
-	// already-initialized modules, so repeating them is safe.
-	const { lookupModule } = revenge.modules.finders
-	const { withProps } = revenge.modules.finders.filters
-	const forceInit = (filter: any) => {
-		try {
-			lookupModule(filter, { initialize: true })
-		} catch {}
+/** Reads the sheet off a matched module, checking the namespace then its default. */
+function readSheet(
+	exports: unknown,
+	props: string | string[],
+): Sheet | undefined {
+	const namespace = exports as Record<string, unknown> | undefined
+	if (!namespace) return undefined
+
+	const names = typeof props === 'string' ? [props] : props
+	const candidates: unknown[] = []
+
+	for (const name of names) {
+		candidates.push(namespace[name])
+		candidates.push(
+			(namespace.default as Record<string, unknown> | undefined)?.[name],
+		)
 	}
-	forceInit(withProps('showUserProfileActionSheetPostConnection'))
-	forceInit(withProps('showYouAccountActionSheet'))
-	forceInit(withProps('requestMembersById'))
-	for (const id of LAZY_SHEET_IDS) {
-		forceLoadModule(id)
-	}
+	candidates.push(namespace.default)
+
+	for (const candidate of candidates)
+		if (typeof candidate === 'function') return candidate as Sheet
+
+	return undefined
 }
 
-const ASYNC_REQUIRE_ID = discordModules.asyncRequireImpl
+/**
+ * Resolves a sheet, memoizing it per spec.
+ *
+ * `withProps` alone can only see initialized modules, and Discord does not
+ * evaluate a sheet until it opens the real one, so on its own it never matches.
+ * Pairing it with `withDependencies` is what makes this work: that filter is
+ * exportsless, so it can match a module that is not initialized yet and force it
+ * to initialize, after which the prop filter can read its exports. The
+ * dependency it is anchored on is the creator the sheet calls into, which is
+ * always present at startup.
+ *
+ * `getModules` backs this up for the case where Discord initializes the sheet on
+ * its own later, so the first tap is not wasted.
+ *
+ * Pass a stable object: results are memoized by spec identity.
+ */
+export function resolveSheet(spec: SheetSpec): Sheet | undefined {
+	const cached = memo.get(spec)
+	if (cached) return cached
 
-function getAsyncRequire(): any {
-	const r = (globalThis as any)?.__r
-	if (typeof r !== 'function') return () => {}
+	// A throw here would escape into whatever called us, and callers include
+	// render and press handlers. Swallow it: a sheet that cannot be found is a
+	// no-op, never a broken screen.
+	let sheet: Sheet | undefined
 	try {
-		return r(ASYNC_REQUIRE_ID)?.default ?? r(ASYNC_REQUIRE_ID)
+		sheet = find(spec)
 	} catch {
-		return () => {}
+		return undefined
 	}
-}
 
-function requireLazy(id: number): Promise<any> {
-	const r = (globalThis as any)?.__r
-	if (typeof r !== 'function') return Promise.resolve(undefined)
-	const asyncRequire = getAsyncRequire()
-	if (typeof asyncRequire === 'function') {
-		try {
-			const p = asyncRequire(id)
-			if (p && typeof p.then === 'function') return p
-		} catch {}
+	if (sheet) {
+		memo.set(spec, sheet)
+		return sheet
 	}
-	if (typeof r.importDefault === 'function') {
-		try {
-			const result = r.importDefault(id)
-			if (result && typeof result.then === 'function') return result
-			return Promise.resolve(result)
-		} catch {}
-	}
-	try {
-		return Promise.resolve(r(id))
-	} catch {
-		return Promise.resolve(undefined)
-	}
-}
 
-// Force-load a module synchronously (asyncRequire then __r fallback).
-// Idempotent: __r and asyncRequire are safe to repeat for loaded modules.
-export function forceLoadModule(id: number): void {
-	const r = (globalThis as any)?.__r
-	if (typeof r !== 'function') return
-	if (typeof id !== 'number') return
-	try {
-		const asyncRequire = getAsyncRequire()
-		if (typeof asyncRequire === 'function') asyncRequire(id)
-	} catch {}
-	try {
-		r(id)
-	} catch {}
-}
-
-// Create-guild modal ActionCreators is in a lazy chunk (module ID from
-// plugins/shared/discord-modules.ts). It internally requires 12838 (the modal
-// component) once evaluated, so loading this one module is sufficient.
-const CREATE_GUILD_ID =
-	discordModules[
-		'modules/create_guild/native/CreateGuildModalActionCreators.tsx'
-	]
-
-export function forceLoadCreateGuild(): void {
-	if (typeof CREATE_GUILD_ID !== 'number') return
-	forceLoadModule(CREATE_GUILD_ID)
-}
-
-export function openCreateGuildModal() {
-	try {
-		forceLoadCreateGuild()
-	} catch {}
-	if (typeof CREATE_GUILD_ID !== 'number') return
-	requireLazy(CREATE_GUILD_ID)
-		.then((ns: any) => {
-			const create = ns?.default?.openCreateGuildModal ? ns.default : ns
-			if (typeof create?.openCreateGuildModal === 'function') {
-				create.openCreateGuildModal()
-				return
-			}
-			forceLoadCreateGuild()
+	if (!listening.has(spec)) {
+		listening.add(spec)
+		getModules(propsFilter(spec.prop), exports => {
+			const value = readSheet(exports, spec.prop)
+			if (value) memo.set(spec, value)
 		})
-		.catch(() => forceLoadCreateGuild())
+	}
+
+	return undefined
 }
 
-export function openAccountSheet(_userId: string, _channelId?: string) {
-	try {
-		const id = moduleId('showYouAccountActionSheet')
-		requireLazy(id)
-			.then((ns: any) => {
-				if (ns?.showYouAccountActionSheet) {
-					ns.showYouAccountActionSheet()
-					return
-				}
-				// Module loaded but the export isn't exposed yet; force-init the
-				// nearby modules so the sheet can resolve on retry.
-				forceLoadLazySheets()
-			})
-			.catch(() => forceLoadLazySheets())
-	} catch {}
+const memo = new Map<SheetSpec, Sheet>()
+const listening = new Set<SheetSpec>()
+
+/** `withProps` has a fixed first argument, so the first name cannot be spread. */
+function propsFilter(props: string | string[]) {
+	const [prop, ...rest] = typeof props === 'string' ? [props] : props
+	return withProps(prop, ...rest)
+}
+
+function find(spec: SheetSpec): Sheet | undefined {
+	// The anchor is resolved from already-initialized modules only, so looking it
+	// up never forces a factory to run.
+	const [, creators] = lookupModule(withProps(spec.anchor))
+	if (creators === undefined) return undefined
+
+	const [namespace] = lookupModule(
+		propsFilter(spec.prop).and(
+			dependsOn(creators, spec.maxDeps ?? DEFAULT_MAX_DEPS),
+		),
+		{ returnNamespace: true },
+	)
+
+	return readSheet(namespace, spec.prop)
 }

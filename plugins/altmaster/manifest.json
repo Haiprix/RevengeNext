@@ -5,7 +5,7 @@
 	"description": "Check linked alt accounts, report a new alt, and appeal false positives — right from the user profile context menu.",
 	"author": "kmmiio99o",
 	"icon": "ShieldIcon",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"dependencies": {
 		"revenge.api": {
 			"version": ">=1"
@@ -14,7 +14,7 @@
 			"version": "*"
 		},
 		"dev.kmmiio99o.lib": {
-			"version": ">=1"
+			"version": ">=1.2.17"
 		}
 	},
 	"dist": {

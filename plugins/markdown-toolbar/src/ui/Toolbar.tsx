@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
-import { FORMAT_ACTIONS, type FormatAction } from '../lib/actions'
-import { num } from '../lib/tokens'
+import { StyleSheet, View } from 'react-native'
+import { FORMAT_ACTIONS } from '../lib/actions'
+import { color, num, theme } from '../lib/tokens'
 import FormatButton from './FormatButton'
-
-const { View } = revenge.react.ReactNative
+import type { FormatAction } from '../lib/actions'
 
 let _chatInputRef: React.RefObject<any> | null = null
 const _listeners = new Set<(v: boolean) => void>()
@@ -18,8 +18,6 @@ export function setKeyboardVisible(visible: boolean) {
 	for (const fn of _listeners) fn(visible)
 }
 
-export function setOverlayHeight(_height: number) {}
-
 function handleFormat(action: FormatAction) {
 	const ref = _chatInputRef?.current
 	if (!ref) return
@@ -29,12 +27,13 @@ function handleFormat(action: FormatAction) {
 }
 
 export default function MarkdownToolbar() {
-	const { Card } = revenge.discord.design.Design
 	const [visible, setVisible] = useState(_keyboardVisible)
 
 	useEffect(() => {
 		_listeners.add(setVisible)
-		return () => { _listeners.delete(setVisible) }
+		return () => {
+			_listeners.delete(setVisible)
+		}
 	}, [])
 
 	const onPress = useCallback((action: FormatAction) => {
@@ -43,31 +42,35 @@ export default function MarkdownToolbar() {
 
 	if (!visible) return null
 
-	const containerPad = num.CHAT_INPUT_CONTAINER_HORIZONTAL_PADDING
-	const pillMargin = num.CHAT_INPUT_PILL_MARGIN_HORIZONTAL
+	const background =
+		color.ACCESSORY_BACKGROUND ?? (theme.isLight ? '#FFFFFF' : '#161718')
+	const border =
+		color.ACCESSORY_BORDER ?? (theme.isLight ? '#D1D5DB' : '#2B2D31')
 
 	return (
 		<View
 			style={{
-				paddingHorizontal: containerPad,
+				paddingHorizontal: num.CHAT_INPUT_HORIZONTAL_PADDING,
 				paddingBottom: 4,
 			}}
 		>
-			<Card
-				variant="secondary"
+			<View
 				style={{
-					marginHorizontal: pillMargin,
-					borderRadius: 10,
-					paddingVertical: 5,
+					backgroundColor: background,
+					borderColor: border,
+					borderWidth: StyleSheet.hairlineWidth,
+					borderRadius: 12,
+					paddingHorizontal: num.CHAT_INPUT_CONTEXT_BAR_PADDING_HORIZONTAL,
+					paddingVertical: num.CHAT_INPUT_CONTEXT_BAR_PADDING_VERTICAL,
 					flexDirection: 'row',
-					alignItems: 'stretch',
-					justifyContent: 'space-around',
+					alignItems: 'center',
+					overflow: 'hidden',
 				}}
 			>
 				{FORMAT_ACTIONS.map(action => (
 					<FormatButton key={action.id} action={action} onPress={onPress} />
 				))}
-			</Card>
+			</View>
 		</View>
 	)
 }

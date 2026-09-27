@@ -1,4 +1,5 @@
-import { defaults } from '../lib/modules'
+import { normalizeStorage } from '../lib/modules'
+import { DM_TILE_OPTIONS, openDmTileSheet } from './DmTileSheet'
 import type { PluginApi } from '@revenge-mod/plugins/types'
 import type { ServerDrawerStorage } from '../lib/modules'
 
@@ -10,22 +11,28 @@ export default function Settings({
 	const { Page } =
 		revenge.components as typeof import('@revenge-mod/components')
 	const { ScrollView } = revenge.react.ReactNative
-	const { Stack, TableRowGroup, TableSwitchRow } = revenge.discord.design.Design
+	const { Stack, TableRow, TableRowGroup, TableSwitchRow } =
+		revenge.discord.design.Design
 
-	const s = { ...defaults, ...(api.jsonStorage.use() ?? {}) }
+	const s = normalizeStorage(api.jsonStorage.use())
+	// `set` deep-merges, so only the changed key has to be sent.
 	const set = (patch: Partial<ServerDrawerStorage>) =>
-		api.jsonStorage.set({ ...s, ...patch })
+		api.jsonStorage.set(patch)
+
+	const dmTileLabel =
+		DM_TILE_OPTIONS.find(option => option.value === s.dmTileMode)?.label ??
+		DM_TILE_OPTIONS[0].label
 
 	return (
 		<Page>
 			<ScrollView contentContainerStyle={{ padding: 0 }}>
 				<Stack>
 					<TableRowGroup title="Server Drawer">
-						<TableSwitchRow
-							label="Hide DM Tile"
-							subLabel="Removes the DM tile from the dock"
-							value={s.hideDmTile}
-							onValueChange={v => set({ hideDmTile: v })}
+						<TableRow
+							label="DM Tile"
+							subLabel={dmTileLabel}
+							arrow
+							onPress={openDmTileSheet}
 						/>
 						<TableSwitchRow
 							label="Show Guild Names"

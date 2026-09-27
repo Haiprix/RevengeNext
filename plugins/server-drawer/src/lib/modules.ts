@@ -1,5 +1,26 @@
+/**
+ * Where the DM tile is shown.
+ *
+ * - `drawer`: inside the server drawer, as a tile next to the guilds.
+ * - `rail`: in the GuildsBar's own slot, so the drawer keeps its full width.
+ * - `hidden`: nowhere. The rail collapses rather than hold an empty strip.
+ *
+ * Declared next to `defaults` because it is part of the stored shape. The
+ * user-facing labels for these live in `ui/DmTileSheet`.
+ */
+export type DmTileMode = 'drawer' | 'rail' | 'hidden'
+
+export const DM_TILE_MODES: readonly DmTileMode[] = ['drawer', 'rail', 'hidden']
+
+export function isDmTileMode(value: unknown): value is DmTileMode {
+	return (
+		typeof value === 'string' &&
+		(DM_TILE_MODES as readonly string[]).includes(value)
+	)
+}
+
 export const defaults = {
-	hideDmTile: false,
+	dmTileMode: 'drawer' as DmTileMode,
 	showGuildNames: false,
 }
 
@@ -10,12 +31,54 @@ export function setStorageRef(ref: any): void {
 	storageRef = ref
 }
 
+/**
+ * Folds a raw storage object into the current shape.
+ *
+ * 1.1.3 stored a `hideDmTile` boolean whose `true` meant "show the tile in the
+ * rail", not "hide it" — the name was misleading and there was no way to remove
+ * the tile altogether. `true` therefore maps onto 'rail', so upgrading does not
+ * move anyone's tile somewhere they never chose.
+ */
+export function normalizeStorage(raw: any): ServerDrawerStorage {
+	const merged: any = { ...defaults, ...raw }
+	if (merged.dmTileMode === undefined && typeof raw?.hideDmTile === 'boolean') {
+		merged.dmTileMode = raw.hideDmTile ? 'rail' : 'drawer'
+	}
+	if (!isDmTileMode(merged.dmTileMode)) {
+		merged.dmTileMode = defaults.dmTileMode
+	}
+	return merged as ServerDrawerStorage
+}
+
 export function snapshot(): ServerDrawerStorage {
-	return { ...defaults, ...(storageRef?.cache ?? {}) }
+	return normalizeStorage(storageRef?.cache)
 }
 
 export function reactive(): ServerDrawerStorage {
-	return { ...defaults, ...(storageRef?.use() ?? {}) }
+	return normalizeStorage(storageRef?.use())
+}
+
+export function setDmTileMode(
+	dmTileMode: DmTileMode,
+): Promise<void> | undefined {
+	return storageRef?.set({ dmTileMode })
+}
+
+/**
+ * Rewrites storage that still carries the pre-1.1.4 `hideDmTile` boolean.
+ *
+ * `set` merges, so the stale key cannot be dropped piecemeal; replacing the
+ * document with the normalized shape is what clears it. Reads already tolerate
+ * the old key, so this only tidies the file.
+ */
+export function migrateStorage(storage: any): void {
+	try {
+		const raw = storage?.cache
+		if (!raw || typeof raw.hideDmTile !== 'boolean') return
+		void storage.set(normalizeStorage(raw), true)
+	} catch {
+		// ignore
+	}
 }
 
 const importedCache = new Map<string, any>()

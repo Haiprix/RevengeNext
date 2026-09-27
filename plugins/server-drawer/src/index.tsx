@@ -1,6 +1,6 @@
 import { forceLoadCreateGuild, startNavigation } from './lib/actions'
 import { bindKmmiio, kmmiio } from './lib/kmmiio'
-import { defaults, setStorageRef } from './lib/modules'
+import { defaults, migrateStorage, setStorageRef } from './lib/modules'
 import {
 	COLLAPSED_DOCK_HEIGHT,
 	patchDockAssetPrefetch,
@@ -24,6 +24,7 @@ export default plugin<{ jsonStorage: ServerDrawerStorage }>({
 	},
 	start({ cleanup, jsonStorage, plugin }) {
 		setStorageRef(jsonStorage)
+		migrateStorage(jsonStorage)
 		bindKmmiio(plugin.api)
 
 		kmmiio()?.setActivePlugin?.(plugin.manifest.id)

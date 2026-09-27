@@ -17,11 +17,15 @@ function GuildsBarPatch() {
 
 function HomePanelContentPatch() {
 	const { View } = revenge.react.ReactNative
-	const { hideDmTile } = reactive()
+	const { dmTileMode } = reactive()
+	const inRail = dmTileMode === 'rail'
 
 	return (
-		<View collapsable={false} style={{ flex: 1, width: RAIL_WIDTH }}>
-			{hideDmTile && <RailDmTile />}
+		<View
+			collapsable={false}
+			style={{ flex: 1, width: inRail ? RAIL_WIDTH : 0 }}
+		>
+			{inRail && <RailDmTile />}
 			<ContextMenuHost />
 		</View>
 	)
@@ -49,7 +53,7 @@ function shiftSideContainerLeft(props: any): any {
 			typeof entry.bottom === 'number' &&
 			typeof entry.right === 'number'
 		) {
-			const left = snapshot().hideDmTile ? RAIL_WIDTH : 0
+			const left = snapshot().dmTileMode === 'rail' ? RAIL_WIDTH : 0
 			if (entry.left !== left) {
 				next = next ?? [...arr]
 				next[i] = { ...entry, left }

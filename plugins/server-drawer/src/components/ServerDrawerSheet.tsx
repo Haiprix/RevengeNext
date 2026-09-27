@@ -194,7 +194,7 @@ export default function ServerDrawerSheet({
 		}
 	}, [base, cols, totalW])
 
-	const { hideDmTile, showGuildNames } = reactive()
+	const { dmTileMode, showGuildNames } = reactive()
 
 	const isExpanded = useQuestDockExpanded()
 
@@ -227,7 +227,7 @@ export default function ServerDrawerSheet({
 	}, [isExpanded, specs])
 
 	const tiles: any[] = []
-	if (!hideDmTile) {
+	if (dmTileMode === 'drawer') {
 		tiles.push(
 			<DmTile
 				key="dm"
@@ -258,25 +258,6 @@ export default function ServerDrawerSheet({
 		)
 	}
 	tiles.push(<CreateJoinButton key="create" onPress={openCreateJoin} />)
-
-	React.useEffect(() => {
-		console.log(
-			'[ServerDrawer] grid rows: tiles =',
-			tiles.length,
-			'cols =',
-			cols,
-		)
-		console.log(
-			'[ServerDrawer] node dump: dmHidden =',
-			hideDmTile,
-			'nodes =',
-			nodes.map((n: any) => ({
-				t: n.type,
-				id: String(n.id).slice(0, 8),
-				kids: n.children?.length ?? 0,
-			})),
-		)
-	}, [tiles.length, cols, nodes, hideDmTile])
 
 	return (
 		<View style={st.slot} onLayout={onCardLayout}>

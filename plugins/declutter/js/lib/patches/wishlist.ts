@@ -17,10 +17,22 @@ export function patchWishlist(): () => void {
 						if (!enabled()) return original(...args)
 						if (!Array.isArray(args[0]?.items)) return original(...args)
 						const items = args[0].items
-						if (!items.some((i: any) => i?.id === 'wishlist' || i?.id === 'board' || i?.id === 'activity')) {
+						if (
+							!items.some(
+								(i: any) =>
+									i?.id === 'wishlist' ||
+									i?.id === 'board' ||
+									i?.id === 'activity',
+							)
+						) {
 							return original(...args)
 						}
-						const filtered = items.filter((i: any) => i?.id !== 'wishlist' && i?.id !== 'board' && i?.id !== 'activity')
+						const filtered = items.filter(
+							(i: any) =>
+								i?.id !== 'wishlist' &&
+								i?.id !== 'board' &&
+								i?.id !== 'activity',
+						)
 						return original({ ...args[0], items: filtered })
 					}),
 				)
@@ -30,22 +42,19 @@ export function patchWishlist(): () => void {
 
 	// Patch Tabs to hide bar when only 1 tab remains
 	unpatch.push(
-		onImportedPath<any>(
-			'design/components/Tabs/native/Tabs.native.tsx',
-			ns => {
-				const Tabs = ns?.Tabs
-				if (typeof Tabs !== 'function') return
-				unpatch.push(
-					safeInsteadJSX(Tabs, (args: any, jsx: any) => {
-						if (!enabled()) return jsx(...args)
-						const state = args?.[1]?.state
-						const items = state?.items
-						if (Array.isArray(items) && items.length <= 1) return null
-						return jsx(...args)
-					}),
-				)
-			},
-		),
+		onImportedPath<any>('design/components/Tabs/native/Tabs.native.tsx', ns => {
+			const Tabs = ns?.Tabs
+			if (typeof Tabs !== 'function') return
+			unpatch.push(
+				safeInsteadJSX(Tabs, (args: any, jsx: any) => {
+					if (!enabled()) return jsx(...args)
+					const state = args?.[1]?.state
+					const items = state?.items
+					if (Array.isArray(items) && items.length <= 1) return null
+					return jsx(...args)
+				}),
+			)
+		}),
 	)
 
 	return () => {

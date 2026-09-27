@@ -112,5 +112,8 @@ export default plugin<{ jsonStorage: ServerDrawerStorage }>({
 				' marker=sd-2026-09-25-22',
 		)
 	},
+	stop({ plugin }) {
+		kmmiio()?.unregisterPlugin?.(plugin.manifest.id)
+	},
 	SettingsComponent: Settings,
 })

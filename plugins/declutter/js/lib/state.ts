@@ -17,13 +17,9 @@ export function getStorage() {
 	return storage
 }
 
-// Server Drawer takes over Discord's Quest Dock as its own surface, so hiding
-// the dock must never apply while that plugin is installed. Detection lives in
-// kmmiio-lib, which handles the hidden plugin registry access and falls back
-// to the filesystem when the developer API is unavailable.
-export function isServerDrawerInstalled(): boolean {
+export function isServerDrawerRunning(): boolean {
 	try {
-		return kmmiioLib()?.isPluginInstalled?.(SERVER_DRAWER_PLUGIN_ID) === true
+		return kmmiioLib()?.isPluginRunning?.(SERVER_DRAWER_PLUGIN_ID) === true
 	} catch {
 		return false
 	}
@@ -31,7 +27,7 @@ export function isServerDrawerInstalled(): boolean {
 
 export function getSettings(): DeclutterSettings {
 	const settings = { ...DEFAULTS, ...(storage?.cache ?? {}) }
-	if (isServerDrawerInstalled()) {
+	if (isServerDrawerRunning()) {
 		settings.questDock = false
 	}
 	return settings

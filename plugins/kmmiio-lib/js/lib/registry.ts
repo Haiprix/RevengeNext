@@ -16,15 +16,15 @@ export interface RegisteredPlugin {
 /**
  * Whether a plugin is installed.
  *
- * Looks it up in the live plugin registry first. That registry is exposed
- * through the hidden developer API (available when the "Developer Mode"
- * plugin `revenge.api.hidden` is enabled), so it degrades to checking the
- * plugin's storage directory on disk via the public fs/constants APIs when
- * Developer Mode is off.
+ * The live plugin list is authoritative whenever it is reachable: it reflects
+ * uninstalls, which nothing on disk can. The storage directory is only a
+ * fallback for when that list is unavailable, and it must never be combined
+ * with the list check, because a plugin's storage directory outlives an
+ * uninstall and would then report a removed plugin as still installed.
  */
 export function isPluginInstalled(id: string): boolean {
 	try {
-		if (typeof pList?.has === 'function' && pList.has(id) === true) return true
+		if (typeof pList?.has === 'function') return pList.has(id) === true
 	} catch {}
 
 	try {
@@ -56,6 +56,23 @@ export function registerPlugin(plugin: RegisteredPlugin) {
 	)
 	registry.set(plugin.id, plugin)
 	notify()
+}
+
+/**
+ * Whether a plugin is running in this process right now.
+ *
+ * Unlike `isPluginInstalled`, this is driven by the plugin's own lifecycle
+ * rather than inferred: plugins register from `start` and unregister from
+ * `stop`. It therefore reflects a disable or an uninstall immediately, needs
+ * neither the hidden developer API nor a disk heuristic, and cannot report a
+ * plugin that has only ever run before.
+ */
+export function isPluginRunning(id: string): boolean {
+	return registry.has(id)
+}
+
+export function unregisterPlugin(id: string) {
+	if (registry.delete(id)) notify()
 }
 
 export function getRegisteredPlugin(id: string): RegisteredPlugin | undefined {

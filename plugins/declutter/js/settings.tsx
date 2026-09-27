@@ -1,5 +1,5 @@
 import { DEFAULTS } from './defaults'
-import { isServerDrawerInstalled } from './lib/state'
+import { isServerDrawerRunning } from './lib/state'
 import type { PluginApi } from '@revenge-mod/plugins/types'
 import type { DeclutterSettings } from './types'
 
@@ -40,7 +40,7 @@ export default function Settings({
 	const { ScrollView } = revenge.react.ReactNative
 	const { Stack, TableRowGroup } = revenge.discord.design.Design
 
-	const serverDrawer = isServerDrawerInstalled()
+	const serverDrawer = isServerDrawerRunning()
 	const raw = { ...DEFAULTS, ...(api.jsonStorage.use() ?? {}) }
 	const s = serverDrawer ? { ...raw, questDock: false } : raw
 	const set = (patch: Partial<DeclutterSettings>) =>
@@ -116,7 +116,7 @@ export default function Settings({
 							label="Quest Dock"
 							subLabel={
 								serverDrawer
-									? 'Disabled while Server Drawer is installed'
+									? 'Disabled while Server Drawer is running'
 									: 'Floating quest bar at bottom of app'
 							}
 							disabled={serverDrawer}

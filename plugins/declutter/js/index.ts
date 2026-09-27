@@ -2,12 +2,7 @@ import { DEFAULTS } from './defaults'
 import { pushNativeConfig } from './lib/bridge'
 import { initKmmiioLib } from './lib/modules'
 import { patchAll } from './lib/patches'
-import {
-	getSettings,
-	isServerDrawerInstalled,
-	setSettings,
-	setStorage,
-} from './lib/state'
+import { getSettings, setStorage } from './lib/state'
 import Settings from './settings'
 import type { DeclutterSettings } from './types'
 
@@ -34,12 +29,6 @@ export default plugin<{ jsonStorage: DeclutterSettings }>({
 			getErrors: () => plugin.errors,
 		})
 		setStorage(jsonStorage)
-
-		// While Server Drawer is installed the Quest Dock is its UI surface, so
-		// force the "Hide Quest Dock" option off.
-		if (isServerDrawerInstalled() && getSettings().questDock) {
-			setSettings({ questDock: false })
-		}
 
 		try {
 			cleanup(patchAll())

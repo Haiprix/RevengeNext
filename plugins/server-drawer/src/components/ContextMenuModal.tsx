@@ -38,7 +38,7 @@ export default function ContextMenuModal({
 	anchorH,
 	onClose,
 }: ContextMenuModalProps) {
-  const { width: winW, height: winH } = Dimensions.get('window')
+	const { width: winW, height: winH } = Dimensions.get('window')
 	const { Text } = revenge.discord.design.Design
 
 	const titleH = title ? PAD + 20 + DIVIDER_H : 0

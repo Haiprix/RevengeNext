@@ -174,8 +174,8 @@
       "versions": {
         "1.1.4": {
           "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.declutter@1.1.4.zip",
-          "sha256": "da88bc1629eb08087452767451809ac9d84e722855ca137d931da1adb7d7e39c",
-          "size": 3827,
+          "sha256": "3fc4f1a67f7cbf8234541c37babe6749220e90c03af11145589668055ef4a399",
+          "size": 3948,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -201,8 +201,8 @@
       "versions": {
         "1.3.0": {
           "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.lib@1.3.0.zip",
-          "sha256": "18b09b65c09ec7f3ba0f4ea8be0156ded50640b38b026dbbe325caa784ddff63",
-          "size": 29819,
+          "sha256": "f4948687b81f2e79e0ff9422f3ebfc577b3f6423089ab367f69d921dd905c7ed",
+          "size": 29843,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -301,13 +301,13 @@
       "author": "kmmiio99o",
       "icon": "FolderIcon",
       "channels": {
-        "latest": "1.1.3"
+        "latest": "1.1.4"
       },
       "versions": {
-        "1.1.3": {
-          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.server-drawer@1.1.3.zip",
-          "sha256": "5675c8708014386caf6cebc40d125850eda3aa764c9fad5898b834838ed9cbd2",
-          "size": 12289,
+        "1.1.4": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.server-drawer@1.1.4.zip",
+          "sha256": "c17005fd22b8f8fd871c54b5fc669d4d9231f6640ca6118bdc4405d415f6ef8c",
+          "size": 12727,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

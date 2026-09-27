@@ -301,13 +301,13 @@
       "author": "kmmiio99o",
       "icon": "FolderIcon",
       "channels": {
-        "latest": "1.1.4"
+        "latest": "1.1.5"
       },
       "versions": {
-        "1.1.4": {
-          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.server-drawer@1.1.4.zip",
-          "sha256": "c17005fd22b8f8fd871c54b5fc669d4d9231f6640ca6118bdc4405d415f6ef8c",
-          "size": 12727,
+        "1.1.5": {
+          "url": "https://rn.kmmiio99o.dev/dev.kmmiio99o.server-drawer@1.1.5.zip",
+          "sha256": "59267a4dd80ce8502ce20141da1bd31885c269e10b1168232f7229178b4d6082",
+          "size": 12766,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

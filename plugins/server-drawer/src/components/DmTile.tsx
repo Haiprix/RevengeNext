@@ -96,7 +96,7 @@ export default function DmTile({ onPress }: { onPress?: () => void }) {
 }
 
 export function RailDmTile() {
-	const { tint, bg } = useDmTileColors()
+	const { tint } = useDmTileColors()
 	const dmCount = useDmMentionCount()
 	const [scale, setPressed] = usePressScale()
 
@@ -108,9 +108,7 @@ export function RailDmTile() {
 			style={railSt.outer}
 		>
 			<View style={railSt.iconWrap} collapsable={false}>
-				<Animated.View
-					style={[railSt.icon, { backgroundColor: bg, transform: [{ scale }] }]}
-				>
+				<Animated.View style={[railSt.icon, { transform: [{ scale }] }]}>
 					{ChatIcon() != null && (
 						<Image
 							source={ChatIcon()}

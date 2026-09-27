@@ -1,3 +1,4 @@
+import { ReactNativeSafeAreaContext } from '@revenge-mod/externals/react-native-safe-area-context'
 import { createGuild, logStatus, openDms, switchGuild } from '../lib/actions'
 import { kmmiio } from '../lib/kmmiio'
 import {
@@ -79,6 +80,7 @@ export default function ServerDrawerSheet({
 	gestureContext?: any
 }) {
 	const React = revenge.react.React
+	const insets = ReactNativeSafeAreaContext.useSafeAreaInsets()
 
 	const extCtx = React.useContext(
 		(getExternalCoordinationContext()?.QuestDockExternalCoordinationContext ??
@@ -272,7 +274,7 @@ export default function ServerDrawerSheet({
 						{
 							width: totalW,
 							paddingTop: 12,
-							paddingBottom: 8,
+							paddingBottom: insets.bottom + 8,
 							columnGap: GAP,
 							rowGap: ROW_GAP,
 						},

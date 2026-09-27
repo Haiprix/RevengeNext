@@ -5,7 +5,7 @@
 	"description": "Manage your Discord servers from a drawer above the YouBar.",
 	"author": "kmmiio99o",
 	"icon": "FolderIcon",
-	"version": "1.1.4",
+	"version": "1.1.5",
 	"dependencies": {
 		"revenge.api": { "version": ">=1" },
 		"discord": { "version": "*" },

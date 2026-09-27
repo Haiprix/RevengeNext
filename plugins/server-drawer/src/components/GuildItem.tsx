@@ -163,7 +163,7 @@ const st = StyleSheet.create({
 	},
 	icon: { width: ICON, height: ICON, borderRadius: 16, overflow: 'hidden' },
 	label: {
-		marginTop: 4,
+		marginTop: 10,
 		width: ICON,
 		fontSize: 10,
 		lineHeight: 12,

@@ -281,7 +281,7 @@ const fo = StyleSheet.create({
 	},
 	folderImg: { width: 24, height: 24 },
 	label: {
-		marginTop: 4,
+		marginTop: 10,
 		width: ICON,
 		fontSize: 10,
 		lineHeight: 12,

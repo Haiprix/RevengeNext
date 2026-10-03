@@ -85,7 +85,7 @@
     "dev.kmmiio99o.chatbox-avatar": {
       "name": "Chatboxav",
       "description": "Quickly view your profile from the chatbox.",
-      "author": "kmmiio99o",
+      "author": "Loki.vtx",
       "icon": "UserSquareIcon",
       "channels": {
         "latest": "1.2.3"
@@ -93,8 +93,8 @@
       "versions": {
         "1.2.3": {
           "url": "https://Haiprix.github.io/RevengeNext/dev.kmmiio99o.chatbox-avatar@1.2.3.zip",
-          "sha256": "282ae9a726fd4c9031ce2a5c219a868ec9a6b6f401a944015a15c26cfed8f47b",
-          "size": 2668,
+          "sha256": "b28dd43c5cdc167c95711e46ea25e81bda35ee209d73a333006729c998d0dabe",
+          "size": 2672,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

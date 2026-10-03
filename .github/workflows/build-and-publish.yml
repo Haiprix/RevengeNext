@@ -99,7 +99,7 @@ jobs:
           EOF
 
       - name: Build plugins
-        run: bun run release --base-url "https://YOU.github.io/REPO"
+        run: bun run release --base-url "https://Haiprix.github.io/RevengeNext"
 
       - name: Deploy to gh-pages branch
         run: |

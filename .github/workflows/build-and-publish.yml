@@ -59,12 +59,14 @@ jobs:
           mv /opt/android-sdk/build-tools/android-16 /opt/android-sdk/build-tools/36.0.0
           mv /opt/android-sdk/build-tools/android-37.0 /opt/android-sdk/build-tools/37.0.0
 
-      - name: Accept licenses & set env
+      l- name: Accept licenses & set env
         run: |
-          mkdir -p /opt/android-sdk/licenses
+          sudo mkdir -p /opt/android-sdk/licenses
+          sudo chown -R $USER /opt/android-sdk
           echo '24333f8a63b6825ea9c5514f83c2829b004d1fee' > /opt/android-sdk/licenses/android-sdk-license
           echo "ANDROID_HOME=/opt/android-sdk" >> $GITHUB_ENV
-
+          echo "ANDROID_SDK_ROOT=/opt/android-sdk" >> $GITHUB_ENV
+          
       - name: Clone revenge-xposed
         run: git clone --depth 1 https://github.com/revenge-mod/revenge-xposed.git
 

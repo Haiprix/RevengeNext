@@ -4,6 +4,33 @@
   "description": "Revenge Next plugins by kmmiio99o. Ports of vd-plugins and other ones.",
   "icon": "SettingsIcon",
   "plugins": {
+    "Loki.vtx.chatbox-avatar": {
+      "name": "Chatbox Avatar",
+      "description": "Quickly view your profile from the chatbox.",
+      "author": "Loki.vtx",
+      "icon": "UserSquareIcon",
+      "channels": {
+        "latest": "1.2.3"
+      },
+      "versions": {
+        "1.2.3": {
+          "url": "https://Haiprix.github.io/RevengeNext/Loki.vtx.chatbox-avatar@1.2.3.zip",
+          "sha256": "c8da4bab32b4c794e3a604df030b36babd459ca9648422039ecec87d05dc61eb",
+          "size": 2672,
+          "dependencies": {
+            "revenge.api": {
+              "version": ">=1"
+            },
+            "discord": {
+              "version": "*"
+            },
+            "dev.kmmiio99o.lib": {
+              "version": ">=1.2.17"
+            }
+          }
+        }
+      }
+    },
     "dev.kmmiio99o.altmaster": {
       "name": "AltMaster",
       "description": "Check linked alt accounts, report a new alt, and appeal false positives — right from the user profile context menu.",
@@ -77,33 +104,6 @@
             },
             "discord": {
               "version": "*"
-            }
-          }
-        }
-      }
-    },
-    "dev.kmmiio99o.chatbox-avatar": {
-      "name": "Chatboxav",
-      "description": "Quickly view your profile from the chatbox.",
-      "author": "Loki.vtx",
-      "icon": "UserSquareIcon",
-      "channels": {
-        "latest": "1.2.3"
-      },
-      "versions": {
-        "1.2.3": {
-          "url": "https://Haiprix.github.io/RevengeNext/dev.kmmiio99o.chatbox-avatar@1.2.3.zip",
-          "sha256": "b28dd43c5cdc167c95711e46ea25e81bda35ee209d73a333006729c998d0dabe",
-          "size": 2672,
-          "dependencies": {
-            "revenge.api": {
-              "version": ">=1"
-            },
-            "discord": {
-              "version": "*"
-            },
-            "dev.kmmiio99o.lib": {
-              "version": ">=1.2.17"
             }
           }
         }

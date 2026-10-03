@@ -83,7 +83,7 @@
       }
     },
     "dev.kmmiio99o.chatbox-avatar": {
-      "name": "Chatbox Avatar",
+      "name": "Chatboxav",
       "description": "Quickly view your profile from the chatbox.",
       "author": "kmmiio99o",
       "icon": "UserSquareIcon",
@@ -93,8 +93,8 @@
       "versions": {
         "1.2.3": {
           "url": "https://YOU.github.io/REPO/dev.kmmiio99o.chatbox-avatar@1.2.3.zip",
-          "sha256": "6e64e983bd035fd2ce92dc9f707e637dcd9e796a6c5af526419105c20a1bced5",
-          "size": 2669,
+          "sha256": "282ae9a726fd4c9031ce2a5c219a868ec9a6b6f401a944015a15c26cfed8f47b",
+          "size": 2668,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

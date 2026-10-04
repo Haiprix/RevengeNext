@@ -22,7 +22,7 @@ function PasscodeGate({ children }: { children: ReactNode }) {
 	const { View } = revenge.react.ReactNative
 	const { Stack, Text, TextInput, Button } = revenge.discord.design.Design
 
-	const [unlocked, setUnlocked] = useState(false)
+	const [unlocked, setUnlocked] = useState(true)
 	const [value, setValue] = useState('')
 	const [error, setError] = useState<string | null>(null)
 	const inputRef = useRef<any>(null)

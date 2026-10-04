@@ -4,7 +4,7 @@
   "description": "Revenge Next plugins by kmmiio99o. Ports of vd-plugins and other ones.",
   "icon": "SettingsIcon",
   "plugins": {
-    "Loki-vtx.lib": {
+    "Loki.vtx.lib": {
       "name": "Loki.vtx Library",
       "description": "Shared utility modules and native hooks for kmmiio99o plugins.",
       "author": "kmmiio99o",
@@ -14,9 +14,9 @@
       },
       "versions": {
         "1.3.0": {
-          "url": "https://Haiprix.github.io/RevengeNext/Loki-vtx.lib@1.3.0.zip",
-          "sha256": "50132e93cc7334a2a8f623fa0065fdcca2203baae998b13d90274e7a292b0e9e",
-          "size": 29836,
+          "url": "https://Haiprix.github.io/RevengeNext/Loki.vtx.lib@1.3.0.zip",
+          "sha256": "aededa59dc91913d17cada42bc4fd3afa4577241b3b6d0a56baad758153dbd02",
+          "size": 29834,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

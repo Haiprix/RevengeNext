@@ -132,13 +132,6 @@ export default function DonateCard({
 							variant="primary-overlay"
 							onPress={() => Linking.openURL(GITHUB_URL)}
 						/>
-						<Button
-							size="sm"
-							icon={revenge.assets.getAssetIdByName('GlobeEarthIcon')}
-							text="Website"
-							variant="tertiary"
-							onPress={() => Linking.openURL(WEBSITE_URL)}
-						/>
 					</View>
 				</View>
 				<Pressable

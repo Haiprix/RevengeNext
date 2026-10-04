@@ -1,9 +1,9 @@
 {
 	"format": 1,
-	"id": "dev.kmmiio99o.message-tweaks",
+	"id": "Loki.vtx.message-tweaks",
 	"name": "Message Tweaks",
 	"description": "Keep deleted messages in chat with red tint and an edit-history trail, unspoiler everything, precise timestamps, and usernames next to nicknames.",
-	"author": "kmmiio99o",
+	"author": "Loki.vtx",
 	"icon": "SendMessageIcon",
 	"version": "1.1.1",
 	"dependencies": {

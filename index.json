@@ -4,30 +4,6 @@
   "description": "Revenge Next plugins by kmmiio99o. Ports of vd-plugins and other ones.",
   "icon": "SettingsIcon",
   "plugins": {
-    "Loki-vtx.lib": {
-      "name": "Loki.vtx Library",
-      "description": "Shared utility modules and native hooks for kmmiio99o plugins.",
-      "author": "kmmiio99o",
-      "icon": "SettingsIcon",
-      "channels": {
-        "latest": "1.3.0"
-      },
-      "versions": {
-        "1.3.0": {
-          "url": "https://Haiprix.github.io/RevengeNext/Loki-vtx.lib@1.3.0.zip",
-          "sha256": "d60c631f4e06b68c572d5e1d80cc5c4d0627a48b600135d18b38e7dd0c675d71",
-          "size": 29816,
-          "dependencies": {
-            "revenge.api": {
-              "version": ">=1"
-            },
-            "discord": {
-              "version": "*"
-            }
-          }
-        }
-      }
-    },
     "Loki.vtx.message-tweaks": {
       "name": "Message Tweaks",
       "description": "Keep deleted messages in chat with red tint and an edit-history trail, unspoiler everything, precise timestamps, and usernames next to nicknames.",
@@ -39,8 +15,8 @@
       "versions": {
         "1.1.1": {
           "url": "https://Haiprix.github.io/RevengeNext/Loki.vtx.message-tweaks@1.1.1.zip",
-          "sha256": "c6dc240e06fa392b79e485c5733b6d4f83ae4e0045348cb4b7a51aa6bddaced5",
-          "size": 8295,
+          "sha256": "1de4f52400c859790d4042267a99ed6256bbdf07d4abc34ed62ded8c78b0b617",
+          "size": 8291,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -48,7 +24,7 @@
             "discord": {
               "version": "*"
             },
-            "dev.kmmiio99o.lib": {
+            "Loki-vtx.lib": {
               "version": ">=1.2.17"
             }
           }

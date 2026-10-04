@@ -1,4 +1,4 @@
-# [kmmiio99o's](https://kmmiio99o.dev) Revenge Next Plugins
+# [Loki-vtx] Revenge Next Plugins
 
 A collection of plugins for the [**Revenge Next**](https://github.com/revenge-mod/revenge-bundle-next) Discord mobile client.
 
@@ -37,7 +37,7 @@ The companion app monitors active media sessions via Android's `MediaSessionMana
 2. Click the "⚙" in the top corner and paste the plugin link:
 
 ```
-https://rn.kmmiio99o.dev/
+https://loki-vtx.github.io/RevengeNext/
 ```
 
 3. Install plugin and enable it from the **Plugins** page.

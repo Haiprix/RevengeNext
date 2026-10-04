@@ -1,7 +1,7 @@
 {
 	"format": 1,
-	"id": "dev.kmmiio99o.lib",
-	"name": "kmmiio Library",
+	"id": "Loki-vtx.lib",
+	"name": "Loki.vtx Library",
 	"description": "Shared utility modules and native hooks for kmmiio99o plugins.",
 	"author": "kmmiio99o",
 	"icon": "SettingsIcon",

@@ -1,83 +1,7 @@
 import { DEFAULTS } from './defaults'
 import { TranslatorGroup } from './lib/translatorSettings'
 import type { PluginApi } from '@revenge-mod/plugins/types'
-import type { ReactNode } from 'react'
 import type { MessageTweaksStorage } from './types'
-
-
-	// If no passkey hash is configured the settings stay fully locked: there is
-	// no secret to match, so nothing can ever unlock them (fail-closed).
-	const noSecret = REQUIRED_HASH === ''
-
-	// autoFocus opens the keyboard before the tab switch settles, so the field
-	// ends up unfocused. Focus it after layout instead.
-	useEffect(() => {
-		if (noSecret) return
-		const t = setTimeout(() => {
-			inputRef.current?.focus?.()
-		}, 100)
-		return () => clearTimeout(t)
-	}, [noSecret])
-
-	if (unlocked) return <>{children}</>
-
-	if (noSecret) {
-		return (
-			<View style={{ flex: 1, paddingTop: 48, paddingHorizontal: 32 }}>
-				<Stack spacing={16}>
-					<LockedHeading />
-					<Text variant="text-md/medium" style={{ textAlign: 'center' }}>
-						You're entering a page that violates people's privacy.
-					</Text>
-					<Text variant="text-sm/medium" style={{ textAlign: 'center' }}>
-						No passkey is configured on this build, so these settings are locked
-						down.
-					</Text>
-				</Stack>
-			</View>
-		)
-	}
-
-	return (
-		<View
-			style={{
-				flex: 1,
-				paddingTop: 48,
-				paddingHorizontal: 32,
-			}}
-		>
-			<Stack spacing={16}>
-				<LockedHeading />
-				<Text variant="text-md/medium" style={{ textAlign: 'center' }}>
-					You're entering a page that violates people's privacy.
-				</Text>
-				<TextInput
-					{...({ ref: inputRef } as any)}
-					value={value}
-					onChange={v => {
-						setValue(v)
-						setError(null)
-					}}
-					placeholder="Passkey"
-					secureTextEntry
-					isClearable
-					returnKeyType="done"
-					errorMessage={error ?? undefined}
-				/>
-				<Button
-					text="Unlock"
-					variant="primary"
-					grow
-					size="md"
-					onPress={() => {
-						if (sha256Hex(value) === REQUIRED_HASH) setUnlocked(true)
-						else setError('Incorrect passkey.')
-					}}
-				/>
-			</Stack>
-		</View>
-	)
-}
 
 export default function Settings({
 	api,
@@ -163,23 +87,22 @@ export default function Settings({
 				id: 'local',
 				label: 'Local',
 				page: (
-						<ScrollView contentContainerStyle={{ padding: 0 }}>
-							<Stack>
-								<TableRowGroup title="Local">
-									<TableSwitchRow
-										label="Show “Edit Locally”"
-										value={s.showLocalEditButton}
-										onValueChange={v => set({ showLocalEditButton: v })}
-									/>
-									<TableSwitchRow
-										label="Show “Hide for Me”"
-										value={s.showHideButton}
-										onValueChange={v => set({ showHideButton: v })}
-									/>
-								</TableRowGroup>
-							</Stack>
-						</ScrollView>
-					</PasscodeGate>
+					<ScrollView contentContainerStyle={{ padding: 0 }}>
+						<Stack>
+							<TableRowGroup title="Local">
+								<TableSwitchRow
+									label="Show “Edit Locally”"
+									value={s.showLocalEditButton}
+									onValueChange={v => set({ showLocalEditButton: v })}
+								/>
+								<TableSwitchRow
+									label="Show “Hide for Me”"
+									value={s.showHideButton}
+									onValueChange={v => set({ showHideButton: v })}
+								/>
+							</TableRowGroup>
+						</Stack>
+					</ScrollView>
 				),
 			},
 		],

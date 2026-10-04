@@ -1,31 +1,9 @@
-import secret from '../secret'
 import { DEFAULTS } from './defaults'
-import { sha256Hex } from './lib/sha256'
 import { TranslatorGroup } from './lib/translatorSettings'
 import type { PluginApi } from '@revenge-mod/plugins/types'
 import type { ReactNode } from 'react'
 import type { MessageTweaksStorage } from './types'
 
-const REQUIRED_HASH = (secret.passkeyHash ?? '').trim().toLowerCase()
-
-function LockedHeading() {
-	const { Text } = revenge.discord.design.Design
-	return (
-		<Text variant="heading-lg/bold" style={{ textAlign: 'center' }}>
-			Warning!
-		</Text>
-	)
-}
-
-function PasscodeGate({ children }: { children: ReactNode }) {
-	const { useEffect, useRef, useState } = revenge.react.React
-	const { View } = revenge.react.ReactNative
-	const { Stack, Text, TextInput, Button } = revenge.discord.design.Design
-
-	const [unlocked, setUnlocked] = useState(true)
-	const [value, setValue] = useState('')
-	const [error, setError] = useState<string | null>(null)
-	const inputRef = useRef<any>(null)
 
 	// If no passkey hash is configured the settings stay fully locked: there is
 	// no secret to match, so nothing can ever unlock them (fail-closed).
@@ -185,7 +163,6 @@ export default function Settings({
 				id: 'local',
 				label: 'Local',
 				page: (
-					<PasscodeGate>
 						<ScrollView contentContainerStyle={{ padding: 0 }}>
 							<Stack>
 								<TableRowGroup title="Local">

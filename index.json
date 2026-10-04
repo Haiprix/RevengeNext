@@ -5,7 +5,7 @@
   "icon": "SettingsIcon",
   "plugins": {
     "Loki.vtx.message-tweaks": {
-      "name": "Message Tweaks",
+      "name": "Message Tweaks+",
       "description": "Keep deleted messages in chat with red tint and an edit-history trail, unspoiler everything, precise timestamps, and usernames next to nicknames.",
       "author": "Loki.vtx",
       "icon": "SendMessageIcon",
@@ -15,8 +15,8 @@
       "versions": {
         "1.1.1": {
           "url": "https://Haiprix.github.io/RevengeNext/Loki.vtx.message-tweaks@1.1.1.zip",
-          "sha256": "c6dc240e06fa392b79e485c5733b6d4f83ae4e0045348cb4b7a51aa6bddaced5",
-          "size": 8295,
+          "sha256": "a3ea2383ad04984fb82dc760866ceb9135637c5477a3f715102f15c6fb66e643",
+          "size": 8297,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

@@ -1,7 +1,7 @@
-package Loki.vtx.lib.chatbubbles
+package dev.kmmiio99o.lib.chatbubbles
 
 import de.robv.android.xposed.XC_MethodHook
-import Loki.vtx.lib.px
+import dev.kmmiio99o.lib.px
 
 internal object BubbleConfig {
     val DEFAULT_AVATAR_CURVE_RADIUS = 12f.px

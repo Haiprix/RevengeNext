@@ -1,7 +1,7 @@
 {
 	"format": 1,
-	"id": "Loki.vtx.lib",
-	"name": "Loki.vtx Library",
+	"id": "dev.kmmiio99o.lib",
+	"name": "kmmiio Library",
 	"description": "Shared utility modules and native hooks for kmmiio99o plugins.",
 	"author": "kmmiio99o",
 	"icon": "SettingsIcon",
@@ -18,7 +18,7 @@
 		"script": "index.js",
 		"android": {
 			"path": "plugin.jar",
-			"class": "Loki.vtx.lib.KmmiioLibPlugin"
+			"class": "dev.kmmiio99o.lib.KmmiioLibPlugin"
 		}
 	}
 }

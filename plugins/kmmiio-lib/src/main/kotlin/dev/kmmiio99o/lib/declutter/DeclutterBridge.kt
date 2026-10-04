@@ -1,4 +1,4 @@
-package Loki.vtx.lib.declutter
+package dev.kmmiio99o.lib.declutter
 
 import io.github.revenge.plugins.PluginScope
 import io.github.revenge.xposed.api.registerNativeMethod

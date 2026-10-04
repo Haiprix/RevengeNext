@@ -1,4 +1,4 @@
-package Loki.vtx.lib.mediasession
+package dev.kmmiio99o.lib.mediasession
 
 import android.app.Application
 import android.content.Context

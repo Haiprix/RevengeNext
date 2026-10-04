@@ -1,4 +1,4 @@
-package Loki.vtx.lib. chatbubbles
+package dev.kmmiio99o.lib.chatbubbles
 
 import android.graphics.Outline
 import android.graphics.drawable.GradientDrawable
@@ -9,9 +9,9 @@ import android.view.ViewGroup.MarginLayoutParams
 import android.view.ViewOutlineProvider
 import android.widget.ImageView
 import android.widget.LinearLayout
-import Loki.vtx.lib. firstChildOrNull
-import Loki.vtx.lib. hasChild
-import Loki.vtx.lib. px
+import dev.kmmiio99o.lib.firstChildOrNull
+import dev.kmmiio99o.lib.hasChild
+import dev.kmmiio99o.lib.px
 import java.util.Collections
 import java.util.WeakHashMap
 

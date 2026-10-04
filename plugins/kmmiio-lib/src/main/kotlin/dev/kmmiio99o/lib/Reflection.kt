@@ -1,4 +1,4 @@
-package dev.kmmiio99o.lib
+package Loki.vtx.lib
 
 import android.content.res.Resources
 import android.view.View

@@ -1,4 +1,4 @@
-package dev.kmmiio99o.lib.declutter
+package Loki.vtx.lib.declutter
 
 import de.robv.android.xposed.XC_MethodHook
 

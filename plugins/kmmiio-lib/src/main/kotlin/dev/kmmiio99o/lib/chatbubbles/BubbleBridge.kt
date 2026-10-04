@@ -1,4 +1,4 @@
-package dev.kmmiio99o.lib.chatbubbles
+package Loki.vtx.lib. chatbubbles
 
 import android.os.Handler
 import android.os.Looper

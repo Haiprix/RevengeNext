@@ -1,4 +1,4 @@
-package dev.kmmiio99o.lib.mediasession
+package Loki.vtx.lib.mediasession
 
 import android.content.Intent
 import android.media.session.PlaybackState

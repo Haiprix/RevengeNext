@@ -1,6 +1,6 @@
 @file:JvmName("KmmiioLibPlugin")
 
-package dev.kmmiio99o.lib
+package Loki-vtx.lib
 
 import io.github.revenge.plugins.plugin
 

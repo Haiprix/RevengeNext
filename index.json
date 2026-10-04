@@ -4,6 +4,33 @@
   "description": "Revenge Next plugins by kmmiio99o. Ports of vd-plugins and other ones.",
   "icon": "SettingsIcon",
   "plugins": {
+    "Loki.vtx.message-tweaks": {
+      "name": "Message Tweaks",
+      "description": "Keep deleted messages in chat with red tint and an edit-history trail, unspoiler everything, precise timestamps, and usernames next to nicknames.",
+      "author": "Loki.vtx",
+      "icon": "SendMessageIcon",
+      "channels": {
+        "latest": "1.1.1"
+      },
+      "versions": {
+        "1.1.1": {
+          "url": "https://Haiprix.github.io/RevengeNext/Loki.vtx.message-tweaks@1.1.1.zip",
+          "sha256": "c6dc240e06fa392b79e485c5733b6d4f83ae4e0045348cb4b7a51aa6bddaced5",
+          "size": 8295,
+          "dependencies": {
+            "revenge.api": {
+              "version": ">=1"
+            },
+            "discord": {
+              "version": "*"
+            },
+            "dev.kmmiio99o.lib": {
+              "version": ">=1.2.17"
+            }
+          }
+        }
+      }
+    },
     "dev.kmmiio99o.altmaster": {
       "name": "AltMaster",
       "description": "Check linked alt accounts, report a new alt, and appeal false positives — right from the user profile context menu.",
@@ -227,33 +254,6 @@
           "url": "https://Haiprix.github.io/RevengeNext/dev.kmmiio99o.markdown.toolbar@1.2.0.zip",
           "sha256": "1f037a7dc48cf97bcd16eccc0b5f537a561c667c18e99ba4fd3412891d50773e",
           "size": 2549,
-          "dependencies": {
-            "revenge.api": {
-              "version": ">=1"
-            },
-            "discord": {
-              "version": "*"
-            },
-            "dev.kmmiio99o.lib": {
-              "version": ">=1.2.17"
-            }
-          }
-        }
-      }
-    },
-    "dev.kmmiio99o.message-tweaks": {
-      "name": "Message Tweaks",
-      "description": "Keep deleted messages in chat with red tint and an edit-history trail, unspoiler everything, precise timestamps, and usernames next to nicknames.",
-      "author": "kmmiio99o",
-      "icon": "SendMessageIcon",
-      "channels": {
-        "latest": "1.1.1"
-      },
-      "versions": {
-        "1.1.1": {
-          "url": "https://Haiprix.github.io/RevengeNext/dev.kmmiio99o.message-tweaks@1.1.1.zip",
-          "sha256": "df2a7346c9471e2f69324a387a870f9d3824dd80d778dec6da86752b7c5fb08f",
-          "size": 10002,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

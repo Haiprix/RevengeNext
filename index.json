@@ -15,8 +15,8 @@
       "versions": {
         "1.3.0": {
           "url": "https://Haiprix.github.io/RevengeNext/Loki-vtx.lib@1.3.0.zip",
-          "sha256": "3e43117f889a5f006ae89a64e36c86b897a18916336e743a6560f1643476b99c",
-          "size": 29852,
+          "sha256": "cb0d7f16c09371c7b503e9263f6c9adcf1f7a369bab65e71da857a940483023f",
+          "size": 29855,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

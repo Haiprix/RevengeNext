@@ -1,4 +1,4 @@
-import { AVATAR_URL, GITHUB_URL, SPONSORS_URL, WEBSITE_URL } from './constants'
+import { AVATAR_URL, GITHUB_URL, SPONSORS_URL, } from './constants'
 
 const { Dimensions } = revenge.react.ReactNative
 const { width: SCREEN_WIDTH } = Dimensions.get('window')

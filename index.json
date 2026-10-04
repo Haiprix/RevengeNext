@@ -14,7 +14,7 @@
       },
       "versions": {
         "1.1.1": {
-          "url": "https://Haiprix.github.io/RevengeNext/Loki.vtx.message-tweaks@1.1.1.zip",
+          "url": "https://Loki-vtx.github.io/RevengeNext/Loki.vtx.message-tweaks@1.1.1.zip",
           "sha256": "a3ea2383ad04984fb82dc760866ceb9135637c5477a3f715102f15c6fb66e643",
           "size": 8297,
           "dependencies": {
@@ -41,7 +41,7 @@
       },
       "versions": {
         "1.0.1": {
-          "url": "https://Haiprix.github.io/RevengeNext/dev.kmmiio99o.altmaster@1.0.1.zip",
+          "url": "https://Loki-vtx.github.io/RevengeNext/dev.kmmiio99o.altmaster@1.0.1.zip",
           "sha256": "a0a03c056e942a98d64e64ba642bc74ffdf80e33cb94c8a8bcd4384acef8e303",
           "size": 5912,
           "dependencies": {
@@ -68,7 +68,7 @@
       },
       "versions": {
         "1.0.0": {
-          "url": "https://Haiprix.github.io/RevengeNext/dev.kmmiio99o.alwaystrust@1.0.0.zip",
+          "url": "https://Loki-vtx.github.io/RevengeNext/dev.kmmiio99o.alwaystrust@1.0.0.zip",
           "sha256": "c0dccbc2df77d18100ac340861b834f38aeb0972aa56c2bf9f555c509001c2e6",
           "size": 603,
           "dependencies": {
@@ -92,7 +92,7 @@
       },
       "versions": {
         "1.0.1": {
-          "url": "https://Haiprix.github.io/RevengeNext/dev.kmmiio99o.better-devices@1.0.1.zip",
+          "url": "https://Loki-vtx.github.io/RevengeNext/dev.kmmiio99o.better-devices@1.0.1.zip",
           "sha256": "c475ed6b051fdf45721540bde4f2fc46ca6e70890b1ef159ac1a297cdd9383a1",
           "size": 5438,
           "dependencies": {
@@ -119,7 +119,7 @@
       },
       "versions": {
         "1.2.3": {
-          "url": "https://Haiprix.github.io/RevengeNext/dev.kmmiio99o.chatbox-avatar@1.2.3.zip",
+          "url": "https://Loki-vtx.github.io/RevengeNext/dev.kmmiio99o.chatbox-avatar@1.2.3.zip",
           "sha256": "b28dd43c5cdc167c95711e46ea25e81bda35ee209d73a333006729c998d0dabe",
           "size": 2672,
           "dependencies": {
@@ -146,7 +146,7 @@
       },
       "versions": {
         "1.1.1": {
-          "url": "https://Haiprix.github.io/RevengeNext/dev.kmmiio99o.chatbubbles@1.1.1.zip",
+          "url": "https://Loki-vtx.github.io/RevengeNext/dev.kmmiio99o.chatbubbles@1.1.1.zip",
           "sha256": "25fb71b493bc35433dd76f019ddbbf28839b928940f904a4e4bab08296ebca8b",
           "size": 2513,
           "dependencies": {
@@ -173,7 +173,7 @@
       },
       "versions": {
         "1.0.0": {
-          "url": "https://Haiprix.github.io/RevengeNext/dev.kmmiio99o.custom.rpc@1.0.0.zip",
+          "url": "https://Loki-vtx.github.io/RevengeNext/dev.kmmiio99o.custom.rpc@1.0.0.zip",
           "sha256": "250e7660c4d7c14156739d9697c1daa884ef3695bebacb1ca5bd471596200082",
           "size": 11900,
           "dependencies": {
@@ -200,7 +200,7 @@
       },
       "versions": {
         "1.1.4": {
-          "url": "https://Haiprix.github.io/RevengeNext/dev.kmmiio99o.declutter@1.1.4.zip",
+          "url": "https://Loki-vtx.github.io/RevengeNext/dev.kmmiio99o.declutter@1.1.4.zip",
           "sha256": "3fc4f1a67f7cbf8234541c37babe6749220e90c03af11145589668055ef4a399",
           "size": 3948,
           "dependencies": {
@@ -227,7 +227,7 @@
       },
       "versions": {
         "1.3.0": {
-          "url": "https://Haiprix.github.io/RevengeNext/dev.kmmiio99o.lib@1.3.0.zip",
+          "url": "https://Loki-vtx.github.io/RevengeNext/dev.kmmiio99o.lib@1.3.0.zip",
           "sha256": "f4948687b81f2e79e0ff9422f3ebfc577b3f6423089ab367f69d921dd905c7ed",
           "size": 29843,
           "dependencies": {
@@ -251,7 +251,7 @@
       },
       "versions": {
         "1.2.0": {
-          "url": "https://Haiprix.github.io/RevengeNext/dev.kmmiio99o.markdown.toolbar@1.2.0.zip",
+          "url": "https://Loki-vtx.github.io/RevengeNext/dev.kmmiio99o.markdown.toolbar@1.2.0.zip",
           "sha256": "1f037a7dc48cf97bcd16eccc0b5f537a561c667c18e99ba4fd3412891d50773e",
           "size": 2549,
           "dependencies": {
@@ -278,7 +278,7 @@
       },
       "versions": {
         "1.2.2": {
-          "url": "https://Haiprix.github.io/RevengeNext/dev.kmmiio99o.multi-scrobbler@1.2.2.zip",
+          "url": "https://Loki-vtx.github.io/RevengeNext/dev.kmmiio99o.multi-scrobbler@1.2.2.zip",
           "sha256": "8a4281d7f562c1133c2b8d8537d42beb0f47a54e7f743804a566ab4ff4ad55ce",
           "size": 15411,
           "dependencies": {
@@ -305,7 +305,7 @@
       },
       "versions": {
         "1.1.5": {
-          "url": "https://Haiprix.github.io/RevengeNext/dev.kmmiio99o.server-drawer@1.1.5.zip",
+          "url": "https://Loki-vtx.github.io/RevengeNext/dev.kmmiio99o.server-drawer@1.1.5.zip",
           "sha256": "59267a4dd80ce8502ce20141da1bd31885c269e10b1168232f7229178b4d6082",
           "size": 12766,
           "dependencies": {
@@ -332,7 +332,7 @@
       },
       "versions": {
         "1.2.2": {
-          "url": "https://Haiprix.github.io/RevengeNext/dev.kmmiio99o.server-info@1.2.2.zip",
+          "url": "https://Loki-vtx.github.io/RevengeNext/dev.kmmiio99o.server-info@1.2.2.zip",
           "sha256": "ab31741775d0ec06951b512539315b15ac93430957cb68c140a55273509f2c59",
           "size": 4476,
           "dependencies": {

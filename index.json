@@ -1,7 +1,7 @@
 {
   "format": 1,
-  "name": "kmmiio99o's Revenge Next Plugins",
-  "description": "Revenge Next plugins by kmmiio99o. Ports of vd-plugins and other ones.",
+  "name": "Modified kmmiio99o's Revenge Next Plugins",
+  "description": "Revenge Next plugins by kmmiio99o and Loki-vtx.",
   "icon": "SettingsIcon",
   "plugins": {
     "Loki.vtx.message-tweaks": {

@@ -15,8 +15,8 @@
       "versions": {
         "1.1.1": {
           "url": "https://Loki-vtx.github.io/RevengeNext/Loki.vtx.message-tweaks@1.1.1.zip",
-          "sha256": "1de4f52400c859790d4042267a99ed6256bbdf07d4abc34ed62ded8c78b0b617",
-          "size": 8291,
+          "sha256": "c6dc240e06fa392b79e485c5733b6d4f83ae4e0045348cb4b7a51aa6bddaced5",
+          "size": 8295,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"
@@ -24,7 +24,7 @@
             "discord": {
               "version": "*"
             },
-            "Loki-vtx.lib": {
+            "dev.kmmiio99o.lib": {
               "version": ">=1.2.17"
             }
           }

@@ -247,7 +247,7 @@
     "dev.kmmiio99o.lib": {
       "name": "kmmiio Library",
       "description": "Shared utility modules and native hooks for kmmiio99o plugins.",
-      "author": "kmmiio99o",
+      "author": "Loki-vtx",
       "icon": "SettingsIcon",
       "channels": {
         "latest": "1.3.0"
@@ -255,8 +255,8 @@
       "versions": {
         "1.3.0": {
           "url": "https://Loki-vtx.github.io/RevengeNext/dev.kmmiio99o.lib@1.3.0.zip",
-          "sha256": "6201baaf1525531fefbbbc28eb8d90396873b1c5e495a6a179c61659580490be",
-          "size": 29852,
+          "sha256": "26bc818fbdba077dc461b84022c9b594b5613757a210ad6f39b2ea0bac49b082",
+          "size": 29857,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

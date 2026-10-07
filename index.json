@@ -4,6 +4,34 @@
   "description": "Revenge Next plugins by kmmiio99o and Loki-vtx.",
   "icon": "SettingsIcon",
   "plugins": {
+    "Loki-vtx.SilentEdit": {
+      "name": "Silent Edit",
+      "description": "Edit your messages silently: the new text is resent and the old message deleted, so no \"(edited)\" tag appears.",
+      "author": "Loki-vtx",
+      "icon": "PencilIcon",
+      "channels": {
+        "latest": "1.0.0"
+      },
+      "versions": {
+        "1.0.0": {
+          "url": "https://Loki-vtx.github.io/RevengeNext/Loki-vtx.SilentEdit@1.0.0.zip",
+          "sha256": "d70007c89d5021260cc52ef5790291f0d281f33b8915586afb03dbf0303bc754",
+          "size": 3050,
+          "dependencies": {
+            "revenge.api": {
+              "version": ">=1"
+            },
+            "discord": {
+              "version": "*"
+            },
+            "dev.kmmiio99o.lib": {
+              "version": ">=1.2.17",
+              "optional": true
+            }
+          }
+        }
+      }
+    },
     "Loki.vtx.message-tweaks": {
       "name": "Message Tweaks",
       "description": "Keep deleted messages in chat with red tint and an edit-history trail, unspoiler everything, precise timestamps, and usernames next to nicknames.",
@@ -17,33 +45,6 @@
           "url": "https://Loki-vtx.github.io/RevengeNext/Loki.vtx.message-tweaks@1.1.1.zip",
           "sha256": "c6dc240e06fa392b79e485c5733b6d4f83ae4e0045348cb4b7a51aa6bddaced5",
           "size": 8295,
-          "dependencies": {
-            "revenge.api": {
-              "version": ">=1"
-            },
-            "discord": {
-              "version": "*"
-            },
-            "dev.kmmiio99o.lib": {
-              "version": ">=1.2.17"
-            }
-          }
-        }
-      }
-    },
-    "Loki.vtx.silent-edit": {
-      "name": "Silent Edit",
-      "description": "Edit your messages silently: the new text is resent and the old message deleted, so no \"(edited)\" tag appears.",
-      "author": "Loki.vtx",
-      "icon": "PencilIcon",
-      "channels": {
-        "latest": "1.0.0"
-      },
-      "versions": {
-        "1.0.0": {
-          "url": "https://Loki-vtx.github.io/RevengeNext/Loki.vtx.silent-edit@1.0.0.zip",
-          "sha256": "a26a44206493c1df9a3506df0bf28b52e0aa020b97a61c4b20f8ff5fd226e8d6",
-          "size": 3039,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

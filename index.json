@@ -4,34 +4,6 @@
   "description": "Revenge Next plugins by kmmiio99o and Loki-vtx.",
   "icon": "SettingsIcon",
   "plugins": {
-    "Loki-vtx.SilentEdit": {
-      "name": "Silent Edit",
-      "description": "Edit your messages silently: the new text is resent and the old message deleted, so no \"(edited)\" tag appears.",
-      "author": "Loki-vtx",
-      "icon": "PencilIcon",
-      "channels": {
-        "latest": "1.0.0"
-      },
-      "versions": {
-        "1.0.0": {
-          "url": "https://Loki-vtx.github.io/RevengeNext/Loki-vtx.SilentEdit@1.0.0.zip",
-          "sha256": "cd1b6ea62dfbce016e2ed2cc4511e06ed11522386a85e3f13020507907556ac8",
-          "size": 3239,
-          "dependencies": {
-            "revenge.api": {
-              "version": ">=1"
-            },
-            "discord": {
-              "version": "*"
-            },
-            "dev.kmmiio99o.lib": {
-              "version": ">=1.2.17",
-              "optional": true
-            }
-          }
-        }
-      }
-    },
     "Loki.vtx.message-tweaks": {
       "name": "Message Tweaks",
       "description": "Keep deleted messages in chat with red tint and an edit-history trail, unspoiler everything, precise timestamps, and usernames next to nicknames.",

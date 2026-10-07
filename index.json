@@ -15,8 +15,8 @@
       "versions": {
         "1.0.0": {
           "url": "https://Loki-vtx.github.io/RevengeNext/Loki-vtx.SilentEdit@1.0.0.zip",
-          "sha256": "d70007c89d5021260cc52ef5790291f0d281f33b8915586afb03dbf0303bc754",
-          "size": 3050,
+          "sha256": "cd1b6ea62dfbce016e2ed2cc4511e06ed11522386a85e3f13020507907556ac8",
+          "size": 3239,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

@@ -1,0 +1,16 @@
+{
+	"format": 1,
+	"id": "Loki-vtx.CustomTags",
+	"name": "Custom User Tags",
+	"description": "bored of normal dihcord tags? add a custom one! (cilent side only),",
+	"author": "Loki-vtx",
+	"icon": "LinkIcon",
+	"version": "0.0.1",
+	"dependencies": {
+		"revenge.api": { "version": ">=1" },
+		"discord": { "version": "*" }
+	},
+	"dist": {
+		"script": "index.js"
+	}
+}

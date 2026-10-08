@@ -4,51 +4,16 @@ import { getIcon } from "../lib/icons";
 import TagEditor from "./TagEditorAlert";
 import TagTemplateEditor from "./TagTemplateEditor";
 
-const { View, ScrollView, TouchableOpacity } = ReactNative;
 const {
-    TableSwitchRow,
+    View,
+    Text,
+    ScrollView,
     TextInput,
-} = (revenge as any).discord.design.Design ?? {};
+    TouchableOpacity,
+} = ReactNative;
 
-function SettingsText({
-    children,
-    style,
-}: {
-    children: any;
-    style?: any;
-}) {
-    const { Text } = (revenge as any).discord.design.Design;
-
-    return (
-        <Text
-            variant="text-md/medium"
-            style={style}
-        >
-            {children}
-        </Text>
-    );
-}
-
-function SettingsNote({ children }: { children: any }) {
-    const { Text } = (revenge as any).discord.design.Design;
-
-    return (
-        <View
-            style={{
-                marginHorizontal: 16,
-                marginVertical: 8,
-                padding: 12,
-                borderRadius: 8,
-            }}
-        >
-            <Text
-                variant="text-sm/medium"
-                color="text-muted"
-            >
-                {children}
-            </Text>
-        </View>
-    );
+interface SettingsProps {
+    jsonStorage: CustomTagsStorage;
 }
 
 function Button({
@@ -63,21 +28,23 @@ function Button({
             onPress={onPress}
             style={{
                 marginHorizontal: 16,
-                marginVertical: 6,
+                marginTop: 8,
                 paddingVertical: 12,
+                paddingHorizontal: 16,
                 borderRadius: 8,
                 backgroundColor: "#5865F2",
                 alignItems: "center",
             }}
         >
-            <SettingsText
+            <Text
                 style={{
                     color: "#FFFFFF",
+                    fontSize: 15,
                     fontWeight: "600",
                 }}
             >
                 {label}
-            </SettingsText>
+            </Text>
         </TouchableOpacity>
     );
 }
@@ -87,107 +54,78 @@ function Section({
     children,
 }: {
     title: string;
-    children: any;
+    children: React.ReactNode;
 }) {
-    const { TableRowGroup } =
-        (revenge as any).discord.design.Design ?? {};
-
-    if (!TableRowGroup) {
-        return (
-            <View style={{ marginVertical: 8 }}>
-                <SettingsText
-                    style={{
-                        paddingHorizontal: 16,
-                        paddingVertical: 8,
-                        fontWeight: "700",
-                    }}
-                >
-                    {title}
-                </SettingsText>
-
-                {children}
-            </View>
-        );
-    }
-
     return (
-        <TableRowGroup title={title}>
-            {children}
-        </TableRowGroup>
+        <View style={{ marginTop: 16 }}>
+            <Text
+                style={{
+                    paddingHorizontal: 16,
+                    paddingBottom: 8,
+                    fontSize: 14,
+                    fontWeight: "700",
+                }}
+            >
+                {title}
+            </Text>
+
+            <View>{children}</View>
+        </View>
     );
 }
 
 function AddTagForm() {
     const [userId, setUserId] = React.useState("");
 
-    const {
-        TextInput,
-    } = (revenge as any).discord.design.Design ?? {};
-
     return (
         <View
             style={{
                 paddingHorizontal: 16,
-                paddingBottom: 12,
             }}
         >
-            {TextInput ? (
-                <TextInput
-                    label="User ID"
-                    placeholder="Enter Discord User ID"
-                    value={userId}
-                    onChange={setUserId}
-                />
-            ) : (
-                <View>
-                    <SettingsText
-                        style={{
-                            marginBottom: 6,
-                            fontWeight: "600",
-                        }}
-                    >
-                        User ID
-                    </SettingsText>
+            <Text
+                style={{
+                    marginBottom: 6,
+                    fontSize: 14,
+                    fontWeight: "600",
+                }}
+            >
+                User ID
+            </Text>
 
-                    <ReactNative.TextInput
-                        value={userId}
-                        placeholder="Enter Discord User ID"
-                        onChangeText={setUserId}
-                        style={{
-                            padding: 10,
-                            borderRadius: 8,
-                            backgroundColor: "rgba(128,128,128,0.15)",
-                        }}
-                    />
-                </View>
-            )}
+            <TextInput
+                value={userId}
+                placeholder="Enter Discord User ID"
+                onChangeText={setUserId}
+                style={{
+                    minHeight: 44,
+                    paddingHorizontal: 12,
+                    borderRadius: 8,
+                    backgroundColor: "rgba(128,128,128,0.15)",
+                }}
+            />
 
             <Button
                 label="Edit tag"
                 onPress={() => {
-                    if (!userId.trim()) return;
+                    const id = userId.trim();
 
-                    openTagEditor(
-                        userId.trim(),
-                        userId.trim()
-                    );
+                    if (!id) return;
+
+                    openTagEditor(id, id);
                 }}
             />
         </View>
     );
 }
 
-function TagRow({
-    id,
+function UserRow({
+    userId,
     tag,
 }: {
-    id: string;
+    userId: string;
     tag: any;
 }) {
-    const {
-        TableRow,
-    } = (revenge as any).discord.design.Design ?? {};
-
     const icon =
         getIcon(tag.icon)?.fallback ||
         tag.customSvgFallback;
@@ -197,50 +135,39 @@ function TagRow({
             icon
                 ? `${icon} ${tag.text}`
                 : tag.text
-        ).trim() || id;
-
-    const onPress = () =>
-        openTagEditor(
-            id,
-            tag.text || id
-        );
-
-    if (TableRow) {
-        return (
-            <TableRow
-                label={label}
-                subLabel={`${id} • Tap to edit`}
-                onPress={onPress}
-                trailing={<TableRow.Arrow />}
-            />
-        );
-    }
+        ).trim() || userId;
 
     return (
         <TouchableOpacity
-            onPress={onPress}
+            onPress={() =>
+                openTagEditor(
+                    userId,
+                    tag.text || userId
+                )
+            }
             style={{
                 paddingHorizontal: 16,
                 paddingVertical: 12,
             }}
         >
-            <SettingsText
+            <Text
                 style={{
+                    fontSize: 15,
                     fontWeight: "600",
                 }}
             >
                 {label}
-            </SettingsText>
+            </Text>
 
-            <SettingsText
+            <Text
                 style={{
                     marginTop: 4,
-                    opacity: 0.7,
                     fontSize: 12,
+                    opacity: 0.65,
                 }}
             >
-                {id} • Tap to edit
-            </SettingsText>
+                {userId} • Tap to edit
+            </Text>
         </TouchableOpacity>
     );
 }
@@ -252,10 +179,6 @@ function TemplateRow({
     name: string;
     tag: any;
 }) {
-    const {
-        TableRow,
-    } = (revenge as any).discord.design.Design ?? {};
-
     const icon =
         getIcon(tag.icon)?.fallback ||
         tag.customSvgFallback;
@@ -267,57 +190,47 @@ function TemplateRow({
                 : tag.text
         ).trim() || name;
 
-    const onPress = () =>
-        openTagTemplateEditor(
-            name,
-            tag
-        );
-
-    if (TableRow) {
-        return (
-            <TableRow
-                label={label}
-                subLabel={`${name} • Tap to edit`}
-                onPress={onPress}
-                trailing={<TableRow.Arrow />}
-            />
-        );
-    }
-
     return (
         <TouchableOpacity
-            onPress={onPress}
+            onPress={() =>
+                openTagTemplateEditor(
+                    name,
+                    tag,
+                    // This will be replaced below by the parent storage.
+                    // Kept out of this component intentionally.
+                    (null as any)
+                )
+            }
             style={{
                 paddingHorizontal: 16,
                 paddingVertical: 12,
             }}
         >
-            <SettingsText
+            <Text
                 style={{
+                    fontSize: 15,
                     fontWeight: "600",
                 }}
             >
                 {label}
-            </SettingsText>
+            </Text>
 
-            <SettingsText
+            <Text
                 style={{
                     marginTop: 4,
-                    opacity: 0.7,
                     fontSize: 12,
+                    opacity: 0.65,
                 }}
             >
                 {name} • Tap to edit
-            </SettingsText>
+            </Text>
         </TouchableOpacity>
     );
 }
 
 export default function Settings({
     jsonStorage,
-}: {
-    jsonStorage: CustomTagsStorage;
-}) {
+}: SettingsProps) {
     const tags = allTags(jsonStorage);
     const userIds = Object.keys(tags);
 
@@ -327,24 +240,33 @@ export default function Settings({
     const savedTagNames =
         Object.keys(savedTags);
 
-    const { ScrollView: DesignScrollView } =
-        (revenge as any).react?.ReactNative ?? {};
-
-    const Page =
-        (revenge as any).components?.Page;
-
-    const Content = (
+    return (
         <ScrollView
             style={{ flex: 1 }}
             contentContainerStyle={{
-                paddingBottom: 24,
+                paddingBottom: 32,
             }}
         >
-            <SettingsNote>
-                Long-press a name in the member list or profile
-                popout to tag someone directly, or add one here
-                by User ID.
-            </SettingsNote>
+            <View
+                style={{
+                    marginHorizontal: 16,
+                    marginTop: 16,
+                    padding: 12,
+                    borderRadius: 8,
+                    backgroundColor: "rgba(128,128,128,0.12)",
+                }}
+            >
+                <Text
+                    style={{
+                        fontSize: 14,
+                        lineHeight: 20,
+                    }}
+                >
+                    Long-press a name in the member list or profile
+                    popout to tag someone directly, or add one here
+                    by User ID.
+                </Text>
+            </View>
 
             <Section title="Add a tag">
                 <AddTagForm />
@@ -352,15 +274,21 @@ export default function Settings({
 
             <Section title="Tagged users">
                 {userIds.length === 0 ? (
-                    <SettingsNote>
+                    <Text
+                        style={{
+                            paddingHorizontal: 16,
+                            paddingVertical: 12,
+                            opacity: 0.65,
+                        }}
+                    >
                         No one's tagged yet.
-                    </SettingsNote>
+                    </Text>
                 ) : (
-                    userIds.map((id) => (
-                        <TagRow
-                            key={id}
-                            id={id}
-                            tag={tags[id]}
+                    userIds.map((userId) => (
+                        <UserRow
+                            key={userId}
+                            userId={userId}
+                            tag={tags[userId]}
                         />
                     ))
                 )}
@@ -368,17 +296,66 @@ export default function Settings({
 
             <Section title="Saved tag templates">
                 {savedTagNames.length === 0 ? (
-                    <SettingsNote>
+                    <Text
+                        style={{
+                            paddingHorizontal: 16,
+                            paddingVertical: 12,
+                            opacity: 0.65,
+                        }}
+                    >
                         No saved tags yet.
-                    </SettingsNote>
+                    </Text>
                 ) : (
-                    savedTagNames.map((name) => (
-                        <TemplateRow
-                            key={name}
-                            name={name}
-                            tag={savedTags[name]}
-                        />
-                    ))
+                    savedTagNames.map((name) => {
+                        const tag = savedTags[name];
+
+                        const icon =
+                            getIcon(tag.icon)?.fallback ||
+                            tag.customSvgFallback;
+
+                        const label =
+                            (
+                                icon
+                                    ? `${icon} ${tag.text}`
+                                    : tag.text
+                            ).trim() || name;
+
+                        return (
+                            <TouchableOpacity
+                                key={name}
+                                onPress={() =>
+                                    openTagTemplateEditor(
+                                        name,
+                                        tag,
+                                        jsonStorage
+                                    )
+                                }
+                                style={{
+                                    paddingHorizontal: 16,
+                                    paddingVertical: 12,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 15,
+                                        fontWeight: "600",
+                                    }}
+                                >
+                                    {label}
+                                </Text>
+
+                                <Text
+                                    style={{
+                                        marginTop: 4,
+                                        fontSize: 12,
+                                        opacity: 0.65,
+                                    }}
+                                >
+                                    {name} • Tap to edit
+                                </Text>
+                            </TouchableOpacity>
+                        );
+                    })
                 )}
             </Section>
 
@@ -392,21 +369,12 @@ export default function Settings({
                                 text: "",
                                 color: "#5865F2",
                                 icon: "none",
-                            }
+                            },
+                            jsonStorage
                         )
                     }
                 />
             </Section>
         </ScrollView>
     );
-
-    if (Page && DesignScrollView) {
-        return (
-            <Page>
-                {Content}
-            </Page>
-        );
-    }
-
-    return Content;
 }

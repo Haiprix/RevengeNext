@@ -10,12 +10,12 @@
       "author": "Loki-vtx",
       "icon": "LinkIcon",
       "channels": {
-        "latest": "0.0.1"
+        "latest": "0.1.1"
       },
       "versions": {
-        "0.0.1": {
-          "url": "https://Loki-vtx.github.io/RevengeNext/Loki-vtx.CustomTags@0.0.1.zip",
-          "sha256": "71a647b1b509593fcdd0e6c5746af1a3ed29e2d879419c64bb5021bf142fcaa0",
+        "0.1.1": {
+          "url": "https://Loki-vtx.github.io/RevengeNext/Loki-vtx.CustomTags@0.1.1.zip",
+          "sha256": "8e9a564a0749ca2f4a126e2cc5924aa8d3e287684ba3a50fd75c5056379f48ab",
           "size": 13190,
           "dependencies": {
             "revenge.api": {

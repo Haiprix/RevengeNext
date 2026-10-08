@@ -1,153 +1,412 @@
 import { React, ReactNative } from "@revenge-mod/react";
-import { TableRowGroup, TextInput } from "@shared/ui/table";
-import SettingsScaffold from "@shared/ui/SettingsScaffold";
-import ListSection from "@shared/ui/ListSection";
-import PrimaryButton from "@shared/ui/PrimaryButton";
-import NoteBox from "@shared/ui/NoteBox";
-import { readData, type TagStorage } from "../lib/tags";
-import { setTagStorage } from "../lib/resolveTag";
+import { allTags, type CustomTagsStorage } from "../lib/tags";
 import { getIcon } from "../lib/icons";
-import openTagEditor from "./TagEditorAlert";
-import openTagTemplateEditor from "./TagTemplateEditor";
+import TagEditor from "./TagEditorAlert";
+import TagTemplateEditor from "./TagTemplateEditor";
 
-const { View } = ReactNative;
+const { View, ScrollView, TouchableOpacity } = ReactNative;
+const {
+    TableSwitchRow,
+    TextInput,
+} = (revenge as any).discord.design.Design ?? {};
+
+function SettingsText({
+    children,
+    style,
+}: {
+    children: any;
+    style?: any;
+}) {
+    const { Text } = (revenge as any).discord.design.Design;
+
+    return (
+        <Text
+            variant="text-md/medium"
+            style={style}
+        >
+            {children}
+        </Text>
+    );
+}
+
+function SettingsNote({ children }: { children: any }) {
+    const { Text } = (revenge as any).discord.design.Design;
+
+    return (
+        <View
+            style={{
+                marginHorizontal: 16,
+                marginVertical: 8,
+                padding: 12,
+                borderRadius: 8,
+            }}
+        >
+            <Text
+                variant="text-sm/medium"
+                color="text-muted"
+            >
+                {children}
+            </Text>
+        </View>
+    );
+}
+
+function Button({
+    label,
+    onPress,
+}: {
+    label: string;
+    onPress: () => void;
+}) {
+    return (
+        <TouchableOpacity
+            onPress={onPress}
+            style={{
+                marginHorizontal: 16,
+                marginVertical: 6,
+                paddingVertical: 12,
+                borderRadius: 8,
+                backgroundColor: "#5865F2",
+                alignItems: "center",
+            }}
+        >
+            <SettingsText
+                style={{
+                    color: "#FFFFFF",
+                    fontWeight: "600",
+                }}
+            >
+                {label}
+            </SettingsText>
+        </TouchableOpacity>
+    );
+}
+
+function Section({
+    title,
+    children,
+}: {
+    title: string;
+    children: any;
+}) {
+    const { TableRowGroup } =
+        (revenge as any).discord.design.Design ?? {};
+
+    if (!TableRowGroup) {
+        return (
+            <View style={{ marginVertical: 8 }}>
+                <SettingsText
+                    style={{
+                        paddingHorizontal: 16,
+                        paddingVertical: 8,
+                        fontWeight: "700",
+                    }}
+                >
+                    {title}
+                </SettingsText>
+
+                {children}
+            </View>
+        );
+    }
+
+    return (
+        <TableRowGroup title={title}>
+            {children}
+        </TableRowGroup>
+    );
+}
 
 function AddTagForm() {
     const [userId, setUserId] = React.useState("");
 
-    return (
-        <View style={{ paddingHorizontal: 16, paddingBottom: 12 }}>
-            <TextInput
-                label="User ID"
-                placeholder="Enter Discord User ID"
-                value={userId}
-                onChange={setUserId}
-            />
+    const {
+        TextInput,
+    } = (revenge as any).discord.design.Design ?? {};
 
-            <PrimaryButton
+    return (
+        <View
+            style={{
+                paddingHorizontal: 16,
+                paddingBottom: 12,
+            }}
+        >
+            {TextInput ? (
+                <TextInput
+                    label="User ID"
+                    placeholder="Enter Discord User ID"
+                    value={userId}
+                    onChange={setUserId}
+                />
+            ) : (
+                <View>
+                    <SettingsText
+                        style={{
+                            marginBottom: 6,
+                            fontWeight: "600",
+                        }}
+                    >
+                        User ID
+                    </SettingsText>
+
+                    <ReactNative.TextInput
+                        value={userId}
+                        placeholder="Enter Discord User ID"
+                        onChangeText={setUserId}
+                        style={{
+                            padding: 10,
+                            borderRadius: 8,
+                            backgroundColor: "rgba(128,128,128,0.15)",
+                        }}
+                    />
+                </View>
+            )}
+
+            <Button
                 label="Edit tag"
-                disabled={!userId.trim()}
-                style={{ marginTop: 8 }}
-                onPress={() =>
-                    openTagEditor(userId.trim(), userId.trim())
-                }
+                onPress={() => {
+                    if (!userId.trim()) return;
+
+                    openTagEditor(
+                        userId.trim(),
+                        userId.trim()
+                    );
+                }}
             />
         </View>
     );
 }
 
-// Revenge Next gives a plugin's SettingsComponent ONE prop: `api`. The storage lives at
-// api.jsonStorage (it is not passed in directly), and it is a wrapper object, not the raw data.
-export default function Settings({ api }: { api: any }) {
-    const storage = api?.jsonStorage as TagStorage | undefined;
+function TagRow({
+    id,
+    tag,
+}: {
+    id: string;
+    tag: any;
+}) {
+    const {
+        TableRow,
+    } = (revenge as any).discord.design.Design ?? {};
 
-    // use() is a React hook: this screen re-renders whenever the stored tags change.
-    const live = storage?.use?.();
+    const icon =
+        getIcon(tag.icon)?.fallback ||
+        tag.customSvgFallback;
 
-    if (!storage) {
+    const label =
+        (
+            icon
+                ? `${icon} ${tag.text}`
+                : tag.text
+        ).trim() || id;
+
+    const onPress = () =>
+        openTagEditor(
+            id,
+            tag.text || id
+        );
+
+    if (TableRow) {
         return (
-            <SettingsScaffold>
-                <NoteBox>
-                    Couldn't open this plugin's storage. Try restarting the app.
-                </NoteBox>
-            </SettingsScaffold>
+            <TableRow
+                label={label}
+                subLabel={`${id} • Tap to edit`}
+                onPress={onPress}
+                trailing={<TableRow.Arrow />}
+            />
         );
     }
 
-    // So the editors and patches use the same storage, even if Settings opens before anything else.
-    setTagStorage(storage);
+    return (
+        <TouchableOpacity
+            onPress={onPress}
+            style={{
+                paddingHorizontal: 16,
+                paddingVertical: 12,
+            }}
+        >
+            <SettingsText
+                style={{
+                    fontWeight: "600",
+                }}
+            >
+                {label}
+            </SettingsText>
 
-    const { tags, savedTags } = readData(storage, live);
-    const userIds = Object.keys(tags);
-    const savedTagNames = Object.keys(savedTags);
+            <SettingsText
+                style={{
+                    marginTop: 4,
+                    opacity: 0.7,
+                    fontSize: 12,
+                }}
+            >
+                {id} • Tap to edit
+            </SettingsText>
+        </TouchableOpacity>
+    );
+}
+
+function TemplateRow({
+    name,
+    tag,
+}: {
+    name: string;
+    tag: any;
+}) {
+    const {
+        TableRow,
+    } = (revenge as any).discord.design.Design ?? {};
+
+    const icon =
+        getIcon(tag.icon)?.fallback ||
+        tag.customSvgFallback;
+
+    const label =
+        (
+            icon
+                ? `${icon} ${tag.text}`
+                : tag.text
+        ).trim() || name;
+
+    const onPress = () =>
+        openTagTemplateEditor(
+            name,
+            tag
+        );
+
+    if (TableRow) {
+        return (
+            <TableRow
+                label={label}
+                subLabel={`${name} • Tap to edit`}
+                onPress={onPress}
+                trailing={<TableRow.Arrow />}
+            />
+        );
+    }
 
     return (
-        <SettingsScaffold>
-            <NoteBox>
-                Long-press a name in the member list or profile popout to tag
-                someone directly, or add one here by User ID.
-            </NoteBox>
+        <TouchableOpacity
+            onPress={onPress}
+            style={{
+                paddingHorizontal: 16,
+                paddingVertical: 12,
+            }}
+        >
+            <SettingsText
+                style={{
+                    fontWeight: "600",
+                }}
+            >
+                {label}
+            </SettingsText>
 
-            <TableRowGroup title="Add a tag">
-                <AddTagForm />
-            </TableRowGroup>
-
-            <ListSection
-                title="Tagged users"
-                emptyText="No one's tagged yet."
-                items={userIds.map((id) => {
-                    const tag = tags[id];
-
-                    const icon =
-                        getIcon(tag.icon)?.fallback ||
-                        tag.customSvgFallback;
-
-                    const label =
-                        (icon
-                            ? `${icon} ${tag.text}`
-                            : tag.text
-                        ).trim() || id;
-
-                    return {
-                        key: id,
-                        label,
-                        subLabel: `${id} • Tap to edit`,
-                        onPress: () =>
-                            openTagEditor(
-                                id,
-                                tag.text || id
-                            ),
-                    };
-                })}
-            />
-
-            <ListSection
-                title="Saved tag templates"
-                emptyText="No saved tags yet."
-                items={savedTagNames.map((name) => {
-                    const tag = savedTags[name];
-
-                    const icon =
-                        getIcon(tag.icon)?.fallback ||
-                        tag.customSvgFallback;
-
-                    const label =
-                        (icon
-                            ? `${icon} ${tag.text}`
-                            : tag.text
-                        ).trim() || name;
-
-                    return {
-                        key: name,
-                        label,
-                        subLabel: `${name} • Tap to edit`,
-                        onPress: () =>
-                            openTagTemplateEditor(
-                                name,
-                                tag
-                            ),
-                    };
-                })}
-            />
-
-            <TableRowGroup title="Create saved template">
-                <View style={{ paddingHorizontal: 16, paddingBottom: 12 }}>
-                    <PrimaryButton
-                        label="New template"
-                        style={{ marginTop: 0 }}
-                        onPress={() =>
-                            openTagTemplateEditor(
-                                "",
-                                {
-                                    text: "",
-                                    color: "#5865F2",
-                                    icon: "none",
-                                }
-                            )
-                        }
-                    />
-                </View>
-            </TableRowGroup>
-        </SettingsScaffold>
+            <SettingsText
+                style={{
+                    marginTop: 4,
+                    opacity: 0.7,
+                    fontSize: 12,
+                }}
+            >
+                {name} • Tap to edit
+            </SettingsText>
+        </TouchableOpacity>
     );
+}
+
+export default function Settings({
+    jsonStorage,
+}: {
+    jsonStorage: CustomTagsStorage;
+}) {
+    const tags = allTags(jsonStorage);
+    const userIds = Object.keys(tags);
+
+    const savedTags =
+        jsonStorage.savedTags || {};
+
+    const savedTagNames =
+        Object.keys(savedTags);
+
+    const { ScrollView: DesignScrollView } =
+        (revenge as any).react?.ReactNative ?? {};
+
+    const Page =
+        (revenge as any).components?.Page;
+
+    const Content = (
+        <ScrollView
+            style={{ flex: 1 }}
+            contentContainerStyle={{
+                paddingBottom: 24,
+            }}
+        >
+            <SettingsNote>
+                Long-press a name in the member list or profile
+                popout to tag someone directly, or add one here
+                by User ID.
+            </SettingsNote>
+
+            <Section title="Add a tag">
+                <AddTagForm />
+            </Section>
+
+            <Section title="Tagged users">
+                {userIds.length === 0 ? (
+                    <SettingsNote>
+                        No one's tagged yet.
+                    </SettingsNote>
+                ) : (
+                    userIds.map((id) => (
+                        <TagRow
+                            key={id}
+                            id={id}
+                            tag={tags[id]}
+                        />
+                    ))
+                )}
+            </Section>
+
+            <Section title="Saved tag templates">
+                {savedTagNames.length === 0 ? (
+                    <SettingsNote>
+                        No saved tags yet.
+                    </SettingsNote>
+                ) : (
+                    savedTagNames.map((name) => (
+                        <TemplateRow
+                            key={name}
+                            name={name}
+                            tag={savedTags[name]}
+                        />
+                    ))
+                )}
+            </Section>
+
+            <Section title="Create saved template">
+                <Button
+                    label="New template"
+                    onPress={() =>
+                        openTagTemplateEditor(
+                            "",
+                            {
+                                text: "",
+                                color: "#5865F2",
+                                icon: "none",
+                            }
+                        )
+                    }
+                />
+            </Section>
+        </ScrollView>
+    );
+
+    if (Page && DesignScrollView) {
+        return (
+            <Page>
+                {Content}
+            </Page>
+        );
+    }
+
+    return Content;
 }

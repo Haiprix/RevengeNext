@@ -10,7 +10,9 @@
 		"resolveJsonModule": true,
 		"types": ["@revenge-mod/types"],
 		"paths": {
-			"#lib/*": ["./node_modules/@revenge-mod/types/lib/*.d.ts"]
+			"#lib/*": ["./node_modules/@revenge-mod/types/lib/*.d.ts"],
+			"@shared/lib/*": ["./shared/lib/*"],
+			"@shared/ui/*": ["./shared/ui/*"]
 		}
 	},
 	"include": ["plugins", "types"],

@@ -16,6 +16,7 @@ export interface UserTag {
 
 export interface CustomTagsStorage {
     tags: Record<string, UserTag>;
+    savedTags?: Record<string, UserTag>;
 }
 
 export function allTags(
@@ -47,4 +48,29 @@ export function removeUserTag(
     userId: string,
 ): void {
     delete allTags(jsonStorage)[userId];
+}
+
+export function getSavedTag(
+    jsonStorage: CustomTagsStorage,
+    templateName: string,
+): UserTag | undefined {
+    jsonStorage.savedTags ??= {};
+    return jsonStorage.savedTags[templateName];
+}
+
+export function setSavedTag(
+    jsonStorage: CustomTagsStorage,
+    templateName: string,
+    tag: UserTag,
+): void {
+    jsonStorage.savedTags ??= {};
+    jsonStorage.savedTags[templateName] = tag;
+}
+
+export function removeSavedTag(
+    jsonStorage: CustomTagsStorage,
+    templateName: string,
+): void {
+    jsonStorage.savedTags ??= {};
+    delete jsonStorage.savedTags[templateName];
 }

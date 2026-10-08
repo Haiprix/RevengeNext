@@ -2,7 +2,6 @@
 import { React, ReactNative } from "@revenge-mod/react";
 import { lookupModule } from "@revenge-mod/modules/finders";
 import { withProps } from "@revenge-mod/modules/finders/filters";
-import { showToast } from "@revenge-mod/ui/toasts";
 
 import { TableSwitchRow, TextInput } from "@shared/ui/table";
 import ColorInput from "./ColorInput";
@@ -49,15 +48,12 @@ function TagEditor({ userId, username }: { userId: string; username: string }) {
 
     const save = () => {
         if (svg.trim() && !isValidCustomSvg(svg)) {
-            showToast("Invalid SVG markup", undefined);
             return;
         }
         if (!text.trim() && !hasIcon) {
-            showToast("Enter some tag text or choose an icon first", undefined);
             return;
         }
         if (iconOnly && !hasIcon) {
-            showToast("Select an icon before enabling icon-only", undefined);
             return;
         }
         setUserTag(userId, {
@@ -68,13 +64,11 @@ function TagEditor({ userId, username }: { userId: string; username: string }) {
             customSvgFallback: svgFallback.trim() || undefined,
             iconOnly
         });
-        showToast(`Tagged ${username}`, undefined);
         dismissAlert?.(ALERT_KEY);
     };
 
     const remove = () => {
         removeUserTag(userId);
-        showToast(`Removed ${username}'s tag`, undefined);
         dismissAlert?.(ALERT_KEY);
     };
 
@@ -136,7 +130,7 @@ function TagEditor({ userId, username }: { userId: string; username: string }) {
 export default function openTagEditor(userId: string, username: string): void {
     const { openAlert } = alertParts();
     if (!openAlert) {
-        showToast("Couldn't open the tag editor - alert system not found", undefined);
+        console.log("Couldn't open the tag editor - alert system not found");
         return;
     }
     openAlert(ALERT_KEY, <TagEditor userId={userId} username={username} />);

@@ -6,8 +6,8 @@ import PrimaryButton from "@shared/ui/PrimaryButton";
 import NoteBox from "@shared/ui/NoteBox";
 import { allTags, type CustomTagsStorage } from "../lib/tags";
 import { getIcon } from "../lib/icons";
-import openTagEditor from "./TagEditorAlert";
-import openTagTemplateEditor from "./TagTemplateEditor";
+import TagEditor from "./TagEditorAlert";
+import TagTemplateEditor from "./TagTemplateEditor";
 
 const { View } = ReactNative;
 

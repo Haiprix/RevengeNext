@@ -1,72 +1,29 @@
-import type { CustomTagsStorage, UserTag } from './tags'
-import { getIcon } from './icons'
+import {
+    getUserTag,
+    type CustomTagsStorage,
+    type UserTag,
+} from "./tags";
 
-export interface ResolvedTag {
-	text: string
-	textColor: string
-	backgroundColor: string
-	icon?: {
-		path?: string
-		svg?: string
-		fallback?: string
-		viewBox?: string
-	}
-	iconColor?: string
+let tagStorage: CustomTagsStorage | undefined;
+
+/**
+ * Connects the resolver to the plugin's jsonStorage.
+ * Call this once from index.ts when the plugin starts.
+ */
+export function setTagStorage(storage: CustomTagsStorage): void {
+    tagStorage = storage;
 }
 
-let storage: CustomTagsStorage | undefined
-
-export function setTagStorage(handle: CustomTagsStorage): void {
-	storage = handle
-}
-
-export function getTagStorage(): CustomTagsStorage | undefined {
-	return storage
-}
-
-export function allTags(): Record<string, UserTag> {
-	if (!storage) {
-		storage = { tags: {} }
-	}
-	storage.tags ??= {}
-	return storage.tags
-}
-
-export function getUserTag(userId: string | undefined): UserTag | undefined {
-	if (!userId) return undefined
-	return allTags()[userId]
-}
-
-export function setUserTag(userId: string, tag: UserTag): void {
-	allTags()[userId] = tag
-}
-
-export function removeUserTag(userId: string): void {
-	delete allTags()[userId]
-}
-
+/**
+ * Gets the currently configured tag for a Discord user.
+ */
 export default function resolveTag(
-	userId: string | undefined,
-): ResolvedTag | undefined {
-	const tag = getUserTag(userId)
-	if (!tag) return undefined
+    userId: string | undefined,
+): UserTag | undefined {
+    if (!userId || !tagStorage) return undefined;
 
-	const iconDef = tag.icon ? getIcon(tag.icon) : undefined
-	const icon = iconDef
-		? {
-			path: iconDef.path,
-			fallback: iconDef.fallback,
-			viewBox: iconDef.viewBox,
-		}
-		: tag.customSvg
-			? { svg: tag.customSvg, fallback: tag.customSvgFallback }
-			: undefined
-
-	return {
-		text: tag.text,
-		textColor: tag.color ?? '#ffffff',
-		backgroundColor: '#5865F2',
-		icon,
-		iconColor: '#ffffff',
-	}
+    return getUserTag(tagStorage, userId);
 }
+
+
+

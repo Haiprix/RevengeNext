@@ -1,5 +1,4 @@
 import { applyPatches } from "@shared/lib/patcher";
-
 import patchChat from "./patches/chat";
 import patchName from "./patches/name";
 import patchDetails from "./patches/details";
@@ -22,7 +21,6 @@ export default plugin<{
         load: true,
         default: DEFAULTS,
     },
-
     start({ cleanup, jsonStorage, plugin }) {
         const id = plugin.manifest.id
 

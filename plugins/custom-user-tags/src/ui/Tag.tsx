@@ -1,29 +1,35 @@
 import { React, ReactNative } from "@revenge-mod/react";
-import { ResolvedTag } from "../lib/resolveTag";
-import Icon from "./Icon";
+import { findInReactTree } from "../lib/findInReactTree";
+import { lookupModule } from "@revenge-mod/modules/finders";
+import { withProps } from "@revenge-mod/modules/finders/filters";
+import { hookWithArgs } from "../lib/hook";
+import Icon from "../ui/Icon";
 
 const { View, Text } = ReactNative;
 
-const baseStyle = {
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 4,
-    paddingHorizontal: 4,
-    paddingVertical: 2,
-    marginLeft: 4,
-    overflow: "hidden"
+// Discord's Tag component ignores custom text/color props unless pushed into the already-rendered
+// tree directly.
+export default () => {
+    // Looked up when the patch is installed, not when this file loads.
+    const Tag = lookupModule(withProps("getBotLabel"))?.[0] as any;
+    if (!Tag) return () => {};
+
+    return hookWithArgs(Tag, "default", ([{ text, textColor, backgroundColor, icon, iconColor }]: any[], ret: any) => {
+        const label = findInReactTree(ret, (c) => typeof c?.props?.children === "string");
+        if (!label) return;
+
+        if (text != null) label.props.children = text;
+        if (textColor) label.props.style?.push?.({ color: textColor });
+        if (backgroundColor) ret?.props?.style?.push?.({ backgroundColor });
+
+        if (icon?.path || icon?.svg) {
+            const style = label.props.style ?? {};
+            ret.props.children = (
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Icon icon={icon} size={12} color={iconColor ?? textColor} style={{ marginRight: text ? 4 : 0 }} />
+                    <Text style={style}>{text != null ? text : label.props.children}</Text>
+                </View>
+            );
+        }
+    });
 };
-
-interface TagProps {
-    tag: ResolvedTag;
-    style?: any;
-}
-
-export default function CustomTag({ tag, style }: TagProps) {
-    return (
-        <View style={[baseStyle, { backgroundColor: tag.backgroundColor }, style]}>
-            {tag.icon && (tag.icon.path || tag.icon.svg) && <Icon icon={tag.icon} size={12} color={tag.iconColor} style={{ marginRight: tag.text ? 4 : 0 }} />}
-            {!!tag.text && <Text style={{ color: tag.textColor, fontSize: 11, fontWeight: "700" }}>{tag.text}</Text>}
-        </View>
-    );
-}

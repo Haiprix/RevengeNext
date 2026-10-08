@@ -15,8 +15,8 @@
       "versions": {
         "0.0.1": {
           "url": "https://Loki-vtx.github.io/RevengeNext/Loki-vtx.CustomTags@0.0.1.zip",
-          "sha256": "594bbb5f8a4b26190a6e5d1181b679c8d6f8774f092d26639e32b00051dd554b",
-          "size": 13031,
+          "sha256": "35badb7de58a08e193708cae46c630cd049cfdd089c2ea13395f2f19346538d3",
+          "size": 13039,
           "dependencies": {
             "revenge.api": {
               "version": ">=1"

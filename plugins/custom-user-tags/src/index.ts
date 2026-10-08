@@ -41,8 +41,5 @@ export default plugin<{
         unpatchAll()
         unpatchAll = () => {}
     },
-
-    SettingsComponent: ({ api }) => (
-        <Settings jsonStorage={api.jsonStorage} />
-    ),
+SettingsComponent: Settings,
 })

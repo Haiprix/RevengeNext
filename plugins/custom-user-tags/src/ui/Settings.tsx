@@ -7,6 +7,7 @@ import NoteBox from "@shared/ui/NoteBox";
 import { allTags, type CustomTagsStorage } from "../lib/tags";
 import { getIcon } from "../lib/icons";
 import openTagEditor from "./TagEditorAlert";
+import openTagTemplateEditor from "./TagTemplateEditor";
 
 const { View } = ReactNative;
 
@@ -41,6 +42,8 @@ function AddTagForm() {
 export default function Settings({ jsonStorage }: SettingsProps) {
     const tags = allTags(jsonStorage);
     const userIds = Object.keys(tags);
+    const savedTags = jsonStorage.savedTags || {};
+    const savedTagNames = Object.keys(savedTags);
 
     return (
         <SettingsScaffold>
@@ -81,6 +84,56 @@ export default function Settings({ jsonStorage }: SettingsProps) {
                     };
                 })}
             />
+
+            <ListSection
+                title="Saved tag templates"
+                emptyText="No saved tags yet."
+                items={savedTagNames.map((name) => {
+                    const tag = savedTags[name];
+
+                    const icon =
+                        getIcon(tag.icon)?.fallback ||
+                        tag.customSvgFallback;
+
+                    const label =
+                        (icon
+                            ? `${icon} ${tag.text}`
+                            : tag.text
+                        ).trim() || name;
+
+                    return {
+                        key: name,
+                        label,
+                        subLabel: `Tap to apply • Swipe to delete`,
+                        onPress: () =>
+                            openTagTemplateEditor(
+                                name,
+                                tag,
+                                jsonStorage
+                            ),
+                    };
+                })}
+            />
+
+            <TableRowGroup title="Create saved template">
+                <View style={{ paddingHorizontal: 16, paddingBottom: 12 }}>
+                    <PrimaryButton
+                        label="New template"
+                        style={{ marginTop: 0 }}
+                        onPress={() =>
+                            openTagTemplateEditor(
+                                "",
+                                {
+                                    text: "",
+                                    color: "#5865F2",
+                                    icon: "none",
+                                },
+                                jsonStorage
+                            )
+                        }
+                    />
+                </View>
+            </TableRowGroup>
         </SettingsScaffold>
     );
 }

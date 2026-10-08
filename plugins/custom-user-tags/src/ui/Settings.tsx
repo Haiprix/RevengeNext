@@ -1,9 +1,4 @@
 import { React, ReactNative } from "@revenge-mod/react";
-import { TableRowGroup, TextInput } from "@shared/ui/table";
-import SettingsScaffold from "@shared/ui/SettingsScaffold";
-import ListSection from "@shared/ui/ListSection";
-import PrimaryButton from "@shared/ui/PrimaryButton";
-import NoteBox from "@shared/ui/NoteBox";
 import { readData, type TagStorage } from "../lib/tags";
 import { setTagStorage } from "../lib/resolveTag";
 import { getIcon } from "../lib/icons";

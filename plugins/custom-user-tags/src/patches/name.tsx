@@ -1,17 +1,15 @@
-import { lookupModule } from "@revenge-mod/modules/finders";
-import { findInReactTree } from "../lib/findInReactTree";
 import { React } from "@revenge-mod/react";
-import { withProps } from "@revenge-mod/modules/finders/filters";
 import { after } from "@revenge-mod/patcher";
+import { lookupModule } from "@revenge-mod/modules/finders";
+import { withProps } from "@revenge-mod/modules/finders/filters";
+import { findInReactTree } from "../lib/findInReactTree";
 import resolveTag from "../lib/resolveTag";
-const { lookupModule } = revenge.modules.finders
-const { withProps } = revenge.modules.finders.filters
 
-const TagModule = lookupModule(withProps("getBotLabel")?.[0],
+const TagModule = lookupModule(withProps("getBotLabel")?.[0]);
 
 // findByName("DisplayName") doesn't survive minification - findByProps looks at the property key
 // instead.
-const DisplayNameModule = findByProps("DisplayName") as any;
+const DisplayNameModule = lookupModule(withProps("DisplayName")) as any;
 
 export default () => {
     if (!DisplayNameModule?.DisplayName) return () => {};

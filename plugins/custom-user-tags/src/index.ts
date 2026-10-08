@@ -5,6 +5,7 @@ import patchDetails from "./patches/details";
 import patchProfile from "./patches/profile";
 import patchTag from "./patches/tag";
 import Settings from "./ui/Settings";
+import { setTagStorage } from "./lib/resolveTag";
 
 import type { CustomTagsStorage } from "./lib/tags";
 
@@ -23,6 +24,7 @@ export default plugin<{
     },
     start({ cleanup, jsonStorage, plugin }) {
         const id = plugin.manifest.id
+        setTagStorage(jsonStorage)
 
         const { logger } = revenge.discord.common
 
@@ -41,5 +43,5 @@ export default plugin<{
         unpatchAll()
         unpatchAll = () => {}
     },
-SettingsComponent: Settings,
+    SettingsComponent: Settings,
 })

@@ -11,6 +11,7 @@ import type { CustomTagsStorage } from "./lib/tags";
 
 export const DEFAULTS: CustomTagsStorage = {
     tags: {},
+    savedTags: {},
 }
 
 let unpatchAll: () => void = () => {}
